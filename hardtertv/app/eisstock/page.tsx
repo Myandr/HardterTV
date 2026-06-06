@@ -1,4 +1,5 @@
 import { MapPin, Users, Euro, CalendarDays, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import { EisWidget } from "@/components/ui/eis-widget";
 
 const infoKacheln = [
@@ -29,10 +30,13 @@ export default function EisPage() {
     <main>
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#122023] px-6 py-24 md:px-12 lg:px-20 lg:py-36">
-        <div className="pointer-events-none absolute inset-0 opacity-10">
-          <div className="absolute -right-32 -top-32 h-[600px] w-[600px] rounded-full bg-[#e1fcad]" />
-          <div className="absolute -bottom-24 -left-24 h-[400px] w-[400px] rounded-full bg-[#e1fcad]" />
-        </div>
+        <Image
+          src="/images/änderungen/eis2.png"
+          alt=""
+          fill
+          className="object-cover opacity-30"
+          priority
+        />
 
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3">

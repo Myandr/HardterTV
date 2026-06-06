@@ -98,7 +98,7 @@ export default function LocationSection() {
             </h2>
 
             <p className="mt-4 max-w-md text-base font-light text-black/50">
-              Erleben Sie Tennis vom Feinsten mit unserer erstklassig gepflegten Anlage und dem Überblick aller 6 Plätze von unserer überdachten Terrasse. Gahlener Str. 204, 46282 Dorsten.
+              Erleben Sie Tennis vom Feinsten mit unserer erstklassig gepflegten Anlage und dem Überblick aller 6 Plätze von unserer überdachten Terrasse. Egal, ob Anfänger oder erfahrener Profi, wir haben den perfekten Platz für Ihr Spiel.
             </p>
           </div>
 

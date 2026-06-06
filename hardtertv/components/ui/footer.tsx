@@ -15,7 +15,7 @@ const links = [
 ];
 
 const kontakt = [
-  { label: "1. Vorsitzender", wert: "Oliver Wiegand · 0172 25 80 209", href: "tel:+4917225802099" },
+  { label: "1. Vorsitzender", wert: "Oliver Wiegand", href: "mailto:1.vorsitzender@hardt-tennis.de" },
   { label: "1. Geschäftsführer", wert: "Hendrick Büncker", href: "mailto:1.vorsitzender@hardt-tennis.de" },
   { label: "Schatzmeister", wert: "Marco Hohenstein", href: "mailto:1.vorsitzender@hardt-tennis.de" },
   { label: "E-Mail", wert: "1.vorsitzender@hardt-tennis.de", href: "mailto:1.vorsitzender@hardt-tennis.de" },

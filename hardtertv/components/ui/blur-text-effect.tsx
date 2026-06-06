@@ -15,20 +15,20 @@ export const BlurTextEffect: React.FC<BlurTextEffectProps> = ({ children, classN
     if (!containerRef.current) return;
 
     const el = containerRef.current;
-    const chars = el.querySelectorAll('span.char');
+    const words = el.querySelectorAll('span.word');
 
-    gsap.set(chars, { opacity: 0, y: 10, filter: 'blur(8px)' });
+    gsap.set(words, { opacity: 0, y: 10, filter: 'blur(8px)' });
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          gsap.to(chars, {
+          gsap.to(words, {
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
             duration: 0.5,
             ease: 'power2.out',
-            stagger: 0.025,
+            stagger: 0.07,
             clearProps: 'filter',
           });
           observer.disconnect();
@@ -41,12 +41,15 @@ export const BlurTextEffect: React.FC<BlurTextEffectProps> = ({ children, classN
     return () => observer.disconnect();
   }, [children]);
 
+  const wordList = children.split(' ');
+
   return (
-    <span className={`inline-block ${className}`} ref={containerRef}>
-      {children.split('').map((char, i) => (
-        <span key={`${char}-${i}`} className="char inline-block" style={{ whiteSpace: 'pre' }}>
-          {char === ' ' ? ' ' : char}
-        </span>
+    <span className={`inline ${className}`} ref={containerRef}>
+      {wordList.map((word, i) => (
+        <React.Fragment key={`${word}-${i}`}>
+          <span className="word inline-block">{word}</span>
+          {i < wordList.length - 1 && ' '}
+        </React.Fragment>
       ))}
     </span>
   );

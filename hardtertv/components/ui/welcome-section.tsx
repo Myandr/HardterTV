@@ -36,12 +36,8 @@ export default function WelcomeSection() {
             </span>
           </div>
 
-          <h2 className="font-kanturmuy max-w-4xl text-3xl font-normal tracking-tighter sm:text-4xl md:text-6xl lg:text-7xl">
-            <BlurTextEffect>Willkommen beim </BlurTextEffect>
-            <span className="relative inline-block">
-              <BlurTextEffect>Hardter TV</BlurTextEffect>
-              <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
-            </span>
+          <h2 className="font-kanturmuy max-w-6xl text-3xl font-normal tracking-tighter sm:text-4xl md:text-6xl lg:text-7xl" style={{ wordBreak: "keep-all", hyphens: "none" }}>
+            <BlurTextEffect>Hardter TV, ein Verein für Jedermann mit bezahlbaren Beiträgen!</BlurTextEffect>
           </h2>
 
           <p className="mt-6 max-w-2xl text-base font-light text-black/60 md:text-lg">
@@ -80,13 +76,16 @@ export default function WelcomeSection() {
           <div className="flex flex-col justify-center space-y-6">
             <div className="space-y-4 text-base font-light leading-relaxed text-black/70 md:text-lg">
               <p>
-                Hardter TV, ein Verein für Jedermann mit bezahlbaren Beiträgen! Gerne zeigen wir Ihnen unsere 6-Platzanlage mit Clubhaus direkt am Kanal gelegen. Die Anlage ist im Normalfall von Mitte April bis Ende Oktober geöffnet. Bei uns kann Tennis als Hobby-, Mannschafts- oder Leistungssport betrieben werden.
+                Gerne zeigen wir Ihnen unsere 6-Platzanlage mit Clubhaus direkt am Kanal gelegen. Die Anlage ist im Normalfall von Mitte April bis Ende Oktober geöffnet. Bei uns kann Tennis als Hobby-, Mannschafts- oder Leistungssport betrieben werden.
               </p>
               <p>
                 Zum gemütlichen Beisammensein vor und nach dem Tennisspielen lädt die großzügig angelegte Terrasse ein. Von dieser aus können Sie die gesamte Anlage überblicken und sie ist zu einem beliebten Treffpunkt geworden.
               </p>
               <p>
-                Für alle diejenigen, die das Tennisspielen beim HTV einmal ausprobieren wollen, bieten wir die sogenannte Greencard an. Mit dieser kann Jeder erst einmal für wenig Geld ab Saisonbeginn bis zum 31.7. schnuppern.
+                Für alle diejenigen, die das Tennisspielen beim HTV einmal ausprobieren wollen, bieten wir die sogenannte Greencard an. Mit dieser kann Jeder erst einmal für wenig Geld ab Saisonbeginn bis zum 31.7. des jeweiligen Jahres schnuppern. Denn bevor Jemand Mitglied werden muss, soll er sich sicher sein, dass der Tennissport und insbesondere der HTV genau das Richtige sind, um in der Freizeit aktiv zu sein.
+              </p>
+              <p>
+                Wir wünschen viel Spaß beim virtuellen Rundgang auf unserer Homepage und bemühen uns die Internetseite nach Möglichkeit immer aktuell zu halten. Für Anmerkungen, Anregungen, Kommunikation etc. steht Ihnen unser Kontaktformular zur Verfügung! Ansonsten freuen wir uns auf Ihren Besuch auf unserer Anlage.
               </p>
               <p className="font-normal text-black/80">
                 Oliver Wiegand<br />

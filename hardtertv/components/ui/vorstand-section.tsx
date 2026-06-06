@@ -12,21 +12,21 @@ const vorstand = [
     titel: "1. Vorsitzender",
     email: "1.vorsitzender@hardt-tennis.de",
     telefon: "0172 25 80 209",
-    bild: "/images/Oliver 1JPG copy.jpg",
-  },
-  {
-    name: "Volker Schuhmacher",
-    titel: "2. Vorsitzender",
-    email: "schatzmeister@hardt-tennis.de",
-    telefon: "0160 99 78 94 11",
-    bild: "/images/Volker Schumacher_1 copy.JPG",
+    bild: "/images/änderungen/oliver-wiegand.png",
   },
   {
     name: "Hendrick Büncker",
     titel: "1. Geschäftsführer",
-    email: "1.vorsitzender@hardt-tennis.de",
-    telefon: "",
-    bild: "/images/Hendrick Büncker_1.jpg",
+    email: "",
+    telefon: "0151 741 04 202",
+    bild: "/images/änderungen/handrick-bünker.png",
+  },
+  {
+    name: "Marco Hohenstein",
+    titel: "Schatzmeister",
+    email: "schatzmeister@hardt-tennis.de",
+    telefon: "0176 666 46 288",
+    bild: "/images/änderungen/marco-hohenstein.png",
   },
 ];
 
@@ -55,13 +55,15 @@ function VorstandCard({ person }: { person: (typeof vorstand)[0] }) {
         </div>
 
         <div className="mt-auto space-y-2.5 border-t border-black/[0.06] pt-4">
-          <a
-            href={`mailto:${person.email}`}
-            className="flex items-center gap-2.5 text-sm text-black/50 transition-colors hover:text-black"
-          >
-            <Mail className="size-3.5 shrink-0" strokeWidth={1.5} />
-            <span className="truncate">{person.email}</span>
-          </a>
+          {person.email && (
+            <a
+              href={`mailto:${person.email}`}
+              className="flex items-center gap-2.5 text-sm text-black/50 transition-colors hover:text-black"
+            >
+              <Mail className="size-3.5 shrink-0" strokeWidth={1.5} />
+              <span className="truncate">{person.email}</span>
+            </a>
+          )}
           {person.telefon && (
             <a
               href={`tel:${person.telefon.replace(/\s/g, "")}`}
