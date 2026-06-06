@@ -22,13 +22,13 @@ const locations = [
   {
     title: "Flutlichtanlage",
     subtitle: "Auf 2 Plätzen",
-    image: "/images/image copy 3.png",
+    image: "/images/image.png",
     href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
   },
   {
     title: "Kletter- und Spielgerüst",
     subtitle: "Für die jüngsten Mitglieder",
-    image: "/images/image.png",
+    image: "/images/image copy 3.png",
     href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
   },
   {
