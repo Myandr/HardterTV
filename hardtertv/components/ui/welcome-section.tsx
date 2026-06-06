@@ -9,7 +9,7 @@ import { FadeIn } from "@/components/ui/fade-in";
 const stats = [
   { icon: Trophy, value: "1952", label: "Gegründet" },
   { icon: Users, value: "300+", label: "Mitglieder" },
-  { icon: MapPin, value: "8", label: "Tennisplätze" },
+  { icon: MapPin, value: "6", label: "Tennisplätze" },
   { icon: Zap, value: "2", label: "Flutlichtplätze" },
 ];
 
@@ -50,13 +50,13 @@ export default function WelcomeSection() {
           </p>
         </FadeIn>
 
-        <FadeIn delay={0.1}>
-          <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 md:mt-14 md:grid-cols-4">
-            {stats.map((stat) => (
-              <StatCard key={stat.label} {...stat} />
-            ))}
-          </div>
-        </FadeIn>
+        <div className="mt-8 grid grid-cols-2 gap-4 sm:gap-6 md:mt-14 md:grid-cols-4">
+          {stats.map((stat, i) => (
+            <FadeIn key={stat.label} delay={0.1 + i * 0.08}>
+              <StatCard {...stat} />
+            </FadeIn>
+          ))}
+        </div>
 
         <FadeIn delay={0.15}>
         <div className="mt-10 grid grid-cols-1 gap-8 lg:mt-20 lg:grid-cols-2 lg:gap-20">
@@ -80,17 +80,17 @@ export default function WelcomeSection() {
           <div className="flex flex-col justify-center space-y-6">
             <div className="space-y-4 text-base font-light leading-relaxed text-black/70 md:text-lg">
               <p>
-                Und los geht es mit einer sehr erfreulichen Nachricht: Der Antrag des HTV
-                auf Mittel aus der Sportpauschale zur Anschaffung einer Flutlichtanlage
-                für zwei Plätze wurde angenommen. Somit wird der HTV der erste
-                Tennisverein in Dorsten sein, der über eine solche Anlage für
-                zwei Tennisfelder verfügen wird.
+                Hardter TV, ein Verein für Jedermann mit bezahlbaren Beiträgen! Gerne zeigen wir Ihnen unsere 6-Platzanlage mit Clubhaus direkt am Kanal gelegen. Die Anlage ist im Normalfall von Mitte April bis Ende Oktober geöffnet. Bei uns kann Tennis als Hobby-, Mannschafts- oder Leistungssport betrieben werden.
               </p>
               <p>
-                Neben der möglichen Ausweitung der Trainingszeiten auch in die späten
-                Abendstunden sieht der HTV Chancen, mit Nachturnieren eine Bereicherung
-                des Vereinslebens zu erzielen. Realisiert werden soll die Flutlichtanlage
-                auf unseren Plätzen 5 und 6.
+                Zum gemütlichen Beisammensein vor und nach dem Tennisspielen lädt die großzügig angelegte Terrasse ein. Von dieser aus können Sie die gesamte Anlage überblicken und sie ist zu einem beliebten Treffpunkt geworden.
+              </p>
+              <p>
+                Für alle diejenigen, die das Tennisspielen beim HTV einmal ausprobieren wollen, bieten wir die sogenannte Greencard an. Mit dieser kann Jeder erst einmal für wenig Geld ab Saisonbeginn bis zum 31.7. schnuppern.
+              </p>
+              <p className="font-normal text-black/80">
+                Oliver Wiegand<br />
+                1. Vorsitzender HTV
               </p>
             </div>
 

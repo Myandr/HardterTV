@@ -26,9 +26,9 @@ export const BlurTextEffect: React.FC<BlurTextEffectProps> = ({ children, classN
             opacity: 1,
             y: 0,
             filter: 'blur(0px)',
-            duration: 0.3,
+            duration: 0.5,
             ease: 'power2.out',
-            stagger: 0.015,
+            stagger: 0.025,
             clearProps: 'filter',
           });
           observer.disconnect();

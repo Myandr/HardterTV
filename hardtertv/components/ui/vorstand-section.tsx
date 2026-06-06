@@ -15,18 +15,18 @@ const vorstand = [
     bild: "/images/Oliver 1JPG copy.jpg",
   },
   {
-    name: "Holger Arlt",
-    titel: "2. Geschäftsführer",
-    email: "woodworm4u@gmail.com",
-    telefon: "0151 70 09 01 37",
-    bild: "/images/Holger Arlt_1.jpg",
-  },
-  {
     name: "Volker Schuhmacher",
-    titel: "Schatzmeister",
+    titel: "2. Vorsitzender",
     email: "schatzmeister@hardt-tennis.de",
     telefon: "0160 99 78 94 11",
-    bild: "/images/Volker Schumacher_1.JPG",
+    bild: "/images/Volker Schumacher_1 copy.JPG",
+  },
+  {
+    name: "Hendrick Büncker",
+    titel: "1. Geschäftsführer",
+    email: "1.vorsitzender@hardt-tennis.de",
+    telefon: "",
+    bild: "/images/Hendrick Büncker_1.jpg",
   },
 ];
 
@@ -62,13 +62,15 @@ function VorstandCard({ person }: { person: (typeof vorstand)[0] }) {
             <Mail className="size-3.5 shrink-0" strokeWidth={1.5} />
             <span className="truncate">{person.email}</span>
           </a>
-          <a
-            href={`tel:${person.telefon.replace(/\s/g, "")}`}
-            className="flex items-center gap-2.5 text-sm text-black/50 transition-colors hover:text-black"
-          >
-            <Phone className="size-3.5 shrink-0" strokeWidth={1.5} />
-            {person.telefon}
-          </a>
+          {person.telefon && (
+            <a
+              href={`tel:${person.telefon.replace(/\s/g, "")}`}
+              className="flex items-center gap-2.5 text-sm text-black/50 transition-colors hover:text-black"
+            >
+              <Phone className="size-3.5 shrink-0" strokeWidth={1.5} />
+              {person.telefon}
+            </a>
+          )}
         </div>
       </div>
 
@@ -100,7 +102,7 @@ export default function VorstandSection() {
             </h2>
 
             <p className="mt-4 max-w-md text-base font-light text-black/50">
-              Lernen Sie die Menschen kennen, die unseren Verein leiten und gestalten.
+              Das Team des Hardter TV
             </p>
           </div>
 
@@ -120,13 +122,13 @@ export default function VorstandSection() {
         </div>
         </FadeIn>
 
-        <FadeIn delay={0.1}>
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:mt-14 lg:grid-cols-3">
-          {vorstand.map((person) => (
-            <VorstandCard key={person.name} person={person} />
+          {vorstand.map((person, i) => (
+            <FadeIn key={person.name} delay={0.1 + i * 0.1}>
+              <VorstandCard person={person} />
+            </FadeIn>
           ))}
         </div>
-        </FadeIn>
       </div>
     </section>
   );

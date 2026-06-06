@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight, Download, Mail, Users, Star, FileText } from "lucide-react";
 
 const vorteile = [
-  "Nutzung aller 8 Tennisplätze (inkl. 2 Flutlichtplätze)",
+  "Nutzung aller 6 Tennisplätze (inkl. 2 Flutlichtplätze)",
   "Teilnahme am Mannschaftsspielbetrieb",
   "Zugang zu Vereinsturnieren & Events",
   "Professionelles Training durch André Albert",
@@ -100,7 +100,7 @@ export default function MitgliedschaftPage() {
               {[
                 { value: "300+", label: "Aktive Mitglieder", sub: "aus Dorsten und Umgebung" },
                 { value: "1952", label: "Vereinsgründung", sub: "über 70 Jahre Tennistradition" },
-                { value: "8", label: "Tennisplätze", sub: "inkl. 2 Flutlichtplätze" },
+                { value: "6", label: "Tennisplätze", sub: "inkl. 2 Flutlichtplätze" },
               ].map((s) => (
                 <div
                   key={s.label}
@@ -184,7 +184,7 @@ export default function MitgliedschaftPage() {
                   du für wenig Geld eine komplette Sommersaison schnuppern — ganz unverbindlich.
                 </p>
                 <div className="mt-6 space-y-3 border-t border-black/[0.06] pt-5">
-                  <a href="/schnuppercard.pdf" download>
+                  <a href="/HTV-SchnupperCard-Antrag 2026.pdf" download>
                     <button className="flex w-full cursor-pointer items-center justify-between rounded-xl bg-[#f9f9f7] px-4 py-3 text-sm font-medium text-black transition-colors hover:bg-[#e1fcad]">
                       <span>Schnuppercard laden</span>
                       <Download className="size-4" strokeWidth={1.5} />

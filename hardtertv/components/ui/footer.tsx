@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FadeIn } from "@/components/ui/fade-in";
 
 const links = [
   { label: "Home", href: "/" },
@@ -14,9 +15,9 @@ const links = [
 ];
 
 const kontakt = [
-  { label: "Vorsitzender", wert: "0172 25 80 209", href: "tel:+4917225800209" },
-  { label: "Geschäftsführer", wert: "0151 70 09 01 37", href: "tel:+4915170090137" },
-  { label: "Sportwart", wert: "0151 53 55 33 55", href: "tel:+4915153553355" },
+  { label: "1. Vorsitzender", wert: "Oliver Wiegand · 0172 25 80 209", href: "tel:+4917225802099" },
+  { label: "1. Geschäftsführer", wert: "Hendrick Büncker", href: "mailto:1.vorsitzender@hardt-tennis.de" },
+  { label: "Schatzmeister", wert: "Marco Hohenstein", href: "mailto:1.vorsitzender@hardt-tennis.de" },
   { label: "E-Mail", wert: "1.vorsitzender@hardt-tennis.de", href: "mailto:1.vorsitzender@hardt-tennis.de" },
 ];
 
@@ -25,6 +26,7 @@ export default function Footer() {
     <footer className="bg-[#0d1a1c] text-white">
       {/* Main grid */}
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-12 lg:px-20 lg:py-20">
+        <FadeIn>
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
 
           {/* Brand */}
@@ -122,6 +124,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
+        </FadeIn>
       </div>
 
       {/* Bottom bar */}

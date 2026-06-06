@@ -147,13 +147,13 @@ export default function TermineSection() {
         </div>
         </FadeIn>
 
-        <FadeIn delay={0.1}>
         <div className="mt-8 grid grid-cols-1 gap-4 md:mt-14 md:grid-cols-2">
-          {termine.map((t) => (
-            <TerminCard key={t.veranstaltung} termin={t} />
+          {termine.map((t, i) => (
+            <FadeIn key={t.veranstaltung} delay={0.08 + i * 0.07}>
+              <TerminCard termin={t} />
+            </FadeIn>
           ))}
         </div>
-        </FadeIn>
       </div>
     </section>
   );

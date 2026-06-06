@@ -43,9 +43,9 @@ export default function ImpressumPage() {
             </h2>
             <div className="rounded-2xl border border-black/[0.06] bg-white p-6">
               <p>
-                Oliver Wiegand<br />
-                Holger Arlt<br />
-                Volker Schuhmacher
+                <span className="font-medium">1. Vorsitzender:</span> Oliver Wiegand<br />
+                <span className="font-medium">1. Geschäftsführer:</span> Hendrick Büncker<br />
+                <span className="font-medium">Schatzmeister:</span> Marco Hohenstein
               </p>
               <p className="mt-3">
                 E-Mail:{" "}

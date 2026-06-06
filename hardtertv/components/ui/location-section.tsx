@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, MapPin } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { BlurTextEffect } from "@/components/ui/blur-text-effect";
@@ -10,29 +10,31 @@ const locations = [
   {
     title: "6 Ascheplätze",
     subtitle: "Zwei mit Flutlichtanlage",
-    address: "Gahlener Str. 204\n46282 Dorsten",
     image: "/images/hero-new.png",
     href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
   },
   {
     title: "Clubheim Hardt",
-    subtitle: "Vermietung nur an Mitglieder\nGastronomie",
-    address: "Gahlener Str. 204\n46282 Dorsten",
+    subtitle: "Vermietung nur an Mitglieder",
     image: "/images/image copy 2.png",
+    href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
+  },
+  {
+    title: "Flutlichtanlage",
+    subtitle: "Auf 2 Plätzen",
+    image: "/images/image copy 3.png",
     href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
   },
   {
     title: "Kletter- und Spielgerüst",
     subtitle: "Für die jüngsten Mitglieder",
-    address: "Gahlener Str. 204\n46282 Dorsten",
-    image: "/images/image copy 3.png",
+    image: "/images/image.png",
     href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
   },
   {
-    title: "Kleinfeldplatz",
-    subtitle: "Inkl. Tenniswand",
-    address: "Gahlener Str. 204\n46282 Dorsten",
-    image: "/images/image.png",
+    title: "Eisstockbahn",
+    subtitle: "Vermietung nur an Mitglieder",
+    image: "/images/änderungen/eis.png",
     href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
   },
 ];
@@ -47,7 +49,7 @@ function LocationCard({ location }: { location: (typeof locations)[0] }) {
               src={location.image}
               alt={location.title}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
               className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/10" />
@@ -65,12 +67,6 @@ function LocationCard({ location }: { location: (typeof locations)[0] }) {
                 {location.subtitle}
               </p>
             )}
-            <div className="mt-4 flex items-start gap-2">
-              <MapPin className="mt-0.5 size-3.5 shrink-0 text-black/30" strokeWidth={1.5} />
-              <span className="text-xs text-black/40 whitespace-pre-line leading-relaxed">
-                {location.address}
-              </span>
-            </div>
             <div className="mt-4 h-[2px] w-0 rounded-full bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full" />
           </div>
         </div>
@@ -94,15 +90,15 @@ export default function LocationSection() {
             </div>
 
             <h2 className="font-kanturmuy max-w-xl text-4xl font-normal tracking-tighter md:text-5xl lg:text-6xl">
-              <BlurTextEffect>Besuche </BlurTextEffect>
+              <BlurTextEffect>Unsere </BlurTextEffect>
               <span className="relative inline-block">
-                <BlurTextEffect>unseren Verein</BlurTextEffect>
+                <BlurTextEffect>Tennisanlage</BlurTextEffect>
                 <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
               </span>
             </h2>
 
             <p className="mt-4 max-w-md text-base font-light text-black/50">
-              Besuche uns an unserem Standort in Dorsten.
+              Erleben Sie Tennis vom Feinsten mit unserer erstklassig gepflegten Anlage und dem Überblick aller 6 Plätze von unserer überdachten Terrasse. Gahlener Str. 204, 46282 Dorsten.
             </p>
           </div>
 
@@ -122,13 +118,13 @@ export default function LocationSection() {
         </div>
         </FadeIn>
 
-        <FadeIn delay={0.1}>
-        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {locations.map((loc) => (
-            <LocationCard key={loc.title} location={loc} />
+        <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          {locations.map((loc, i) => (
+            <FadeIn key={loc.title} delay={0.1 + i * 0.08}>
+              <LocationCard location={loc} />
+            </FadeIn>
           ))}
         </div>
-        </FadeIn>
       </div>
     </section>
   );

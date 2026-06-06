@@ -189,18 +189,18 @@ export default function NewsSection() {
         </div>
         </FadeIn>
 
-        <FadeIn delay={0.1}>
         <div className="mt-8 grid grid-cols-1 gap-6 md:mt-14 lg:grid-cols-3">
-          <NewsCard artikel={news[0]} featured />
-          <NewsCard artikel={news[1]} />
+          <FadeIn delay={0.1}><NewsCard artikel={news[0]} featured /></FadeIn>
+          <FadeIn delay={0.18}><NewsCard artikel={news[1]} /></FadeIn>
         </div>
 
         <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {news.slice(2).map((artikel) => (
-            <NewsCard key={artikel.titel} artikel={artikel} />
+          {news.slice(2).map((artikel, i) => (
+            <FadeIn key={artikel.titel} delay={0.08 + i * 0.08}>
+              <NewsCard artikel={artikel} />
+            </FadeIn>
           ))}
         </div>
-        </FadeIn>
       </div>
     </section>
   );
