@@ -35,14 +35,19 @@ const locations = [
     title: "Eisstockbahn",
     subtitle: "Vermietung nur an Mitglieder",
     image: "/images/änderungen/eis.png",
-    href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
+    href: "/eisstock",
   },
 ];
 
 function LocationCard({ location }: { location: (typeof locations)[0] }) {
+  const isExternal = location.href.startsWith("http");
   return (
     <div>
-      <Link href={location.href} className="group block" target="_blank" rel="noopener noreferrer">
+      <Link
+        href={location.href}
+        className="group block"
+        {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
         <div className="overflow-hidden rounded-2xl bg-black/[0.03] transition-all duration-500 hover:shadow-xl">
           <div className="relative h-52 overflow-hidden">
             <Image

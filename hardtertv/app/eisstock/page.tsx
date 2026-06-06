@@ -119,6 +119,30 @@ export default function EisPage() {
         </div>
       </section>
 
+      {/* Galerie */}
+      <section className="bg-white px-6 py-20 md:px-12 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="relative h-72 overflow-hidden rounded-2xl sm:h-96">
+              <Image
+                src="/images/änderungen/eis.png"
+                alt="Eisstockbahn"
+                fill
+                className="object-cover transition-transform duration-700 ease-out hover:scale-105"
+              />
+            </div>
+            <div className="relative h-72 overflow-hidden rounded-2xl sm:h-96">
+              <Image
+                src="/images/änderungen/eis3.png"
+                alt="Eisstockschießen"
+                fill
+                className="object-cover transition-transform duration-700 ease-out hover:scale-105"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Buchungs-Widget */}
       <section id="buchen" className="bg-white px-6 py-20 md:px-12 lg:px-20 lg:py-32">
         <div className="mx-auto max-w-7xl">

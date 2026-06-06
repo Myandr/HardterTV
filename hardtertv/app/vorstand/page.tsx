@@ -9,8 +9,6 @@ type Person = {
   bild: string;
 };
 
-const placeholder = "/images/Foto Person fehlt.png";
-
 const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] = [
   {
     titel: "Führung",
@@ -21,26 +19,25 @@ const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] =
         titel: "1. Vorsitzender",
         email: "1.vorsitzender@hardt-tennis.de",
         telefon: "0172 25 80 209",
-        bild: "/images/Oliver 1JPG.jpg",
+        bild: "/images/änderungen/oliver-wiegand.png",
       },
       {
         name: "Volker Schuhmacher",
         titel: "2. Vorsitzender",
-        email: "schatzmeister@hardt-tennis.de",
         telefon: "0160 99 78 94 11",
-        bild: "/images/Volker Schumacher_1.JPG",
+        bild: "/images/änderungen/volker-schuhmacher.png",
       },
       {
         name: "Hendrick Büncker",
         titel: "1. Geschäftsführer",
-        bild: "/images/Hendrick Büncker_1.jpg",
+        bild: "/images/änderungen/handrick-bünker.png",
       },
       {
         name: "Holger Arlt",
         titel: "2. Geschäftsführer",
         email: "woodworm4u@gmail.com",
         telefon: "0151 70 09 01 37",
-        bild: "/images/Holger Arlt_1.jpg",
+        bild: "/images/änderungen/holger-arlt.png",
       },
     ],
   },
@@ -51,12 +48,14 @@ const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] =
       {
         name: "Marco Hohenstein",
         titel: "Schatzmeister",
-        bild: placeholder,
+        email: "schatzmeister@hardt-tennis.de",
+        bild: "/images/änderungen/marco-hohenstein.png",
       },
       {
         name: "Anni Holzmann",
         titel: "Breitensport- & Clubheimwartin",
-        bild: placeholder,
+        email: "annikaholzmann@gmx.de",
+        bild: "/images/änderungen/anni-holzmann.png",
       },
     ],
   },
@@ -67,15 +66,13 @@ const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] =
       {
         name: "Tanja Wiegand",
         titel: "1. Sportwartin",
-        email: "tanjawiegand@icloud.com",
-        bild: placeholder,
+        email: "1.sportwart@hardt-tennis.de",
+        bild: "/images/änderungen/tanja-wiegand.png",
       },
       {
         name: "Rainer Pieper",
         titel: "2. Sportwart",
-        email: "1.sportwart@hardt-tennis.de",
-        telefon: "0151 53 55 33 55",
-        bild: placeholder,
+        bild: "/images/änderungen/rainer-pieper.png",
       },
     ],
   },
@@ -86,13 +83,14 @@ const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] =
       {
         name: "Tabea Wiegand",
         titel: "Event & Kommunikationswartin",
-        email: "tabea.wiegand.tw@gmail.com",
-        bild: placeholder,
+        email: "tabeawiegand@gmail.com",
+        bild: "/images/änderungen/tabea-wiegand.png",
       },
       {
         name: "Valentin Trapp",
         titel: "Eventmanager",
-        bild: placeholder,
+        email: "v.trapp1407@gmail.com",
+        bild: "/images/änderungen/valentin-trapp1.png",
       },
     ],
   },
@@ -103,7 +101,8 @@ const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] =
       {
         name: "Udo Kahlert",
         titel: "Technikwart",
-        bild: placeholder,
+        email: "annikaholzmann@gmx.de",
+        bild: "/images/änderungen/udo-kahlert.png",
       },
       {
         name: "Jürgen Mertens",
