@@ -4,6 +4,7 @@ import { useState } from "react";
 import { MapPin, Phone, Mail, ArrowUpRight } from "lucide-react";
 import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
+import { MapsConsentGate } from "@/components/ui/maps-consent-gate";
 
 const kontaktInfo = [
   {
@@ -141,14 +142,11 @@ export default function KontaktSection() {
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-black/[0.06] min-h-[280px] sm:min-h-[360px] lg:min-h-0">
-            <iframe
+            <MapsConsentGate
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2474.959200775651!2d6.927527713413548!3d51.6605833717312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b8f26e657412d9%3A0x9088105a5549feb5!2sHardter%20TV!5e0!3m2!1sde!2sde!4v1737024831814!5m2!1sde!2sde"
               title="Standort Hardter TV"
               className="h-full w-full"
               style={{ border: 0, minHeight: "280px" }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
             />
           </div>
         </div>
