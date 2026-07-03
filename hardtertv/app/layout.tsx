@@ -20,9 +20,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Hardter Tennisverein Dorsten" }],
   robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+    index: false,
+    follow: false,
+    googleBot: { index: false, follow: false },
   },
   verification: {
     google: "0gx3hyEH12kdsRXAgq1wqLd6Ob4_9hyHqm95lMaqbkw",

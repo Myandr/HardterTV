@@ -124,6 +124,22 @@ export default function KontaktSection() {
                       placeholder="Deine Nachricht an den HTV..."
                     />
                   </div>
+                  <div className="flex items-start gap-2.5">
+                    <input
+                      type="checkbox"
+                      id="datenschutz"
+                      name="datenschutz"
+                      required
+                      className="mt-0.5 size-4 shrink-0 cursor-pointer accent-[#122023]"
+                    />
+                    <label htmlFor="datenschutz" className="text-xs leading-relaxed text-black/50">
+                      Ich habe die{" "}
+                      <a href="/datenschutz" className="text-black underline underline-offset-2 hover:text-black/70">
+                        Datenschutzerklärung
+                      </a>{" "}
+                      gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu.
+                    </label>
+                  </div>
                   <button
                     type="submit"
                     className="group flex cursor-pointer items-center gap-0 self-start rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none"

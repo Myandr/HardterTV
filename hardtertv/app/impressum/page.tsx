@@ -25,7 +25,7 @@ export default function ImpressumPage() {
 
           <section>
             <h2 className="mb-3 text-xs uppercase tracking-[0.2em] text-black/40">
-              Angaben gemäß § 5 TMG
+              Angaben gemäß § 5 DDG
             </h2>
             <div className="rounded-2xl border border-black/[0.06] bg-white p-6">
               <p className="font-medium text-black">Sitz und Postanschrift des Vereins</p>
@@ -48,6 +48,15 @@ export default function ImpressumPage() {
                 <span className="font-medium">Schatzmeister:</span> Marco Hohenstein
               </p>
               <p className="mt-3">
+                Telefon:{" "}
+                <a
+                  href="tel:+4917225800209"
+                  className="text-black underline-offset-2 hover:underline"
+                >
+                  0172 25 80 209
+                </a>
+              </p>
+              <p className="mt-1">
                 E-Mail:{" "}
                 <a
                   href="mailto:1.vorsitzender@hardt-tennis.de"
@@ -74,20 +83,7 @@ export default function ImpressumPage() {
 
           <section>
             <h2 className="mb-3 text-xs uppercase tracking-[0.2em] text-black/40">
-              Bankverbindungen des Vereins
-            </h2>
-            <div className="rounded-2xl border border-black/[0.06] bg-white p-6">
-              <p>
-                Volksbank Dorsten<br />
-                BIC: GENODEM1KIH<br />
-                IBAN: DE49 4246 1435 0706 7540 00
-              </p>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="mb-3 text-xs uppercase tracking-[0.2em] text-black/40">
-              Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+              Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV
             </h2>
             <div className="rounded-2xl border border-black/[0.06] bg-white p-6">
               <p>
@@ -103,6 +99,29 @@ export default function ImpressumPage() {
                 >
                   1.vorsitzender@hardt-tennis.de
                 </a>
+              </p>
+            </div>
+          </section>
+
+          <section>
+            <h2 className="mb-3 text-xs uppercase tracking-[0.2em] text-black/40">
+              Online-Streitbeilegung
+            </h2>
+            <div className="rounded-2xl border border-black/[0.06] bg-white p-6">
+              <p>
+                Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{" "}
+                <a
+                  href="https://ec.europa.eu/consumers/odr"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-black underline-offset-2 hover:underline"
+                >
+                  https://ec.europa.eu/consumers/odr
+                </a>
+              </p>
+              <p className="mt-3">
+                Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
+                Verbraucherschlichtungsstelle teilzunehmen.
               </p>
             </div>
           </section>
