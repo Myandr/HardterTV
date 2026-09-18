@@ -1,7 +1,41 @@
+import { getPayload } from "payload";
+import config from "@payload-config";
 import MannschaftenClient from "./mannschaften-client";
-import { herren, damen, gemischt } from "@/lib/mannschaften-data";
 
-export default function MannschaftenPage() {
+type Team = {
+  slug: string;
+  name: string;
+  kategorie: "Herren" | "Damen" | "Gemischt";
+  kontakt: string;
+  bild: string | null;
+  ligaUrl: string;
+};
+
+async function getTeams(): Promise<Team[]> {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({
+    collection: "teams",
+    depth: 1,
+    limit: 200,
+    sort: "name",
+  });
+
+  return docs.map((doc) => ({
+    slug: doc.slug,
+    name: doc.name,
+    kategorie: doc.kategorie,
+    kontakt: doc.kontakt,
+    bild: typeof doc.bild === "object" && doc.bild ? doc.bild.url ?? null : null,
+    ligaUrl: doc.ligaUrl,
+  }));
+}
+
+export default async function MannschaftenPage() {
+  const teams = await getTeams();
+  const herren = teams.filter((t) => t.kategorie === "Herren");
+  const damen = teams.filter((t) => t.kategorie === "Damen");
+  const gemischt = teams.filter((t) => t.kategorie === "Gemischt");
+
   return (
     <main>
       {/* Hero */}

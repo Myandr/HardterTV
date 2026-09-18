@@ -13,7 +13,6 @@
     "generate:importmap": "dotenv -e .env.local -- payload generate:importmap",
     "migrate:create": "dotenv -e .env.local -- payload migrate:create",
     "migrate": "dotenv -e .env.local -- payload migrate",
-    "seed:teams": "dotenv -e .env.local -- tsx scripts/seed-teams.ts",
     "ci": "payload migrate && next build"
   },
   "dependencies": {

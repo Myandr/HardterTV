@@ -5,8 +5,16 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import React from "react";
-import type { Team } from "@/lib/mannschaften-data";
 import TeamPlaceholder from "@/components/ui/team-placeholder";
+
+type Team = {
+  slug: string;
+  name: string;
+  kategorie: "Herren" | "Damen" | "Gemischt";
+  kontakt: string;
+  bild: string | null;
+  ligaUrl: string;
+};
 
 type Props = {
   herren: Team[];

@@ -2,11 +2,43 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Mail, Phone } from "lucide-react";
-import { teams, getTeamBySlug } from "@/lib/mannschaften-data";
+import { getPayload } from "payload";
+import config from "@payload-config";
 import TeamPlaceholder from "@/components/ui/team-placeholder";
 
-export function generateStaticParams() {
-  return teams.map((t) => ({ slug: t.slug }));
+type Team = {
+  slug: string;
+  name: string;
+  kategorie: "Herren" | "Damen" | "Gemischt";
+  kontakt: string;
+  bild: string | null;
+  ligaUrl: string;
+};
+
+async function getTeam(slug: string): Promise<Team | null> {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({
+    collection: "teams",
+    where: { slug: { equals: slug } },
+    depth: 1,
+    limit: 1,
+  });
+  const doc = docs[0];
+  if (!doc) return null;
+  return {
+    slug: doc.slug,
+    name: doc.name,
+    kategorie: doc.kategorie,
+    kontakt: doc.kontakt,
+    bild: typeof doc.bild === "object" && doc.bild ? doc.bild.url ?? null : null,
+    ligaUrl: doc.ligaUrl,
+  };
+}
+
+export async function generateStaticParams() {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({ collection: "teams", limit: 200, depth: 0 });
+  return docs.map((t) => ({ slug: t.slug }));
 }
 
 export async function generateMetadata({
@@ -15,7 +47,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const team = getTeamBySlug(slug);
+  const team = await getTeam(slug);
   if (!team) return {};
   return {
     title: `${team.name} – Hardter TV`,
@@ -33,7 +65,7 @@ export default async function TeamPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const team = getTeamBySlug(slug);
+  const team = await getTeam(slug);
   if (!team) notFound();
 
   return (
