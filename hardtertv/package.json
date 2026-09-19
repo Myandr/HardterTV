@@ -13,6 +13,7 @@
     "generate:importmap": "dotenv -e .env.local -- payload generate:importmap",
     "migrate:create": "dotenv -e .env.local -- payload migrate:create",
     "migrate": "dotenv -e .env.local -- payload migrate",
+    "seed:board-members": "dotenv -e .env.local -- tsx scripts/seed-board-members.ts",
     "ci": "if [ \"$VERCEL_ENV\" = \"production\" ]; then payload migrate; fi && next build"
   },
   "dependencies": {

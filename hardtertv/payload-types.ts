@@ -70,6 +70,7 @@ export interface Config {
     users: User;
     media: Media;
     teams: Team;
+    'board-members': BoardMember;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -80,6 +81,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     teams: TeamsSelect<false> | TeamsSelect<true>;
+    'board-members': BoardMembersSelect<false> | BoardMembersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -181,6 +183,34 @@ export interface Team {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "board-members".
+ */
+export interface BoardMember {
+  id: number;
+  name: string;
+  titel: string;
+  gruppe: 'fuehrung' | 'finanzen' | 'sport' | 'events' | 'technik';
+  /**
+   * Bestimmt die Reihenfolge innerhalb der Gruppe und auf der Startseite.
+   */
+  reihenfolge: number;
+  emails?:
+    | {
+        email: string;
+        id?: string | null;
+      }[]
+    | null;
+  telefon?: string | null;
+  foto?: (number | null) | Media;
+  /**
+   * Die ersten 3 Markierten (nach Reihenfolge) erscheinen auf der Startseite.
+   */
+  featured?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -214,6 +244,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'teams';
         value: number | Team;
+      } | null)
+    | ({
+        relationTo: 'board-members';
+        value: number | BoardMember;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -309,6 +343,27 @@ export interface TeamsSelect<T extends boolean = true> {
   kontakt?: T;
   bild?: T;
   ligaUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "board-members_select".
+ */
+export interface BoardMembersSelect<T extends boolean = true> {
+  name?: T;
+  titel?: T;
+  gruppe?: T;
+  reihenfolge?: T;
+  emails?:
+    | T
+    | {
+        email?: T;
+        id?: T;
+      };
+  telefon?: T;
+  foto?: T;
+  featured?: T;
   updatedAt?: T;
   createdAt?: T;
 }

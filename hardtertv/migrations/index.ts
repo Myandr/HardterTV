@@ -1,5 +1,6 @@
 import * as migration_20260917_134356_init from './20260917_134356_init';
 import * as migration_20260917_135734_add_teams from './20260917_135734_add_teams';
+import * as migration_20260919_094211_add_board_members from './20260919_094211_add_board_members';
 
 export const migrations = [
   {
@@ -10,6 +11,11 @@ export const migrations = [
   {
     up: migration_20260917_135734_add_teams.up,
     down: migration_20260917_135734_add_teams.down,
-    name: '20260917_135734_add_teams'
+    name: '20260917_135734_add_teams',
+  },
+  {
+    up: migration_20260919_094211_add_board_members.up,
+    down: migration_20260919_094211_add_board_members.down,
+    name: '20260919_094211_add_board_members'
   },
 ];
