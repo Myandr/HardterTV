@@ -16,6 +16,7 @@
     "seed:board-members": "dotenv -e .env.local -- tsx scripts/seed-board-members.ts",
     "seed:events": "dotenv -e .env.local -- tsx scripts/seed-events.ts",
     "seed:gallery": "dotenv -e .env.local -- tsx scripts/seed-gallery.ts",
+    "seed:legal-pages": "dotenv -e .env.local -- tsx scripts/seed-legal-pages.ts",
     "ci": "if [ \"$VERCEL_ENV\" = \"production\" ]; then payload migrate; fi && next build"
   },
   "dependencies": {
