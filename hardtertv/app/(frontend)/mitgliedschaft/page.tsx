@@ -1,16 +1,38 @@
-import Link from "next/link";
-import { ArrowUpRight, Download, Mail, Users, Star, FileText } from "lucide-react";
+import { ArrowUpRight, Download, FileText, Mail, Star, Users } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { getPayload } from "payload";
+import config from "@payload-config";
+import type { Media } from "@/payload-types";
 
-const vorteile = [
-  "Nutzung aller 6 Tennisplätze (inkl. 2 Flutlichtplätze)",
-  "Teilnahme am Mannschaftsspielbetrieb",
-  "Zugang zu Vereinsturnieren & Events",
-  "Professionelles Training durch André Albert",
-  "Aktives Vereinsleben mit Gemeinschaft",
-  "Günstige Mitgliedsbeiträge für alle Altersgruppen",
-];
+export const revalidate = 3600;
 
-export default function MitgliedschaftPage() {
+const DOKUMENT_ICONS: Record<string, LucideIcon> = {
+  users: Users,
+  star: Star,
+  fileText: FileText,
+};
+
+function dokumentIcon(key: string | null | undefined): LucideIcon {
+  return DOKUMENT_ICONS[key ?? ""] ?? FileText;
+}
+
+function fileUrl(value: number | Media | null | undefined): string | null {
+  return typeof value === "object" && value ? value.url ?? null : null;
+}
+
+function mailtoHref(email: string, betreff?: string | null): string {
+  return betreff ? `mailto:${email}?subject=${encodeURIComponent(betreff)}` : `mailto:${email}`;
+}
+
+export default async function MitgliedschaftPage() {
+  const payload = await getPayload({ config });
+  const { hero, vorteile, dokumente, prozess, cta } = await payload.findGlobal({
+    slug: "mitgliedschaft",
+    depth: 1,
+  });
+
+  const antragUrl = fileUrl(hero.antragPdf);
+
   return (
     <main>
       {/* Hero */}
@@ -23,39 +45,38 @@ export default function MitgliedschaftPage() {
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-8 bg-white/30" />
-            <span className="text-xs uppercase tracking-[0.2em] text-white/50">Mitmachen</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-white/50">{hero.eyebrow}</span>
           </div>
 
           <h1 className="font-kanturmuy max-w-3xl text-4xl font-normal tracking-tighter text-white sm:text-5xl md:text-7xl">
-            Werde{" "}
+            {hero.titelVorne}{" "}
             <span className="relative inline-block">
-              Mitglied
+              {hero.titelHighlight}
               <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-base font-light text-white/60 md:text-lg">
-            Ob jung, ob alt, ob Profi oder Anfänger, ob Männlein oder Weiblein —
-            jeder ist willkommen beim Hardter TV.
-          </p>
+          <p className="mt-6 max-w-xl text-base font-light text-white/60 md:text-lg">{hero.text}</p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <a href="/aufnahmeantrag.pdf" download>
-              <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
-                <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-white group-hover:text-black">
-                  Antrag herunterladen
-                </span>
-                <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-white group-hover:text-black">
-                  <Download className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" strokeWidth={1.5} />
-                  <Download className="absolute left-1/2 top-1/2 size-4 -translate-x-16 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:-translate-x-1/2" strokeWidth={1.5} />
-                </div>
-              </button>
-            </a>
+            {antragUrl && (
+              <a href={antragUrl} download>
+                <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
+                  <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-white group-hover:text-black">
+                    {hero.antragButtonLabel}
+                  </span>
+                  <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-white group-hover:text-black">
+                    <Download className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" strokeWidth={1.5} />
+                    <Download className="absolute left-1/2 top-1/2 size-4 -translate-x-16 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:-translate-x-1/2" strokeWidth={1.5} />
+                  </div>
+                </button>
+              </a>
+            )}
             <a
-              href="mailto:1.vorsitzender@hardt-tennis.de"
+              href={`mailto:${hero.kontaktEmail}`}
               className="flex items-center text-sm font-light text-white/50 underline-offset-4 hover:underline"
             >
-              Fragen? Schreib uns →
+              {hero.kontaktLinkLabel}
             </a>
           </div>
         </div>
@@ -68,28 +89,25 @@ export default function MitgliedschaftPage() {
             <div>
               <div className="mb-6 flex items-center gap-3">
                 <span className="h-px w-8 bg-black/30" />
-                <span className="text-xs uppercase tracking-[0.2em] text-black/50">Deine Vorteile</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-black/50">{vorteile.eyebrow}</span>
               </div>
               <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl">
-                Was du als{" "}
+                {vorteile.titelVorne}{" "}
                 <span className="relative inline-block">
-                  Mitglied
+                  {vorteile.titelHighlight}
                   <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
-                </span>{" "}
-                bekommst
+                </span>
+                {vorteile.titelHinten ? <> {vorteile.titelHinten}</> : null}
               </h2>
-              <p className="mt-5 text-base font-light leading-relaxed text-black/60">
-                Als Mitglied des Hardter TV bist du Teil einer lebendigen Tennisgemeinschaft
-                mit allem, was dazu gehört.
-              </p>
+              <p className="mt-5 text-base font-light leading-relaxed text-black/60">{vorteile.text}</p>
 
               <ul className="mt-8 space-y-3">
-                {vorteile.map((v) => (
-                  <li key={v} className="flex items-start gap-3">
+                {(vorteile.liste ?? []).map((v) => (
+                  <li key={v.text} className="flex items-start gap-3">
                     <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-[#e1fcad]">
                       <Star className="size-3 text-black" strokeWidth={2} />
                     </span>
-                    <span className="text-sm font-light text-black/70">{v}</span>
+                    <span className="text-sm font-light text-black/70">{v.text}</span>
                   </li>
                 ))}
               </ul>
@@ -97,21 +115,17 @@ export default function MitgliedschaftPage() {
 
             {/* Stat block */}
             <div className="flex flex-col justify-center gap-6">
-              {[
-                { value: "200+", label: "Aktive Mitglieder", sub: "aus Dorsten und Umgebung" },
-                { value: "1978", label: "Vereinsgründung", sub: "über 45 Jahre Tennistradition" },
-                { value: "6", label: "Tennisplätze", sub: "inkl. 2 Flutlichtplätze" },
-              ].map((s) => (
+              {(vorteile.stats ?? []).map((s) => (
                 <div
                   key={s.label}
                   className="flex items-center gap-6 rounded-2xl border border-black/[0.06] bg-[#f9f9f7] p-6"
                 >
                   <span className="font-kanturmuy text-4xl font-normal tracking-tight text-black">
-                    {s.value}
+                    {s.wert}
                   </span>
                   <div>
                     <p className="font-medium text-black">{s.label}</p>
-                    <p className="text-sm font-light text-black/50">{s.sub}</p>
+                    <p className="text-sm font-light text-black/50">{s.zusatz}</p>
                   </div>
                 </div>
               ))}
@@ -126,106 +140,60 @@ export default function MitgliedschaftPage() {
           <div className="mb-10">
             <div className="mb-4 flex items-center gap-3">
               <span className="h-px w-8 bg-black/30" />
-              <span className="text-xs uppercase tracking-[0.2em] text-black/50">Dokumente</span>
+              <span className="text-xs uppercase tracking-[0.2em] text-black/50">{dokumente.eyebrow}</span>
             </div>
             <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl">
-              Alle{" "}
+              {dokumente.titelVorne}{" "}
               <span className="relative inline-block">
-                Unterlagen
+                {dokumente.titelHighlight}
                 <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
               </span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {/* Mitglied werden */}
-            <div className="group flex flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-300 hover:shadow-lg">
-              <div className="flex flex-1 flex-col p-7">
-                <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-[#e1fcad]">
-                  <Users className="size-5 text-black" strokeWidth={1.5} />
+            {(dokumente.karten ?? []).map((karte) => {
+              const Icon = dokumentIcon(karte.icon);
+              const dateiUrl = fileUrl(karte.datei);
+              return (
+                <div
+                  key={karte.titel}
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-300 hover:shadow-lg"
+                >
+                  <div className="flex flex-1 flex-col p-7">
+                    <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-[#e1fcad]">
+                      <Icon className="size-5 text-black" strokeWidth={1.5} />
+                    </div>
+                    <h3 className="font-kanturmuy text-2xl font-normal tracking-tight text-black">
+                      {karte.titel}
+                    </h3>
+                    <p className="mt-3 flex-1 text-sm font-light leading-relaxed text-black/55">
+                      {karte.beschreibung}
+                    </p>
+                    <div className="mt-6 space-y-3 border-t border-black/[0.06] pt-5">
+                      {dateiUrl && (
+                        <a href={dateiUrl} download>
+                          <button className="flex w-full cursor-pointer items-center justify-between rounded-xl bg-[#f9f9f7] px-4 py-3 text-sm font-medium text-black transition-colors hover:bg-[#e1fcad]">
+                            <span>{karte.downloadLabel}</span>
+                            <Download className="size-4" strokeWidth={1.5} />
+                          </button>
+                        </a>
+                      )}
+                      {karte.mailAdresse && karte.mailLabel && (
+                        <a
+                          href={mailtoHref(karte.mailAdresse, karte.mailBetreff)}
+                          className="flex items-center justify-between rounded-xl border border-black/[0.06] px-4 py-3 text-sm text-black/50 transition-colors hover:text-black"
+                        >
+                          <span>{karte.mailLabel}</span>
+                          <Mail className="size-4" strokeWidth={1.5} />
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                  <div className="h-[3px] w-0 bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full" />
                 </div>
-                <h3 className="font-kanturmuy text-2xl font-normal tracking-tight text-black">
-                  Mitglied werden
-                </h3>
-                <p className="mt-3 flex-1 text-sm font-light leading-relaxed text-black/55">
-                  Fülle den Aufnahmeantrag aus und schick ihn per E-Mail an uns. Wir melden
-                  uns schnellstmöglich bei dir.
-                </p>
-                <div className="mt-6 space-y-3 border-t border-black/[0.06] pt-5">
-                  <a href="/aufnahmeantrag.pdf" download>
-                    <button className="group/btn flex w-full cursor-pointer items-center justify-between rounded-xl bg-[#f9f9f7] px-4 py-3 text-sm font-medium text-black transition-colors hover:bg-[#e1fcad]">
-                      <span>Antrag herunterladen</span>
-                      <Download className="size-4" strokeWidth={1.5} />
-                    </button>
-                  </a>
-                  <a
-                    href="mailto:1.vorsitzender@hardt-tennis.de?subject=Mitgliedschaft%20Hardter%20TV"
-                    className="flex items-center justify-between rounded-xl border border-black/[0.06] px-4 py-3 text-sm text-black/50 transition-colors hover:text-black"
-                  >
-                    <span>Per E-Mail einreichen</span>
-                    <Mail className="size-4" strokeWidth={1.5} />
-                  </a>
-                </div>
-              </div>
-              <div className="h-[3px] w-0 bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full" />
-            </div>
-
-            {/* Schnuppercard */}
-            <div className="group flex flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-300 hover:shadow-lg">
-              <div className="flex flex-1 flex-col p-7">
-                <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-[#e1fcad]">
-                  <Star className="size-5 text-black" strokeWidth={1.5} />
-                </div>
-                <h3 className="font-kanturmuy text-2xl font-normal tracking-tight text-black">
-                  HTV Schnuppercard
-                </h3>
-                <p className="mt-3 flex-1 text-sm font-light leading-relaxed text-black/55">
-                  Du möchtest Tennis beim HTV erst ausprobieren? Mit unserer Greencard kannst
-                  du für wenig Geld eine komplette Sommersaison schnuppern — ganz unverbindlich.
-                </p>
-                <div className="mt-6 space-y-3 border-t border-black/[0.06] pt-5">
-                  <a href="/HTV-SchnupperCard-Antrag 2026.pdf" download>
-                    <button className="flex w-full cursor-pointer items-center justify-between rounded-xl bg-[#f9f9f7] px-4 py-3 text-sm font-medium text-black transition-colors hover:bg-[#e1fcad]">
-                      <span>Schnuppercard laden</span>
-                      <Download className="size-4" strokeWidth={1.5} />
-                    </button>
-                  </a>
-                  <a
-                    href="mailto:1.vorsitzender@hardt-tennis.de?subject=Schnuppercard%20Hardter%20TV"
-                    className="flex items-center justify-between rounded-xl border border-black/[0.06] px-4 py-3 text-sm text-black/50 transition-colors hover:text-black"
-                  >
-                    <span>Per E-Mail einreichen</span>
-                    <Mail className="size-4" strokeWidth={1.5} />
-                  </a>
-                </div>
-              </div>
-              <div className="h-[3px] w-0 bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full" />
-            </div>
-
-            {/* Beitragsordnung */}
-            <div className="group flex flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-300 hover:shadow-lg">
-              <div className="flex flex-1 flex-col p-7">
-                <div className="mb-5 flex size-12 items-center justify-center rounded-xl bg-[#e1fcad]">
-                  <FileText className="size-5 text-black" strokeWidth={1.5} />
-                </div>
-                <h3 className="font-kanturmuy text-2xl font-normal tracking-tight text-black">
-                  Beitragsordnung
-                </h3>
-                <p className="mt-3 flex-1 text-sm font-light leading-relaxed text-black/55">
-                  Alle Informationen zu Beiträgen, Altersgruppen und Konditionen findest du
-                  in unserer Beitragsordnung als PDF-Dokument.
-                </p>
-                <div className="mt-6 border-t border-black/[0.06] pt-5">
-                  <a href="/beitragsordnung.pdf" download>
-                    <button className="flex w-full cursor-pointer items-center justify-between rounded-xl bg-[#f9f9f7] px-4 py-3 text-sm font-medium text-black transition-colors hover:bg-[#e1fcad]">
-                      <span>Beitragsordnung laden</span>
-                      <Download className="size-4" strokeWidth={1.5} />
-                    </button>
-                  </a>
-                </div>
-              </div>
-              <div className="h-[3px] w-0 bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full" />
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -236,35 +204,19 @@ export default function MitgliedschaftPage() {
           <div className="mb-10">
             <div className="mb-4 flex items-center gap-3">
               <span className="h-px w-8 bg-black/30" />
-              <span className="text-xs uppercase tracking-[0.2em] text-black/50">Anmeldung</span>
+              <span className="text-xs uppercase tracking-[0.2em] text-black/50">{prozess.eyebrow}</span>
             </div>
             <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl">
-              So einfach{" "}
+              {prozess.titelVorne}{" "}
               <span className="relative inline-block">
-                geht's
+                {prozess.titelHighlight}
                 <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
               </span>
             </h2>
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {[
-              {
-                nr: "01",
-                titel: "Antrag herunterladen",
-                text: "Lade den Aufnahmeantrag oder die Schnuppercard als PDF herunter und drucke ihn aus.",
-              },
-              {
-                nr: "02",
-                titel: "Ausfüllen & unterschreiben",
-                text: "Fülle den Antrag vollständig aus und unterschreibe ihn.",
-              },
-              {
-                nr: "03",
-                titel: "Einreichen",
-                text: "Schick den ausgefüllten Antrag per E-Mail an 1.vorsitzender@hardt-tennis.de — fertig!",
-              },
-            ].map((s) => (
+            {(prozess.schritte ?? []).map((s) => (
               <div key={s.nr} className="flex flex-col gap-4 rounded-2xl border border-black/[0.06] bg-[#f9f9f7] p-7">
                 <span className="font-kanturmuy text-4xl font-normal text-black/10">{s.nr}</span>
                 <h3 className="font-kanturmuy text-xl font-normal tracking-tight text-black">
@@ -283,18 +235,15 @@ export default function MitgliedschaftPage() {
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter text-black sm:text-4xl md:text-5xl">
-                Noch Fragen?
+                {cta.titel}
               </h2>
-              <p className="mt-3 max-w-md text-base font-light text-black/60">
-                Unser 1. Vorsitzender Oliver Wiegand hilft dir gerne weiter —
-                per E-Mail oder telefonisch.
-              </p>
+              <p className="mt-3 max-w-md text-base font-light text-black/60">{cta.text}</p>
             </div>
             <div className="flex flex-wrap gap-4 shrink-0">
-              <a href="mailto:1.vorsitzender@hardt-tennis.de">
+              <a href={`mailto:${cta.email}`}>
                 <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
                   <span className="rounded-full bg-[#122023] px-6 py-3 text-sm font-medium text-[#e1fcad] duration-500 ease-in-out group-hover:bg-black group-hover:text-white">
-                    E-Mail schreiben
+                    {cta.buttonLabel}
                   </span>
                   <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#122023] text-[#e1fcad] duration-500 ease-in-out group-hover:bg-black group-hover:text-white">
                     <ArrowUpRight className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />
@@ -303,10 +252,10 @@ export default function MitgliedschaftPage() {
                 </button>
               </a>
               <a
-                href="tel:+4917225802099"
+                href={`tel:${cta.telefonHref}`}
                 className="flex items-center text-sm font-light text-black/60 underline-offset-4 hover:underline"
               >
-                0172 25 80 209 →
+                {cta.telefonLabel}
               </a>
             </div>
           </div>
