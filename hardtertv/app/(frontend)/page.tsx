@@ -8,6 +8,7 @@ import VorstandSection from "@/components/ui/vorstand-section";
 // import NewsSection from "@/components/ui/news-section";
 import InstagramCta from "@/components/ui/instagram-cta";
 import KontaktSection from "@/components/ui/kontakt-section";
+import { formatTerminDatum, startOfTodayIso } from "@/lib/events";
 
 export const revalidate = 3600;
 
@@ -29,14 +30,35 @@ async function getVorstand() {
   }));
 }
 
+async function getTermine() {
+  const payload = await getPayload({ config });
+  const heute = startOfTodayIso();
+  const { docs } = await payload.find({
+    collection: "events",
+    where: {
+      or: [{ datum: { greater_than_equal: heute } }, { datumEnde: { greater_than_equal: heute } }],
+    },
+    sort: "datum",
+    limit: 3,
+    depth: 0,
+  });
+  return docs.map((d) => ({
+    ...formatTerminDatum(d.datum, d.datumEnde),
+    veranstaltung: d.titel,
+    uhrzeit: d.uhrzeit ?? "",
+    ort: d.ort ?? "",
+    kategorie: d.kategorie,
+  }));
+}
+
 export default async function Home() {
-  const vorstand = await getVorstand();
+  const [vorstand, termine] = await Promise.all([getVorstand(), getTermine()]);
   return (
     <main>
       <Hero />
       <WelcomeSection />
       <LocationSection />
-      <TermineSection />
+      <TermineSection termine={termine} />
       <VorstandSection vorstand={vorstand} />
       {/* <NewsSection /> */}
       <InstagramCta />

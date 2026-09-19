@@ -5,32 +5,14 @@ import Link from "next/link";
 import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 
-const termine = [
-  {
-    datum: "08./09. Aug.",
-    tag: "Sa/So",
-    veranstaltung: "LK-Turnier LK 20-25",
-    uhrzeit: "Ganztägig",
-    ort: "Gahlener Str. 204",
-    kategorie: "Turnier",
-  },
-  {
-    datum: "15. Aug.",
-    tag: "Sa",
-    veranstaltung: "2. HTV-Tennis Beer Pong Turnier",
-    uhrzeit: "noch offen",
-    ort: "Gahlener Str. 204",
-    kategorie: "Turnier",
-  },
-  {
-    datum: "12./13. Sep.",
-    tag: "Sa/So",
-    veranstaltung: "Mixed- und Doppelstadtmeisterschaften",
-    uhrzeit: "Ganztägig",
-    ort: "Gahlener Str. 204",
-    kategorie: "Turnier",
-  },
-];
+type Termin = {
+  datum: string;
+  tag: string;
+  veranstaltung: string;
+  uhrzeit: string;
+  ort: string;
+  kategorie: string;
+};
 
 const kategorieFarbe: Record<string, string> = {
   Medenspiele: "bg-blue-50 text-blue-600",
@@ -39,7 +21,7 @@ const kategorieFarbe: Record<string, string> = {
   Vereinsleben: "bg-orange-50 text-orange-600",
 };
 
-function TerminCard({ termin }: { termin: (typeof termine)[0] }) {
+function TerminCard({ termin }: { termin: Termin }) {
   const [tage, monat] = termin.datum.split(" ");
   const mehrtaegig = tage.includes("/");
 
@@ -65,14 +47,18 @@ function TerminCard({ termin }: { termin: (typeof termine)[0] }) {
           {termin.veranstaltung}
         </p>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-          <span className="flex items-center gap-1.5 text-xs text-black/40">
-            <Clock className="size-3" strokeWidth={1.5} />
-            {termin.uhrzeit}
-          </span>
-          <span className="flex items-center gap-1.5 text-xs text-black/40">
-            <MapPin className="size-3" strokeWidth={1.5} />
-            {termin.ort}
-          </span>
+          {termin.uhrzeit && (
+            <span className="flex items-center gap-1.5 text-xs text-black/40">
+              <Clock className="size-3" strokeWidth={1.5} />
+              {termin.uhrzeit}
+            </span>
+          )}
+          {termin.ort && (
+            <span className="flex items-center gap-1.5 text-xs text-black/40">
+              <MapPin className="size-3" strokeWidth={1.5} />
+              {termin.ort}
+            </span>
+          )}
         </div>
       </div>
 
@@ -83,7 +69,7 @@ function TerminCard({ termin }: { termin: (typeof termine)[0] }) {
   );
 }
 
-export default function TermineSection() {
+export default function TermineSection({ termine }: { termine: Termin[] }) {
   return (
     <section id="termine" className="bg-white px-6 py-20 md:px-12 lg:px-20 lg:py-32">
       <div className="mx-auto max-w-7xl">
@@ -93,7 +79,7 @@ export default function TermineSection() {
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-8 bg-black/30" />
               <span className="text-xs uppercase tracking-[0.2em] text-black/50">
-                Veranstaltungen 2026
+                Veranstaltungen {new Date().getFullYear()}
               </span>
             </div>
 
@@ -127,11 +113,18 @@ export default function TermineSection() {
         </FadeIn>
 
         <div className="mt-8 grid grid-cols-1 gap-4 md:mt-14 md:grid-cols-2">
-          {termine.map((t, i) => (
-            <FadeIn key={t.veranstaltung} delay={0.08 + i * 0.07}>
-              <TerminCard termin={t} />
-            </FadeIn>
-          ))}
+          {termine.length === 0 ? (
+            <p className="rounded-2xl border border-black/[0.07] bg-white p-6 text-sm text-black/50 md:col-span-2">
+              Aktuell sind keine Termine geplant — schau bald wieder vorbei oder wirf einen Blick in den{" "}
+              <Link href="/kalender" className="underline">Kalender</Link>.
+            </p>
+          ) : (
+            termine.map((t, i) => (
+              <FadeIn key={`${t.veranstaltung}-${t.datum}`} delay={0.08 + i * 0.07}>
+                <TerminCard termin={t} />
+              </FadeIn>
+            ))
+          )}
         </div>
       </div>
     </section>

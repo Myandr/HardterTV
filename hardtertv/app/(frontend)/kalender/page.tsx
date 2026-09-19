@@ -1,6 +1,29 @@
+import { getPayload } from "payload";
+import config from "@payload-config";
+import { toIsoDay } from "@/lib/events";
 import KalenderClient from "./kalender-client";
 
-export default function KalenderPage() {
+export const revalidate = 3600;
+
+export default async function KalenderPage() {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({
+    collection: "events",
+    limit: 1000,
+    sort: "datum",
+    depth: 0,
+  });
+  const events = docs.map((d) => ({
+    id: d.id,
+    titel: d.titel,
+    datum: toIsoDay(d.datum),
+    datumEnde: d.datumEnde ? toIsoDay(d.datumEnde) : undefined,
+    uhrzeit: d.uhrzeit ?? undefined,
+    ort: d.ort ?? undefined,
+    kategorie: d.kategorie,
+    beschreibung: d.beschreibung ?? undefined,
+  }));
+
   return (
     <main>
       {/* Hero */}
@@ -31,7 +54,7 @@ export default function KalenderPage() {
         </div>
       </section>
 
-      <KalenderClient />
+      <KalenderClient events={events} />
     </main>
   );
 }

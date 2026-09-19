@@ -10,70 +10,12 @@ type Event = {
   id: number;
   titel: string;
   datum: string; // YYYY-MM-DD
+  datumEnde?: string;
   uhrzeit?: string;
   ort?: string;
   kategorie: Kategorie;
   beschreibung?: string;
 };
-
-const EVENTS: Event[] = [
-  {
-    id: 1,
-    titel: "Frühjahrinstandsetzung",
-    datum: "2025-04-12",
-    uhrzeit: "10:00",
-    ort: "Gahlener Str. 204, Dorsten",
-    kategorie: "Sonstiges",
-  },
-  {
-    id: 2,
-    titel: "Saisoneröffnung",
-    datum: "2025-04-26",
-    uhrzeit: "14:00",
-    ort: "Gahlener Str. 204, Dorsten",
-    kategorie: "Sonstiges",
-  },
-  {
-    id: 3,
-    titel: "LK-Turnier LK 20 – 25",
-    datum: "2025-06-08",
-    ort: "Gahlener Str. 204, Dorsten",
-    kategorie: "Turnier",
-    beschreibung: "Ganztägig",
-  },
-  {
-    id: 4,
-    titel: "1. HTV-Tennis Beer Pong Turnier",
-    datum: "2025-07-12",
-    uhrzeit: "11:00",
-    ort: "Gahlener Str. 204, Dorsten",
-    kategorie: "Turnier",
-  },
-  {
-    id: 5,
-    titel: "LK-Turnier LK 20 – 25",
-    datum: "2025-07-13",
-    ort: "Gahlener Str. 204, Dorsten",
-    kategorie: "Turnier",
-    beschreibung: "Ganztägig",
-  },
-  {
-    id: 6,
-    titel: "Stadtmeisterschaften der Senioren",
-    datum: "2025-09-01",
-    ort: "Gahlener Str. 204, Dorsten",
-    kategorie: "Turnier",
-    beschreibung: "Mehrtägiges Turnier",
-  },
-  {
-    id: 7,
-    titel: "Doppel-/Mixed Stadtmeisterschaften",
-    datum: "2025-09-20",
-    ort: "TV Feldmark",
-    kategorie: "Turnier",
-    beschreibung: "Mehrtägiges Turnier",
-  },
-];
 
 const KATEGORIE_FARBE: Record<Kategorie, string> = {
   Training: "bg-blue-100 text-blue-700",
@@ -98,7 +40,7 @@ function formatDatum(dateStr: string) {
   return d.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 }
 
-export default function KalenderClient() {
+export default function KalenderClient({ events }: { events: Event[] }) {
   const today = new Date();
   const [view, setView] = React.useState<"monat" | "liste">("monat");
   const [year, setYear] = React.useState(today.getFullYear());
@@ -128,17 +70,17 @@ export default function KalenderClient() {
 
   const eventsForDay = (day: number) => {
     const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-    return EVENTS.filter(e => e.datum === key);
+    return events.filter(e => e.datum <= key && key <= (e.datumEnde ?? e.datum));
   };
 
   const selectedEvents = selectedDate
-    ? EVENTS.filter(e => e.datum === selectedDate)
+    ? events.filter(e => e.datum <= selectedDate && selectedDate <= (e.datumEnde ?? e.datum))
     : [];
 
   const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 
   // List view — alle Termine anzeigen
-  const filteredEvents = EVENTS
+  const filteredEvents = events
     .filter(e => filterKat === "Alle" || e.kategorie === filterKat)
     .sort((a, b) => a.datum.localeCompare(b.datum));
 
@@ -302,7 +244,7 @@ export default function KalenderClient() {
                     <div className="mb-1">
                       <p className="text-xs uppercase tracking-widest text-black/40">Nächste Termine</p>
                     </div>
-                    {EVENTS.filter(e => e.datum >= todayStr)
+                    {events.filter(e => e.datum >= todayStr)
                       .sort((a, b) => a.datum.localeCompare(b.datum))
                       .slice(0, 4)
                       .map((e) => <EventCard key={e.id} event={e} />)
