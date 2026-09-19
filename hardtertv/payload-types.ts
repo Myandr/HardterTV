@@ -74,6 +74,7 @@ export interface Config {
     events: Event;
     'gallery-albums': GalleryAlbum;
     news: News;
+    'legal-pages': LegalPage;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     'gallery-albums': GalleryAlbumsSelect<false> | GalleryAlbumsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
+    'legal-pages': LegalPagesSelect<false> | LegalPagesSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -291,6 +293,71 @@ export interface News {
   createdAt: string;
 }
 /**
+ * Impressum, Datenschutzerklärung und Cookie-Seite. Diese drei Seiten können bearbeitet, aber nicht neu angelegt oder gelöscht werden.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-pages".
+ */
+export interface LegalPage {
+  id: number;
+  /**
+   * Fest verdrahtet — bestimmt die URL der Seite und kann nicht geändert werden.
+   */
+  slug: 'impressum' | 'datenschutz' | 'cookies';
+  /**
+   * Überschrift der Seite und Titel im Browser-Tab.
+   */
+  titel: string;
+  /**
+   * Optionaler Text direkt unter der Überschrift (wird auf der Cookie-Seite genutzt).
+   */
+  intro?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * Jeder Abschnitt erscheint als eigene Karte mit kleiner Überschrift darüber.
+   */
+  abschnitte?:
+    | {
+        titel: string;
+        inhalt: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * z.B. "Stand: Juni 2026" — erscheint klein unter der Seite.
+   */
+  stand?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -341,6 +408,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'news';
         value: number | News;
+      } | null)
+    | ({
+        relationTo: 'legal-pages';
+        value: number | LegalPage;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -497,6 +568,25 @@ export interface NewsSelect<T extends boolean = true> {
   content?: T;
   bild?: T;
   kategorie?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "legal-pages_select".
+ */
+export interface LegalPagesSelect<T extends boolean = true> {
+  slug?: T;
+  titel?: T;
+  intro?: T;
+  abschnitte?:
+    | T
+    | {
+        titel?: T;
+        inhalt?: T;
+        id?: T;
+      };
+  stand?: T;
   updatedAt?: T;
   createdAt?: T;
 }
