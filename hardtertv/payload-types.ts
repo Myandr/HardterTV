@@ -73,6 +73,7 @@ export interface Config {
     'board-members': BoardMember;
     events: Event;
     'gallery-albums': GalleryAlbum;
+    news: News;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     'board-members': BoardMembersSelect<false> | BoardMembersSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     'gallery-albums': GalleryAlbumsSelect<false> | GalleryAlbumsSelect<true>;
+    news: NewsSelect<false> | NewsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -255,6 +257,41 @@ export interface GalleryAlbum {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news".
+ */
+export interface News {
+  id: number;
+  datum: string;
+  titel: string;
+  /**
+   * Wird auf der Startseite unter der Überschrift angezeigt.
+   */
+  excerpt: string;
+  /**
+   * Wird aktuell noch nicht auf der Website angezeigt — eine Detailseite folgt in einem späteren Schritt.
+   */
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  bild?: (number | null) | Media;
+  kategorie: 'Vereinsnews' | 'Vereinsleben' | 'Turnier' | 'Training';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -300,6 +337,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'gallery-albums';
         value: number | GalleryAlbum;
+      } | null)
+    | ({
+        relationTo: 'news';
+        value: number | News;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -442,6 +483,20 @@ export interface GalleryAlbumsSelect<T extends boolean = true> {
   titel?: T;
   jahr?: T;
   bilder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news_select".
+ */
+export interface NewsSelect<T extends boolean = true> {
+  datum?: T;
+  titel?: T;
+  excerpt?: T;
+  content?: T;
+  bild?: T;
+  kategorie?: T;
   updatedAt?: T;
   createdAt?: T;
 }

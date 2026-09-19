@@ -12,6 +12,7 @@ import { Teams } from "./collections/Teams";
 import { BoardMembers } from "./collections/BoardMembers";
 import { Events } from "./collections/Events";
 import { GalleryAlbums } from "./collections/GalleryAlbums";
+import { News } from "./collections/News";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -23,7 +24,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Teams, BoardMembers, Events, GalleryAlbums],
+  collections: [Users, Media, Teams, BoardMembers, Events, GalleryAlbums, News],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

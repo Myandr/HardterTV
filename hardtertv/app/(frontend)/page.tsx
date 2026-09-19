@@ -5,10 +5,11 @@ import WelcomeSection from "@/components/ui/welcome-section";
 import LocationSection from "@/components/ui/location-section";
 import TermineSection from "@/components/ui/termine-section";
 import VorstandSection from "@/components/ui/vorstand-section";
-// import NewsSection from "@/components/ui/news-section";
+import NewsSection from "@/components/ui/news-section";
 import InstagramCta from "@/components/ui/instagram-cta";
 import KontaktSection from "@/components/ui/kontakt-section";
 import { formatTerminDatum, startOfTodayIso } from "@/lib/events";
+import { formatNewsDatum } from "@/lib/news";
 
 export const revalidate = 3600;
 
@@ -51,8 +52,25 @@ async function getTermine() {
   }));
 }
 
+async function getNews() {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({
+    collection: "news",
+    depth: 1,
+    limit: 5,
+    sort: "-datum",
+  });
+  return docs.map((d) => ({
+    datum: formatNewsDatum(d.datum),
+    titel: d.titel,
+    excerpt: d.excerpt,
+    bild: typeof d.bild === "object" && d.bild ? d.bild.url ?? null : null,
+    kategorie: d.kategorie,
+  }));
+}
+
 export default async function Home() {
-  const [vorstand, termine] = await Promise.all([getVorstand(), getTermine()]);
+  const [vorstand, termine, news] = await Promise.all([getVorstand(), getTermine(), getNews()]);
   return (
     <main>
       <Hero />
@@ -60,7 +78,7 @@ export default async function Home() {
       <LocationSection />
       <TermineSection termine={termine} />
       <VorstandSection vorstand={vorstand} />
-      {/* <NewsSection /> */}
+      <NewsSection news={news} />
       <InstagramCta />
       <KontaktSection />
     </main>
