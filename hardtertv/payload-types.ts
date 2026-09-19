@@ -99,8 +99,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    mitgliedschaft: Mitgliedschaft;
+  };
+  globalsSelect: {
+    mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -629,6 +633,172 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mitgliedschaft".
+ */
+export interface Mitgliedschaft {
+  id: number;
+  hero: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    antragButtonLabel: string;
+    /**
+     * Wird vom Button im Hero heruntergeladen.
+     */
+    antragPdf?: (number | null) | Media;
+    kontaktLinkLabel: string;
+    kontaktEmail: string;
+  };
+  vorteile: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    titelHinten?: string | null;
+    text: string;
+    liste: {
+      text: string;
+      id?: string | null;
+    }[];
+    stats: {
+      wert: string;
+      label: string;
+      zusatz: string;
+      id?: string | null;
+    }[];
+  };
+  dokumente: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    karten: {
+      icon: 'users' | 'star' | 'fileText';
+      titel: string;
+      beschreibung: string;
+      datei?: (number | null) | Media;
+      downloadLabel: string;
+      mailLabel?: string | null;
+      mailAdresse?: string | null;
+      mailBetreff?: string | null;
+      id?: string | null;
+    }[];
+  };
+  prozess: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    schritte: {
+      nr: string;
+      titel: string;
+      text: string;
+      id?: string | null;
+    }[];
+  };
+  cta: {
+    titel: string;
+    text: string;
+    buttonLabel: string;
+    email: string;
+    telefonLabel: string;
+    /**
+     * Wird als tel:-Link verwendet, z.B. "+4917225802099".
+     */
+    telefonHref: string;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mitgliedschaft_select".
+ */
+export interface MitgliedschaftSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        antragButtonLabel?: T;
+        antragPdf?: T;
+        kontaktLinkLabel?: T;
+        kontaktEmail?: T;
+      };
+  vorteile?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        titelHinten?: T;
+        text?: T;
+        liste?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        stats?:
+          | T
+          | {
+              wert?: T;
+              label?: T;
+              zusatz?: T;
+              id?: T;
+            };
+      };
+  dokumente?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        karten?:
+          | T
+          | {
+              icon?: T;
+              titel?: T;
+              beschreibung?: T;
+              datei?: T;
+              downloadLabel?: T;
+              mailLabel?: T;
+              mailAdresse?: T;
+              mailBetreff?: T;
+              id?: T;
+            };
+      };
+  prozess?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        schritte?:
+          | T
+          | {
+              nr?: T;
+              titel?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  cta?:
+    | T
+    | {
+        titel?: T;
+        text?: T;
+        buttonLabel?: T;
+        email?: T;
+        telefonLabel?: T;
+        telefonHref?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

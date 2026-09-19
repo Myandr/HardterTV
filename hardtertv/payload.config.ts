@@ -14,6 +14,7 @@ import { Events } from "./collections/Events";
 import { GalleryAlbums } from "./collections/GalleryAlbums";
 import { News } from "./collections/News";
 import { LegalPages } from "./collections/LegalPages";
+import { Mitgliedschaft } from "./globals/Mitgliedschaft";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -26,6 +27,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Teams, BoardMembers, Events, GalleryAlbums, News, LegalPages],
+  globals: [Mitgliedschaft],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

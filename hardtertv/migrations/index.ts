@@ -5,6 +5,7 @@ import * as migration_20260919_102241_add_events from './20260919_102241_add_eve
 import * as migration_20260919_141246_add_gallery_albums from './20260919_141246_add_gallery_albums';
 import * as migration_20260919_174521_add_news from './20260919_174521_add_news';
 import * as migration_20260919_175022_add_legal_pages from './20260919_175022_add_legal_pages';
+import * as migration_20260919_194632_add_mitgliedschaft from './20260919_194632_add_mitgliedschaft';
 
 export const migrations = [
   {
@@ -40,6 +41,11 @@ export const migrations = [
   {
     up: migration_20260919_175022_add_legal_pages.up,
     down: migration_20260919_175022_add_legal_pages.down,
-    name: '20260919_175022_add_legal_pages'
+    name: '20260919_175022_add_legal_pages',
+  },
+  {
+    up: migration_20260919_194632_add_mitgliedschaft.up,
+    down: migration_20260919_194632_add_mitgliedschaft.down,
+    name: '20260919_194632_add_mitgliedschaft'
   },
 ];
