@@ -1,11 +1,17 @@
 import CookieSettings from "@/components/ui/cookie-settings";
+import RichTextBody from "@/components/ui/rich-text";
+import { getLegalPage } from "@/lib/get-legal-page";
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: "Cookie-Einstellungen",
   description: "Verwalte deine Cookie-Einstellungen für hardt-tennis.de",
 };
 
-export default function CookiesPage() {
+export default async function CookiesPage() {
+  const page = await getLegalPage("cookies");
+
   return (
     <main className="min-h-screen bg-[#f9f9f7] px-6 py-24 md:px-12 lg:px-20">
       <div className="mx-auto max-w-2xl">
@@ -15,18 +21,19 @@ export default function CookiesPage() {
         </div>
 
         <h1 className="font-kanturmuy text-4xl font-normal tracking-tighter text-black sm:text-5xl">
-          Cookie-{" "}
+          Cookie-
           <span className="relative inline-block">
             Einstellungen
             <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
           </span>
         </h1>
 
-        <p className="mt-4 text-base font-light leading-relaxed text-black/60">
-          Hier kannst du jederzeit deine Einwilligung zur Verwendung von Cookies anpassen.
-          Notwendige Cookies sind für den Betrieb der Website erforderlich und können nicht
-          deaktiviert werden.
-        </p>
+        {page.intro && (
+          <RichTextBody
+            data={page.intro}
+            className="mt-4 text-base font-light leading-relaxed text-black/60 [&>*:first-child]:mt-0 [&_p]:mt-3 [&_a]:text-black [&_a]:underline-offset-2 [&_a:hover]:underline"
+          />
+        )}
 
         <CookieSettings />
       </div>
