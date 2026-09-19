@@ -6,41 +6,29 @@ import Link from "next/link";
 import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 
-const vorstand = [
-  {
-    name: "Oliver Wiegand",
-    titel: "1. Vorsitzender",
-    email: "1.vorsitzender@hardt-tennis.de",
-    telefon: "0172 25 80 209",
-    bild: "/images/änderungen/oliver-wiegand.png",
-  },
-  {
-    name: "Hendrick Büncker",
-    titel: "1. Geschäftsführer",
-    email: "",
-    telefon: "0151 741 04 202",
-    bild: "/images/änderungen/handrick-bünker.png",
-  },
-  {
-    name: "Marco Hohenstein",
-    titel: "Schatzmeister",
-    email: "schatzmeister@hardt-tennis.de",
-    telefon: "0176 666 46 288",
-    bild: "/images/änderungen/marco-hohenstein.png",
-  },
-];
+type VorstandItem = {
+  name: string;
+  titel: string;
+  email: string;
+  telefon: string;
+  bild: string | null;
+};
 
-function VorstandCard({ person }: { person: (typeof vorstand)[0] }) {
+function VorstandCard({ person }: { person: VorstandItem }) {
   return (
     <div className="group flex flex-col rounded-2xl bg-white overflow-hidden border border-black/[0.06] transition-shadow duration-300 hover:shadow-lg">
       <div className="relative h-72 w-full overflow-hidden">
-        <Image
-          src={person.bild}
-          alt={person.name}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-        />
+        {person.bild ? (
+          <Image
+            src={person.bild}
+            alt={person.name}
+            fill
+            sizes="(max-width: 768px) 100vw, 33vw"
+            className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+          />
+        ) : (
+          <div className="h-full w-full bg-black/[0.04]" />
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-6">
@@ -81,7 +69,7 @@ function VorstandCard({ person }: { person: (typeof vorstand)[0] }) {
   );
 }
 
-export default function VorstandSection() {
+export default function VorstandSection({ vorstand }: { vorstand: VorstandItem[] }) {
   return (
     <section id="trainer" className="bg-[#f9f9f7] px-6 py-20 md:px-12 lg:px-20 lg:py-32">
       <div className="mx-auto max-w-7xl">

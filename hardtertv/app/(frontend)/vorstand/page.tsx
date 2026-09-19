@@ -1,132 +1,62 @@
 import Image from "next/image";
 import { Mail, Phone } from "lucide-react";
+import { getPayload } from "payload";
+import config from "@payload-config";
+import { VORSTAND_GRUPPEN } from "@/lib/vorstand-gruppen";
+
+export const revalidate = 3600;
 
 type Person = {
   name: string;
   titel: string;
-  email?: string | string[];
+  email: string[];
   telefon?: string;
-  bild: string;
+  bild: string | null;
 };
 
-const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] = [
-  {
-    titel: "Führung",
-    beschreibung: "Der geschäftsführende Vorstand leitet den Verein und vertritt ihn nach außen.",
-    mitglieder: [
-      {
-        name: "Oliver Wiegand",
-        titel: "1. Vorsitzender",
-        email: "1.vorsitzender@hardt-tennis.de",
-        telefon: "0172 25 80 209",
-        bild: "/images/änderungen/oliver-wiegand.png",
-      },
-      {
-        name: "Volker Schuhmacher",
-        titel: "2. Vorsitzender",
-        telefon: "0160 99 78 94 11",
-        bild: "/images/änderungen/volker-schuhmacher.png",
-      },
-      {
-        name: "Hendrick Büncker",
-        titel: "1. Geschäftsführer",
-        bild: "/images/änderungen/handrick-bünker.png",
-      },
-      {
-        name: "Holger Arlt",
-        titel: "2. Geschäftsführer",
-        email: "woodworm4u@gmail.com",
-        telefon: "0151 70 09 01 37",
-        bild: "/images/änderungen/holger-arlt.png",
-      },
-    ],
-  },
-  {
-    titel: "Finanzen & Verwaltung",
-    beschreibung: "Sie kümmern sich um Finanzen, Organisation und das Vereinsheim.",
-    mitglieder: [
-      {
-        name: "Marco Hohenstein",
-        titel: "Schatzmeister",
-        email: "schatzmeister@hardt-tennis.de",
-        bild: "/images/änderungen/marco-hohenstein.png",
-      },
-      {
-        name: "Anni Holzmann",
-        titel: "Breitensport- & Clubheimwartin",
-        email: "annikaholzmann@gmx.de",
-        bild: "/images/änderungen/anni-holzmann.png",
-      },
-    ],
-  },
-  {
-    titel: "Sport",
-    beschreibung: "Die Sportwarte organisieren den Spielbetrieb und koordinieren unsere Mannschaften.",
-    mitglieder: [
-      {
-        name: "Tanja Wiegand",
-        titel: "1. Sportwartin",
-        email: "1.sportwart@hardt-tennis.de",
-        bild: "/images/änderungen/tanja-wiegand.png",
-      },
-      {
-        name: "Rainer Pieper",
-        titel: "2. Sportwart",
-        bild: "/images/änderungen/rainer-pieper.png",
-      },
-    ],
-  },
-  {
-    titel: "Events & Kommunikation",
-    beschreibung: "Sie gestalten das Vereinsleben, organisieren Events und pflegen die Kommunikation.",
-    mitglieder: [
-      {
-        name: "Tabea Wiegand",
-        titel: "Event & Kommunikationswartin",
-        email: ["tabea.wiegand.tw@gmail.com", "event.HTV@gmail.com"],
-        bild: "/images/änderungen/tabea-wiegand.png",
-      },
-      {
-        name: "Valentin Trapp",
-        titel: "Eventmanager",
-        email: ["v.trapp1407@gmail.com", "event.HTV@gmail.com"],
-        bild: "/images/änderungen/valentin-trapp1.png",
-      },
-    ],
-  },
-  {
-    titel: "Technik & Platz",
-    beschreibung: "Sie sorgen für die technische Infrastruktur und gepflegte Anlagen.",
-    mitglieder: [
-      {
-        name: "Udo Kahlert",
-        titel: "Technikwart",
-        email: "annikaholzmann@gmx.de",
-        bild: "/images/änderungen/udo-kahlert.png",
-      },
-      {
-        name: "Jürgen Mertens",
-        titel: "Platzwart",
-        email: "juergenmertens62tennis@web.de",
-        bild: "/images/Jürgen Mertens_1.jpg",
-      },
-    ],
-  },
-];
+async function getGruppen() {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({
+    collection: "board-members",
+    depth: 1,
+    limit: 200,
+    sort: "reihenfolge",
+  });
+
+  return VORSTAND_GRUPPEN.map((g) => ({
+    titel: g.titel,
+    beschreibung: g.beschreibung,
+    mitglieder: docs
+      .filter((d) => d.gruppe === g.value)
+      .map(
+        (d): Person => ({
+          name: d.name,
+          titel: d.titel,
+          email: (d.emails ?? []).map((e) => e.email),
+          telefon: d.telefon ?? undefined,
+          bild: typeof d.foto === "object" && d.foto ? d.foto.url ?? null : null,
+        }),
+      ),
+  })).filter((g) => g.mitglieder.length > 0);
+}
 
 function VorstandCard({ person }: { person: Person }) {
-  const emails = person.email ? (Array.isArray(person.email) ? person.email : [person.email]) : [];
+  const emails = person.email;
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-300 hover:shadow-lg">
       <div className="relative h-64 w-full overflow-hidden">
-        <Image
-          src={person.bild}
-          alt={person.name}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-        />
+        {person.bild ? (
+          <Image
+            src={person.bild}
+            alt={person.name}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+          />
+        ) : (
+          <div className="h-full w-full bg-black/[0.04]" />
+        )}
       </div>
 
       <div className="flex flex-1 flex-col p-5">
@@ -168,7 +98,8 @@ function VorstandCard({ person }: { person: Person }) {
   );
 }
 
-export default function VorstandPage() {
+export default async function VorstandPage() {
+  const gruppen = await getGruppen();
   const total = gruppen.reduce((sum, g) => sum + g.mitglieder.length, 0);
 
   return (
