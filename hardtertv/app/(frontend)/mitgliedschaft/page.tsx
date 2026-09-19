@@ -98,8 +98,8 @@ export default function MitgliedschaftPage() {
             {/* Stat block */}
             <div className="flex flex-col justify-center gap-6">
               {[
-                { value: "300+", label: "Aktive Mitglieder", sub: "aus Dorsten und Umgebung" },
-                { value: "1952", label: "Vereinsgründung", sub: "über 70 Jahre Tennistradition" },
+                { value: "200+", label: "Aktive Mitglieder", sub: "aus Dorsten und Umgebung" },
+                { value: "1978", label: "Vereinsgründung", sub: "über 45 Jahre Tennistradition" },
                 { value: "6", label: "Tennisplätze", sub: "inkl. 2 Flutlichtplätze" },
               ].map((s) => (
                 <div

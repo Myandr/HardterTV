@@ -4,7 +4,7 @@ import { Mail, Phone } from "lucide-react";
 type Person = {
   name: string;
   titel: string;
-  email?: string;
+  email?: string | string[];
   telefon?: string;
   bild: string;
 };
@@ -83,13 +83,13 @@ const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] =
       {
         name: "Tabea Wiegand",
         titel: "Event & Kommunikationswartin",
-        email: "tabeawiegand@gmail.com",
+        email: ["tabea.wiegand.tw@gmail.com", "event.HTV@gmail.com"],
         bild: "/images/änderungen/tabea-wiegand.png",
       },
       {
         name: "Valentin Trapp",
         titel: "Eventmanager",
-        email: "v.trapp1407@gmail.com",
+        email: ["v.trapp1407@gmail.com", "event.HTV@gmail.com"],
         bild: "/images/änderungen/valentin-trapp1.png",
       },
     ],
@@ -115,6 +115,8 @@ const gruppen: { titel: string; beschreibung: string; mitglieder: Person[] }[] =
 ];
 
 function VorstandCard({ person }: { person: Person }) {
+  const emails = person.email ? (Array.isArray(person.email) ? person.email : [person.email]) : [];
+
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-300 hover:shadow-lg">
       <div className="relative h-64 w-full overflow-hidden">
@@ -136,17 +138,18 @@ function VorstandCard({ person }: { person: Person }) {
           <span className="text-xs font-light text-black/50">{person.titel}</span>
         </div>
 
-        {(person.email || person.telefon) && (
+        {(emails.length > 0 || person.telefon) && (
           <div className="mt-4 space-y-2 border-t border-black/[0.06] pt-4">
-            {person.email && (
+            {emails.map((email) => (
               <a
-                href={`mailto:${person.email}`}
+                key={email}
+                href={`mailto:${email}`}
                 className="flex items-center gap-2 text-xs text-black/50 transition-colors hover:text-black"
               >
                 <Mail className="size-3 shrink-0" strokeWidth={1.5} />
-                <span className="truncate">{person.email}</span>
+                <span className="truncate">{email}</span>
               </a>
-            )}
+            ))}
             {person.telefon && (
               <a
                 href={`tel:${person.telefon.replace(/\s/g, "")}`}

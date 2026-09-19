@@ -3,7 +3,6 @@ import Link from "next/link";
 import {
   ArrowUpRight,
   Phone,
-  Mail,
   Dumbbell,
   Users,
   Trophy,
@@ -162,15 +161,6 @@ export default function TrainingPage() {
                     <Phone className="size-3.5" strokeWidth={1.5} />
                   </div>
                   0175 59 04 903
-                </a>
-                <a
-                  href="mailto:1.vorsitzender@hardt-tennis.de"
-                  className="flex items-center gap-3 text-sm text-black/50 transition-colors hover:text-black"
-                >
-                  <div className="flex size-8 items-center justify-center rounded-full bg-[#e1fcad]">
-                    <Mail className="size-3.5" strokeWidth={1.5} />
-                  </div>
-                  1.vorsitzender@hardt-tennis.de
                 </a>
               </div>
             </div>
