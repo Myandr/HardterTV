@@ -71,6 +71,7 @@ export interface Config {
     media: Media;
     teams: Team;
     'board-members': BoardMember;
+    events: Event;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -82,6 +83,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     teams: TeamsSelect<false> | TeamsSelect<true>;
     'board-members': BoardMembersSelect<false> | BoardMembersSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -211,6 +213,25 @@ export interface BoardMember {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  titel: string;
+  datum: string;
+  datumEnde?: string | null;
+  /**
+   * z.B. "10:00" oder "Ganztägig"
+   */
+  uhrzeit?: string | null;
+  ort?: string | null;
+  kategorie: 'Training' | 'Turnier' | 'Sonstiges';
+  beschreibung?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -248,6 +269,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'board-members';
         value: number | BoardMember;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -364,6 +389,21 @@ export interface BoardMembersSelect<T extends boolean = true> {
   telefon?: T;
   foto?: T;
   featured?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  titel?: T;
+  datum?: T;
+  datumEnde?: T;
+  uhrzeit?: T;
+  ort?: T;
+  kategorie?: T;
+  beschreibung?: T;
   updatedAt?: T;
   createdAt?: T;
 }
