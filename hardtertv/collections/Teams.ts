@@ -1,4 +1,30 @@
-import type { CollectionConfig } from "payload";
+import { revalidatePath } from "next/cache";
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionConfig,
+} from "payload";
+
+const revalidateTeam: CollectionAfterChangeHook = ({
+  doc,
+  previousDoc,
+  req,
+}) => {
+  if (req.context?.disableRevalidate) return doc;
+  revalidatePath("/mannschaften");
+  revalidatePath(`/mannschaften/${doc.slug}`);
+  if (previousDoc?.slug && previousDoc.slug !== doc.slug) {
+    revalidatePath(`/mannschaften/${previousDoc.slug}`);
+  }
+  return doc;
+};
+
+const revalidateTeamDelete: CollectionAfterDeleteHook = ({ doc, req }) => {
+  if (req.context?.disableRevalidate) return doc;
+  revalidatePath("/mannschaften");
+  revalidatePath(`/mannschaften/${doc.slug}`);
+  return doc;
+};
 
 export const Teams: CollectionConfig = {
   slug: "teams",
@@ -8,6 +34,10 @@ export const Teams: CollectionConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [revalidateTeam],
+    afterDelete: [revalidateTeamDelete],
   },
   fields: [
     {
