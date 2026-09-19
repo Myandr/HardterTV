@@ -1,11 +1,44 @@
+import { getPayload } from "payload";
+import config from "@payload-config";
+import type { Media } from "@/payload-types";
 import GalerieClient from "./galerie-client";
 
-export default function GaleriePage() {
-  const images = Array.from({ length: 17 }, (_, i) => ({
-    src: `/images/R%C3%BCckblick%202024/R%C3%BCckblick%202024_${i + 1}.jpg`,
-    alt: `Rückblick 2024 – Bild ${i + 1}`,
-    index: i,
+export const revalidate = 3600;
+
+export type GalerieAlbum = {
+  id: number;
+  titel: string;
+  jahr: number;
+  bilder: { src: string; alt: string; index: number }[];
+};
+
+async function getAlben(): Promise<GalerieAlbum[]> {
+  const payload = await getPayload({ config });
+  const { docs } = await payload.find({
+    collection: "gallery-albums",
+    depth: 1,
+    limit: 100,
+    sort: "-jahr",
+  });
+
+  let laufenderIndex = 0;
+  return docs.map((doc) => ({
+    id: doc.id,
+    titel: doc.titel,
+    jahr: doc.jahr,
+    bilder: (doc.bilder ?? [])
+      .filter((b): b is Media => typeof b === "object" && b !== null && typeof b.url === "string")
+      .map((b) => ({
+        src: b.url as string,
+        alt: b.alt || doc.titel,
+        index: laufenderIndex++,
+      })),
   }));
+}
+
+export default async function GaleriePage() {
+  const alben = await getAlben();
+  const gesamtBilder = alben.reduce((summe, album) => summe + album.bilder.length, 0);
 
   return (
     <main>
@@ -35,16 +68,21 @@ export default function GaleriePage() {
             über Mannschaftsabende bis zum Saisonabschluss.
           </p>
 
-          <div className="mt-8 flex items-center gap-4">
-            <span className="rounded-full bg-[#e1fcad]/20 px-4 py-2 text-sm font-light text-[#e1fcad]">
-              Rückblick 2024
-            </span>
-            <span className="text-sm text-white/40">{images.length} Bilder</span>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            {alben.map((album) => (
+              <span
+                key={album.id}
+                className="rounded-full bg-[#e1fcad]/20 px-4 py-2 text-sm font-light text-[#e1fcad]"
+              >
+                {album.titel}
+              </span>
+            ))}
+            <span className="text-sm text-white/40">{gesamtBilder} Bilder</span>
           </div>
         </div>
       </section>
 
-      <GalerieClient images={images} />
+      <GalerieClient alben={alben} />
     </main>
   );
 }

@@ -11,7 +11,15 @@ type GalerieImage = {
   index: number;
 };
 
-export default function GalerieClient({ images }: { images: GalerieImage[] }) {
+type GalerieAlbum = {
+  id: number;
+  titel: string;
+  jahr: number;
+  bilder: GalerieImage[];
+};
+
+export default function GalerieClient({ alben }: { alben: GalerieAlbum[] }) {
+  const images = React.useMemo(() => alben.flatMap((album) => album.bilder), [alben]);
   const [lightbox, setLightbox] = React.useState<number | null>(null);
 
   const openLightbox = (index: number) => setLightbox(index);
@@ -38,33 +46,43 @@ export default function GalerieClient({ images }: { images: GalerieImage[] }) {
       {/* Grid */}
       <section className="bg-[#f9f9f7] px-6 py-20 md:px-12 lg:px-20 lg:py-28">
         <div className="mx-auto max-w-7xl">
-          <div className="mb-10 flex items-center gap-3">
-            <span className="h-px w-8 bg-black/30" />
-            <span className="text-xs uppercase tracking-[0.2em] text-black/50">Rückblick 2024</span>
-          </div>
+          {images.length === 0 && (
+            <p className="rounded-2xl border border-black/[0.07] bg-white p-6 text-sm text-black/50">
+              Aktuell sind keine Bilder online — schau bald wieder vorbei.
+            </p>
+          )}
 
-          <div className="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4">
-            {images.map((img) => (
-              <div
-                key={img.index}
-                className="group mb-4 cursor-pointer overflow-hidden rounded-2xl break-inside-avoid border border-black/[0.06] bg-white"
-                onClick={() => openLightbox(img.index)}
-              >
-                <div className="relative overflow-hidden">
-                  <Image
-                    src={img.src}
-                    alt={img.alt}
-                    width={600}
-                    height={400}
-                    className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                  <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
-                  <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full" />
-                </div>
+          {alben.map((album, albumIndex) => (
+            <div key={album.id} className={albumIndex > 0 ? "mt-16" : undefined}>
+              <div className="mb-10 flex items-center gap-3">
+                <span className="h-px w-8 bg-black/30" />
+                <span className="text-xs uppercase tracking-[0.2em] text-black/50">{album.titel}</span>
               </div>
-            ))}
-          </div>
+
+              <div className="columns-1 gap-4 sm:columns-2 md:columns-3 lg:columns-4">
+                {album.bilder.map((img) => (
+                  <div
+                    key={img.index}
+                    className="group mb-4 cursor-pointer overflow-hidden rounded-2xl break-inside-avoid border border-black/[0.06] bg-white"
+                    onClick={() => openLightbox(img.index)}
+                  >
+                    <div className="relative overflow-hidden">
+                      <Image
+                        src={img.src}
+                        alt={img.alt}
+                        width={600}
+                        height={400}
+                        className="w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      />
+                      <div className="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/10" />
+                      <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
