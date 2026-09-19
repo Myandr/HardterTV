@@ -1,4 +1,13 @@
-import type { CollectionConfig } from "payload";
+import type { Access, CollectionConfig } from "payload";
+
+const isAdmin: Access = ({ req }) => req.user?.role === "admin";
+
+// Admins: everything. Other logged-in users: only their own document.
+const adminOrSelf: Access = ({ req }) => {
+  if (!req.user) return false;
+  if (req.user.role === "admin") return true;
+  return { id: { equals: req.user.id } };
+};
 
 export const Users: CollectionConfig = {
   slug: "users",
@@ -6,6 +15,13 @@ export const Users: CollectionConfig = {
     useAsTitle: "email",
   },
   auth: true,
+  access: {
+    admin: ({ req }) => Boolean(req.user),
+    create: isAdmin,
+    delete: isAdmin,
+    read: adminOrSelf,
+    update: adminOrSelf,
+  },
   fields: [
     {
       name: "role",
@@ -17,7 +33,8 @@ export const Users: CollectionConfig = {
         { label: "Editor", value: "editor" },
       ],
       access: {
-        // Only admins can change a user's role — editors can't promote themselves.
+        // Only admins can set or change a user's role — editors can't promote themselves.
+        create: ({ req }) => req.user?.role === "admin",
         update: ({ req }) => req.user?.role === "admin",
       },
     },
