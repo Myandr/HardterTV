@@ -72,6 +72,7 @@ export interface Config {
     teams: Team;
     'board-members': BoardMember;
     events: Event;
+    'gallery-albums': GalleryAlbum;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -84,6 +85,7 @@ export interface Config {
     teams: TeamsSelect<false> | TeamsSelect<true>;
     'board-members': BoardMembersSelect<false> | BoardMembersSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    'gallery-albums': GalleryAlbumsSelect<false> | GalleryAlbumsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -232,6 +234,27 @@ export interface Event {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-albums".
+ */
+export interface GalleryAlbum {
+  id: number;
+  /**
+   * z.B. "Rückblick 2024" — erscheint als Überschrift über dem Bilderraster.
+   */
+  titel: string;
+  /**
+   * Bestimmt die Reihenfolge: neuestes Jahr zuerst.
+   */
+  jahr: number;
+  /**
+   * Die Reihenfolge hier ist die Reihenfolge auf der Website.
+   */
+  bilder: (number | Media)[];
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -273,6 +296,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'events';
         value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'gallery-albums';
+        value: number | GalleryAlbum;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -404,6 +431,17 @@ export interface EventsSelect<T extends boolean = true> {
   ort?: T;
   kategorie?: T;
   beschreibung?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-albums_select".
+ */
+export interface GalleryAlbumsSelect<T extends boolean = true> {
+  titel?: T;
+  jahr?: T;
+  bilder?: T;
   updatedAt?: T;
   createdAt?: T;
 }
