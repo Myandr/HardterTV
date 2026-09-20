@@ -7,6 +7,7 @@ import { VORSTAND_GRUPPEN } from "@/lib/vorstand-gruppen";
 export const revalidate = 3600;
 
 type Person = {
+  id: string;
   name: string;
   titel: string;
   email: string[];
@@ -30,6 +31,7 @@ async function getGruppen() {
       .filter((d) => d.gruppe === g.value)
       .map(
         (d): Person => ({
+          id: String(d.id),
           name: d.name,
           titel: d.titel,
           email: (d.emails ?? []).map((e) => e.email),
@@ -173,7 +175,7 @@ export default async function VorstandPage() {
 
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {gruppe.mitglieder.map((person) => (
-                <VorstandCard key={person.name} person={person} />
+                <VorstandCard key={person.id} person={person} />
               ))}
             </div>
           </div>

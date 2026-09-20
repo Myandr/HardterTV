@@ -25,7 +25,7 @@
     "seed:location-section": "dotenv -e .env.local -- tsx scripts/seed-location-section.ts",
     "seed:footer": "dotenv -e .env.local -- tsx scripts/seed-footer.ts",
     "seed:kontakt-section": "dotenv -e .env.local -- tsx scripts/seed-kontakt-section.ts",
-    "ci": "if [ \"$VERCEL_ENV\" = \"production\" ]; then payload migrate; fi && next build"
+    "ci": "payload migrate && next build"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

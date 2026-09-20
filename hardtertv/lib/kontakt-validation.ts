@@ -45,7 +45,9 @@ export function validateKontakt(eingabe: KontaktEingabe): KontaktValidierung {
   const name = eingabe.name.replace(STEUERZEICHEN, "").trim();
   const email = eingabe.email.replace(STEUERZEICHEN, "").trim().toLowerCase();
   const telefon = eingabe.telefon.replace(STEUERZEICHEN, "").trim();
-  const nachricht = eingabe.nachricht.replace(STEUERZEICHEN_OHNE_UMBRUCH, "").trim();
+  const nachricht = eingabe.nachricht
+    .replace(/\r\n?/g, "\n")
+    .replace(STEUERZEICHEN_OHNE_UMBRUCH, "").trim();
 
   const fieldErrors: KontaktFeldFehler = {};
 

@@ -6,6 +6,8 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import TeamPlaceholder from "@/components/ui/team-placeholder";
 
+export const revalidate = 3600;
+
 type Team = {
   slug: string;
   name: string;
@@ -50,7 +52,7 @@ export async function generateMetadata({
   const team = await getTeam(slug);
   if (!team) return {};
   return {
-    title: `${team.name} – Hardter TV`,
+    title: team.name,
     description: `${team.name} des Hardter Tennisverein – Saison 2024/2025`,
   };
 }

@@ -7,6 +7,7 @@ import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 
 type VorstandItem = {
+  id: string;
   name: string;
   titel: string;
   email: string;
@@ -114,7 +115,7 @@ export default function VorstandSection({ vorstand }: { vorstand: VorstandItem[]
 
         <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:mt-14 lg:grid-cols-3">
           {vorstand.map((person, i) => (
-            <FadeIn key={person.name} delay={0.1 + i * 0.1}>
+            <FadeIn key={person.id} delay={0.1 + i * 0.1}>
               <VorstandCard person={person} />
             </FadeIn>
           ))}

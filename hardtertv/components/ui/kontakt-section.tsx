@@ -54,6 +54,7 @@ export default function KontaktSection({
   // Kontrolliertes Feld: der Formular-Reset kann den Zeitstempel nicht leeren.
   const [gestartetAm, setGestartetAm] = useState("");
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Zeitstempel nur clientseitig, sonst Hydration-Mismatch
     setGestartetAm(String(Date.now()));
   }, []);
 

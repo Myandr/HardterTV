@@ -121,6 +121,7 @@ async function getVorstand() {
     sort: "reihenfolge",
   });
   return docs.map((d) => ({
+    id: String(d.id),
     name: d.name,
     titel: d.titel,
     email: d.emails?.[0]?.email ?? "",
@@ -142,6 +143,7 @@ async function getTermine() {
     depth: 0,
   });
   return docs.map((d) => ({
+    id: String(d.id),
     ...formatTerminDatum(d.datum, d.datumEnde),
     veranstaltung: d.titel,
     uhrzeit: d.uhrzeit ?? "",
@@ -159,6 +161,7 @@ async function getNews() {
     sort: "-datum",
   });
   return docs.map((d) => ({
+    id: String(d.id),
     datum: formatNewsDatum(d.datum),
     titel: d.titel,
     excerpt: d.excerpt,

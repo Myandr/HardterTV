@@ -71,7 +71,7 @@ export const Eisstock: GlobalConfig = {
               type: "array",
               label: "Bilder",
               labels: { singular: "Bild", plural: "Bilder" },
-              fields: [{ name: "bild", type: "upload", relationTo: "media", required: true }],
+              fields: [{ name: "bild", type: "upload", relationTo: "media" }],
             },
           ],
         },

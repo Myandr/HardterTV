@@ -6,6 +6,7 @@ import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 
 type Termin = {
+  id: string;
   datum: string;
   tag: string;
   veranstaltung: string;
@@ -120,7 +121,7 @@ export default function TermineSection({ termine }: { termine: Termin[] }) {
             </p>
           ) : (
             termine.map((t, i) => (
-              <FadeIn key={`${t.veranstaltung}-${t.datum}`} delay={0.08 + i * 0.07}>
+              <FadeIn key={t.id} delay={0.08 + i * 0.07}>
                 <TerminCard termin={t} />
               </FadeIn>
             ))

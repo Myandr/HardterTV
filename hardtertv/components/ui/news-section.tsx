@@ -5,6 +5,7 @@ import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 
 export type NewsItem = {
+  id: string;
   datum: string;
   titel: string;
   excerpt: string;
@@ -139,7 +140,7 @@ export default function NewsSection({ news }: { news: NewsItem[] }) {
         {news.length > 2 && (
           <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {news.slice(2).map((artikel, i) => (
-              <FadeIn key={artikel.titel} delay={0.08 + i * 0.08}>
+              <FadeIn key={artikel.id} delay={0.08 + i * 0.08}>
                 <NewsCard artikel={artikel} />
               </FadeIn>
             ))}

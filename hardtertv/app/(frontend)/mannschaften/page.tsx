@@ -2,6 +2,8 @@ import { getPayload } from "payload";
 import config from "@payload-config";
 import MannschaftenClient from "./mannschaften-client";
 
+export const revalidate = 3600;
+
 type Team = {
   slug: string;
   name: string;

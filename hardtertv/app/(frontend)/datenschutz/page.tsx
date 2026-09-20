@@ -7,7 +7,7 @@ import LegalSections from "@/components/ui/legal-sections";
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "Datenschutz – Hardter TV",
+  title: "Datenschutz",
 };
 
 export default async function DatenschutzPage() {

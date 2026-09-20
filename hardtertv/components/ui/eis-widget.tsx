@@ -1,7 +1,7 @@
 "use client";
 
 export function EisWidget({ url }: { url: string }) {
-  if (!url || url.includes("DEIN-VEREIN")) {
+  if (!url) {
     return (
       <div className="flex min-h-[200px] items-center justify-center rounded-2xl border-2 border-dashed border-[#e1fcad] bg-[#f9f9f7] p-10 text-center">
         <div>

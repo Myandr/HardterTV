@@ -7,7 +7,7 @@ import LegalSections from "@/components/ui/legal-sections";
 export const revalidate = 3600;
 
 export const metadata = {
-  title: "Impressum – Hardter TV",
+  title: "Impressum",
 };
 
 export default async function ImpressumPage() {

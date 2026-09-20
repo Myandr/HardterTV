@@ -52,7 +52,7 @@ export const HeroGlobal: GlobalConfig = {
       labels: { singular: "Logo", plural: "Logos" },
       admin: { description: "Laufen als Endlosband unter dem Text durch." },
       fields: [
-        { name: "logo", type: "upload", relationTo: "media", required: true },
+        { name: "logo", type: "upload", relationTo: "media" },
         {
           name: "alt",
           type: "text",

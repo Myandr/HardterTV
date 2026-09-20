@@ -9,6 +9,18 @@ export const revalidatePathsAfterChange =
     return doc;
   };
 
+export const revalidateLayoutAfterChange: CollectionAfterChangeHook = ({ doc, req }) => {
+  if (req.context?.disableRevalidate) return doc;
+  revalidatePath("/", "layout");
+  return doc;
+};
+
+export const revalidateLayoutAfterDelete: CollectionAfterDeleteHook = ({ doc, req }) => {
+  if (req.context?.disableRevalidate) return doc;
+  revalidatePath("/", "layout");
+  return doc;
+};
+
 export const revalidatePathsAfterDelete =
   (paths: string[]): CollectionAfterDeleteHook =>
   ({ doc, req }) => {

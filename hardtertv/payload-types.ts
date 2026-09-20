@@ -878,7 +878,7 @@ export interface Eisstock {
   galerie?: {
     bilder?:
       | {
-          bild: number | Media;
+          bild?: (number | null) | Media;
           id?: string | null;
         }[]
       | null;
@@ -917,7 +917,7 @@ export interface Hero {
    */
   partnerLogos?:
     | {
-        logo: number | Media;
+        logo?: (number | null) | Media;
         /**
          * Leer lassen = Alternativtext des Bildes wird verwendet.
          */
