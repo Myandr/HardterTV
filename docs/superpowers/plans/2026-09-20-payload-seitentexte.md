@@ -32,6 +32,8 @@
   - **Datums-/Lokalisierungsdaten**: Monats- und Wochentagsnamen sowie Datumsformate in `lib/events.ts`, `lib/news.ts` und `app/(frontend)/kalender/kalender-client.tsx` — das ist Lokalisierung, kein Inhalt;
   - **Enum-Werte** aus Collections (`Herren`/`Damen`/`Gemischt`, `Training`/`Turnier`/`Sonstiges`, Legal-Slugs) — die stehen bereits als Select-Optionen im Admin und werden dort gepflegt;
   - **SEO-Metadaten** (`metadata`-Exporte, `layout.tsx`) — unverändert, mit *einer* Ausnahme: die Saison-Angabe in `generateMetadata` von `/mannschaften/[slug]` wird aus dem gleichen Payload-Feld gespeist wie die sichtbare Angabe, damit beide nicht auseinanderlaufen (Task 7);
+  - das `title`-Attribut des Buchungs-iframes in `components/ui/eis-widget.tsx` („Eisstockschießen online buchen") — reines Screenreader-Attribut des eingebetteten Fremdwidgets, kein sichtbarer Seiteninhalt;
+  - `components/ui/location-section.tsx` bezieht die Texte der gesperrten Karten-Kachel („Google Maps nicht aktiviert" / „Einstellungen") aus `cookie-texte` (`maps.titel`, `banner.einstellungenLabel`) statt eigener Felder;
   - der Admin-Hinweistext in `components/ui/eis-widget.tsx` („Online-Buchung coming soon … im Payload-Admin eintragen") — er erscheint nur, solange ein Redakteur die URL *nicht* gepflegt hat, und erklärt genau diese Pflege; ihn editierbar zu machen wäre zirkulär.
 - Node: System-Node genügt (`"type": "module"` gesetzt). Commit mit **gezieltem `git add`** — nie `git add -A`, nie `.env.local` stagen, nie `--amend`; nur neue Commits.
 - Wegwerf-Prüfskripte/-routen liegen **außerhalb** des Repos und werden vor dem Commit gelöscht; sie werden nie committet.

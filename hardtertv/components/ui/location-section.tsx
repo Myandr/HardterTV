@@ -22,9 +22,22 @@ export type LocationSectionProps = {
   intro: string;
   ctaLabel: string;
   karten: StandortKarte[];
+  /** Texte der gesperrten Karten-Kachel — kommen aus dem Global "cookie-texte". */
+  mapsGesperrtText: string;
+  mapsGesperrtLink: string;
 };
 
-function LocationCard({ location, mapsAllowed }: { location: StandortKarte; mapsAllowed: boolean }) {
+function LocationCard({
+  location,
+  mapsAllowed,
+  mapsGesperrtText,
+  mapsGesperrtLink,
+}: {
+  location: StandortKarte;
+  mapsAllowed: boolean;
+  mapsGesperrtText: string;
+  mapsGesperrtLink: string;
+}) {
   const isExternal = location.href.startsWith("http");
   const blocked = isExternal && !mapsAllowed;
 
@@ -47,13 +60,13 @@ function LocationCard({ location, mapsAllowed }: { location: StandortKarte; maps
             <svg className="size-5 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="10" /><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
             </svg>
-            <p className="text-xs font-light text-white/80 leading-snug">Google Maps nicht aktiviert</p>
+            <p className="text-xs font-light text-white/80 leading-snug">{mapsGesperrtText}</p>
             <Link
               href="/cookies"
               className="mt-1 rounded-full bg-white/20 px-3 py-1 text-xs text-white transition-colors hover:bg-white/30"
               onClick={(e) => e.stopPropagation()}
             >
-              Einstellungen
+              {mapsGesperrtLink}
             </Link>
           </div>
         )}
@@ -105,6 +118,8 @@ export default function LocationSection({
   intro,
   ctaLabel,
   karten,
+  mapsGesperrtText,
+  mapsGesperrtLink,
 }: LocationSectionProps) {
   const consent = useCookieConsent();
   const mapsAllowed = consent?.maps ?? false;
@@ -154,7 +169,12 @@ export default function LocationSection({
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {karten.map((karte, i) => (
             <FadeIn key={karte.id} delay={0.1 + i * 0.08}>
-              <LocationCard location={karte} mapsAllowed={mapsAllowed} />
+              <LocationCard
+                location={karte}
+                mapsAllowed={mapsAllowed}
+                mapsGesperrtText={mapsGesperrtText}
+                mapsGesperrtLink={mapsGesperrtLink}
+              />
             </FadeIn>
           ))}
         </div>

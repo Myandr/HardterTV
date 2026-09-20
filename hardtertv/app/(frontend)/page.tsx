@@ -257,7 +257,11 @@ export default async function Home() {
     <main>
       <Hero {...hero} />
       <WelcomeSection {...welcome} />
-      <LocationSection {...standorte} />
+      <LocationSection
+        {...standorte}
+        mapsGesperrtText={cookieTexte.maps.platzhalterTitel}
+        mapsGesperrtLink={cookieTexte.banner.einstellungenLabel}
+      />
       <TermineSection termine={termine} {...termineTexte} />
       <VorstandSection vorstand={vorstand} {...vorstandTexte} />
       <NewsSection news={news} {...newsTexte} />
