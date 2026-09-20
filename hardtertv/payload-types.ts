@@ -1072,6 +1072,53 @@ export interface Footer {
    * Das Jahr wird automatisch eingesetzt.
    */
   copyrightName: string;
+  schnelleLinksTitel: string;
+  schnelleLinks: {
+    label: string;
+    ziel:
+      | '/'
+      | '/#about'
+      | '/#termine'
+      | '/#news'
+      | '/#contact'
+      | '/vorstand'
+      | '/training'
+      | '/mannschaften'
+      | '/galerie'
+      | '/mitgliedschaft'
+      | '/kalender'
+      | '/eisstock'
+      | '/datenschutz'
+      | '/impressum'
+      | '/cookies';
+    id?: string | null;
+  }[];
+  kontaktTitel: string;
+  emailLabel: string;
+  /**
+   * Steht hinter Jahr und Vereinsname.
+   */
+  copyrightZusatz: string;
+  rechtlicheLinks: {
+    label: string;
+    ziel:
+      | '/'
+      | '/#about'
+      | '/#termine'
+      | '/#news'
+      | '/#contact'
+      | '/vorstand'
+      | '/training'
+      | '/mannschaften'
+      | '/galerie'
+      | '/mitgliedschaft'
+      | '/kalender'
+      | '/eisstock'
+      | '/datenschutz'
+      | '/impressum'
+      | '/cookies';
+    id?: string | null;
+  }[];
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1617,6 +1664,24 @@ export interface FooterSelect<T extends boolean = true> {
         ctaText?: T;
       };
   copyrightName?: T;
+  schnelleLinksTitel?: T;
+  schnelleLinks?:
+    | T
+    | {
+        label?: T;
+        ziel?: T;
+        id?: T;
+      };
+  kontaktTitel?: T;
+  emailLabel?: T;
+  copyrightZusatz?: T;
+  rechtlicheLinks?:
+    | T
+    | {
+        label?: T;
+        ziel?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

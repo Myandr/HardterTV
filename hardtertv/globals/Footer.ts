@@ -1,5 +1,6 @@
 import type { GlobalConfig } from "payload";
 
+import { INTERNE_LINKS } from "../lib/interne-links";
 import { revalidateGlobalLayout } from "./hooks/revalidate";
 
 export const FooterGlobal: GlobalConfig = {
@@ -96,6 +97,39 @@ export const FooterGlobal: GlobalConfig = {
       maxLength: 80,
       label: "Name in der Copyright-Zeile",
       admin: { description: "Das Jahr wird automatisch eingesetzt." },
+    },
+    { name: "schnelleLinksTitel", type: "text", required: true, maxLength: 60, label: "Überschrift der Linkspalte" },
+    {
+      name: "schnelleLinks",
+      type: "array",
+      required: true,
+      label: "Schnelle Links",
+      labels: { singular: "Link", plural: "Links" },
+      fields: [
+        { name: "label", type: "text", required: true, maxLength: 60 },
+        { name: "ziel", type: "select", required: true, options: INTERNE_LINKS },
+      ],
+    },
+    { name: "kontaktTitel", type: "text", required: true, maxLength: 60, label: "Überschrift der Kontaktspalte" },
+    { name: "emailLabel", type: "text", required: true, maxLength: 60, label: "Beschriftung über der E-Mail-Adresse" },
+    {
+      name: "copyrightZusatz",
+      type: "text",
+      required: true,
+      maxLength: 120,
+      admin: { description: "Steht hinter Jahr und Vereinsname." },
+    },
+    {
+      name: "rechtlicheLinks",
+      type: "array",
+      required: true,
+      maxRows: 6,
+      label: "Rechtliche Links",
+      labels: { singular: "Link", plural: "Links" },
+      fields: [
+        { name: "label", type: "text", required: true, maxLength: 60 },
+        { name: "ziel", type: "select", required: true, options: INTERNE_LINKS },
+      ],
     },
   ],
 };

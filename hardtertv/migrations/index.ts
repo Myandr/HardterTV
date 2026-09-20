@@ -17,6 +17,7 @@ import * as migration_20260920_100331_add_contact_submissions from './20260920_1
 import * as migration_20260920_104752_check_nullability from './20260920_104752_check_nullability';
 import * as migration_20260920_170801_add_seiten_texte from './20260920_170801_add_seiten_texte';
 import * as migration_20260920_171650_add_startseite_abschnitte from './20260920_171650_add_startseite_abschnitte';
+import * as migration_20260920_171943_add_footer_links from './20260920_171943_add_footer_links';
 
 export const migrations = [
   {
@@ -112,6 +113,11 @@ export const migrations = [
   {
     up: migration_20260920_171650_add_startseite_abschnitte.up,
     down: migration_20260920_171650_add_startseite_abschnitte.down,
-    name: '20260920_171650_add_startseite_abschnitte'
+    name: '20260920_171650_add_startseite_abschnitte',
+  },
+  {
+    up: migration_20260920_171943_add_footer_links.up,
+    down: migration_20260920_171943_add_footer_links.down,
+    name: '20260920_171943_add_footer_links'
   },
 ];

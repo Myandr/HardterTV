@@ -3,19 +3,6 @@ import config from "@payload-config";
 import Link from "next/link";
 import { FadeIn } from "@/components/ui/fade-in";
 
-const links = [
-  { label: "Home", href: "/" },
-  { label: "Über uns", href: "/#about" },
-  { label: "Termine", href: "/#termine" },
-  { label: "Vorstand", href: "/vorstand" },
-  { label: "Neuigkeiten", href: "/#news" },
-  { label: "Kontakt", href: "/#contact" },
-  { label: "Training", href: "/training" },
-  { label: "Mannschaften", href: "/mannschaften" },
-  { label: "Galerie", href: "/galerie" },
-  { label: "Mitgliedschaft", href: "/mitgliedschaft" },
-];
-
 export default async function Footer() {
   const payload = await getPayload({ config });
   const data = await payload.findGlobal({ slug: "footer", depth: 0 });
@@ -61,13 +48,13 @@ export default async function Footer() {
           {/* Quick links */}
           <div>
             <h4 className="mb-5 text-xs uppercase tracking-[0.2em] text-white/30">
-              Schnelle Links
+              {data.schnelleLinksTitel}
             </h4>
             <ul className="flex flex-col gap-2.5">
-              {links.map((l) => (
-                <li key={l.label}>
+              {(data.schnelleLinks ?? []).map((l) => (
+                <li key={l.id ?? l.ziel}>
                   <Link
-                    href={l.href}
+                    href={l.ziel}
                     className="text-sm text-white/50 transition-colors hover:text-white"
                   >
                     {l.label}
@@ -80,7 +67,7 @@ export default async function Footer() {
           {/* Kontakt */}
           <div>
             <h4 className="mb-5 text-xs uppercase tracking-[0.2em] text-white/30">
-              Kontakt
+              {data.kontaktTitel}
             </h4>
             <p className="mb-4 text-sm font-light leading-relaxed text-white/50">
               {data.vereinsname}<br />
@@ -100,7 +87,7 @@ export default async function Footer() {
                 </li>
               ))}
               <li className="flex flex-col">
-                <span className="text-[11px] uppercase tracking-widest text-white/25">E-Mail</span>
+                <span className="text-[11px] uppercase tracking-widest text-white/25">{data.emailLabel}</span>
                 <a
                   href={`mailto:${data.email}`}
                   className="text-sm text-white/50 transition-colors hover:text-white"
@@ -142,17 +129,13 @@ export default async function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/[0.06]">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-5 text-xs text-white/30 md:flex-row md:px-12 lg:px-20">
-          <p>{`© ${new Date().getFullYear()} ${data.copyrightName}. Alle Rechte vorbehalten.`}</p>
+          <p>{`© ${new Date().getFullYear()} ${data.copyrightName}. ${data.copyrightZusatz}`}</p>
           <div className="flex gap-5">
-            <Link href="/datenschutz" className="transition-colors hover:text-white">
-              Datenschutz
-            </Link>
-            <Link href="/impressum" className="transition-colors hover:text-white">
-              Impressum
-            </Link>
-            <Link href="/cookies" className="transition-colors hover:text-white">
-              Cookie-Einstellungen
-            </Link>
+            {(data.rechtlicheLinks ?? []).map((l) => (
+              <Link key={l.id ?? l.ziel} href={l.ziel} className="transition-colors hover:text-white">
+                {l.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
