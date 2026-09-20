@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getCookieConsent, type ConsentState } from "@/components/ui/cookie-banner";
+import { getCookieConsent, type ConsentState } from "@/lib/cookie-consent";
 
 export function useCookieConsent(): ConsentState | null {
   const [consent, setConsent] = useState<ConsentState | null>(null);

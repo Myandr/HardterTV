@@ -114,6 +114,7 @@ export interface Config {
     'termine-section': TermineSection;
     'vorstand-section': VorstandSection;
     'news-section': NewsSection;
+    'cookie-texte': CookieTexte;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
@@ -128,6 +129,7 @@ export interface Config {
     'termine-section': TermineSectionSelect<false> | TermineSectionSelect<true>;
     'vorstand-section': VorstandSectionSelect<false> | VorstandSectionSelect<true>;
     'news-section': NewsSectionSelect<false> | NewsSectionSelect<true>;
+    'cookie-texte': CookieTexteSelect<false> | CookieTexteSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1371,6 +1373,56 @@ export interface NewsSection {
   createdAt?: string | null;
 }
 /**
+ * Diese Texte sind datenschutzrechtlich relevant. Bitte nur nach Rücksprache ändern.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cookie-texte".
+ */
+export interface CookieTexte {
+  id: number;
+  banner: {
+    titel: string;
+    textVor: string;
+    /**
+     * Verlinkt immer auf /datenschutz.
+     */
+    linkText: string;
+    textNach: string;
+    alleAkzeptierenLabel: string;
+    auswahlSpeichernLabel: string;
+    einstellungenLabel: string;
+    nurNotwendigeLabel: string;
+  };
+  seite: {
+    speichernLabel: string;
+    gespeichertLabel: string;
+    alleAkzeptierenLabel: string;
+    nurNotwendigeLabel: string;
+  };
+  kategorien: {
+    schluessel: 'notwendig' | 'maps' | 'analyse';
+    titel: string;
+    bannerBeschreibung: string;
+    seiteBeschreibung: string;
+    seiteFussnote: string;
+    /**
+     * Nicht bei „Notwendige Cookies“ — dort gibt es keinen Schalter.
+     */
+    toggleAriaLabel?: string | null;
+    id?: string | null;
+  }[];
+  maps: {
+    titel: string;
+    text: string;
+    /**
+     * Verlinkt immer auf /cookies.
+     */
+    buttonLabel: string;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
@@ -1930,6 +1982,53 @@ export interface NewsSectionSelect<T extends boolean = true> {
   headlineTeil1?: T;
   headlineTeil2?: T;
   intro?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cookie-texte_select".
+ */
+export interface CookieTexteSelect<T extends boolean = true> {
+  banner?:
+    | T
+    | {
+        titel?: T;
+        textVor?: T;
+        linkText?: T;
+        textNach?: T;
+        alleAkzeptierenLabel?: T;
+        auswahlSpeichernLabel?: T;
+        einstellungenLabel?: T;
+        nurNotwendigeLabel?: T;
+      };
+  seite?:
+    | T
+    | {
+        speichernLabel?: T;
+        gespeichertLabel?: T;
+        alleAkzeptierenLabel?: T;
+        nurNotwendigeLabel?: T;
+      };
+  kategorien?:
+    | T
+    | {
+        schluessel?: T;
+        titel?: T;
+        bannerBeschreibung?: T;
+        seiteBeschreibung?: T;
+        seiteFussnote?: T;
+        toggleAriaLabel?: T;
+        id?: T;
+      };
+  maps?:
+    | T
+    | {
+        titel?: T;
+        text?: T;
+        buttonLabel?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

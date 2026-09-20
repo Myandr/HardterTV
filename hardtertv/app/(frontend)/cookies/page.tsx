@@ -2,6 +2,7 @@ import CookieSettings from "@/components/ui/cookie-settings";
 import RichTextBody from "@/components/ui/rich-text";
 import { getLegalPage } from "@/lib/get-legal-page";
 import { getSeitenTexte } from "@/lib/seiten-texte";
+import { getCookieTexte } from "@/lib/cookie-texte";
 
 export const revalidate = 3600;
 
@@ -11,7 +12,11 @@ export const metadata = {
 };
 
 export default async function CookiesPage() {
-  const [page, texte] = await Promise.all([getLegalPage("cookies"), getSeitenTexte()]);
+  const [page, texte, cookieTexte] = await Promise.all([
+    getLegalPage("cookies"),
+    getSeitenTexte(),
+    getCookieTexte(),
+  ]);
 
   return (
     <main className="min-h-screen bg-[#f9f9f7] px-6 py-24 md:px-12 lg:px-20">
@@ -36,7 +41,7 @@ export default async function CookiesPage() {
           />
         )}
 
-        <CookieSettings />
+        <CookieSettings seite={cookieTexte.seite} kategorien={cookieTexte.kategorien} />
       </div>
     </main>
   );

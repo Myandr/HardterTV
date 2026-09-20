@@ -9,9 +9,12 @@ interface MapsConsentGateProps {
   title: string;
   className?: string;
   style?: React.CSSProperties;
+  platzhalterTitel: string;
+  platzhalterText: string;
+  buttonLabel: string;
 }
 
-export function MapsConsentGate({ src, title, className = "", style }: MapsConsentGateProps) {
+export function MapsConsentGate({ src, title, className = "", style, platzhalterTitel, platzhalterText, buttonLabel }: MapsConsentGateProps) {
   const consent = useCookieConsent();
   const allowed = consent?.maps ?? false;
 
@@ -41,17 +44,17 @@ export function MapsConsentGate({ src, title, className = "", style }: MapsConse
         </div>
         <div>
           <p className="font-kanturmuy text-lg font-normal tracking-tight text-black">
-            Google Maps nicht aktiviert
+            {platzhalterTitel}
           </p>
           <p className="mt-1 max-w-xs text-sm font-light leading-relaxed text-black/50">
-            Um die Karte anzuzeigen, müssen Google Maps Cookies in den Einstellungen aktiviert werden.
+            {platzhalterText}
           </p>
         </div>
         <Link
           href="/cookies"
           className="mt-1 rounded-full bg-[#122023] px-5 py-2.5 text-sm font-medium text-[#e1fcad] transition-colors hover:bg-black"
         >
-          Cookie-Einstellungen öffnen
+          {buttonLabel}
         </Link>
       </div>
     </div>

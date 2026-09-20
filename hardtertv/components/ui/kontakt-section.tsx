@@ -35,6 +35,7 @@ export type KontaktSectionProps = {
   erfolgTitel: string;
   erfolgText: string;
   formular: KontaktFormularTexte;
+  mapsPlatzhalter: { platzhalterTitel: string; platzhalterText: string; buttonLabel: string };
   adresse: string;
   telefonLabel: string;
   telefon: string;
@@ -52,6 +53,7 @@ export default function KontaktSection({
   erfolgTitel,
   erfolgText,
   formular,
+  mapsPlatzhalter,
   adresse,
   telefonLabel,
   telefon,
@@ -252,6 +254,7 @@ export default function KontaktSection({
             <MapsConsentGate
               src={mapsEmbedUrl}
               title={mapsTitel}
+              {...mapsPlatzhalter}
               className="h-full w-full"
               style={{ border: 0, minHeight: "280px" }}
             />

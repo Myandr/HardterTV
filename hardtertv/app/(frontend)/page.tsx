@@ -8,6 +8,7 @@ import VorstandSection from "@/components/ui/vorstand-section";
 import NewsSection from "@/components/ui/news-section";
 import InstagramCta from "@/components/ui/instagram-cta";
 import KontaktSection from "@/components/ui/kontakt-section";
+import { getCookieTexte } from "@/lib/cookie-texte";
 import { formatTerminDatum, startOfTodayIso } from "@/lib/events";
 import { formatNewsDatum } from "@/lib/news";
 import { toBild } from "@/lib/media";
@@ -237,6 +238,7 @@ export default async function Home() {
     termineTexte,
     vorstandTexte,
     newsTexte,
+    cookieTexte,
   ] = await Promise.all([
     getHero(),
     getWelcome(),
@@ -249,6 +251,7 @@ export default async function Home() {
     getTermineTexte(),
     getVorstandTexte(),
     getNewsTexte(),
+    getCookieTexte(),
   ]);
   return (
     <main>
@@ -259,7 +262,7 @@ export default async function Home() {
       <VorstandSection vorstand={vorstand} {...vorstandTexte} />
       <NewsSection news={news} {...newsTexte} />
       <InstagramCta {...footerDaten.instagram} />
-      <KontaktSection {...kontaktTexte} {...footerDaten.kontakt} />
+      <KontaktSection {...kontaktTexte} {...footerDaten.kontakt} mapsPlatzhalter={cookieTexte.maps} />
     </main>
   );
 }

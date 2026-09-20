@@ -27,6 +27,7 @@ import { SeitenTexte } from "./globals/SeitenTexte";
 import { TermineSectionGlobal } from "./globals/TermineSection";
 import { VorstandSectionGlobal } from "./globals/VorstandSection";
 import { NewsSectionGlobal } from "./globals/NewsSection";
+import { CookieTexteGlobal } from "./globals/CookieTexte";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -39,7 +40,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Teams, BoardMembers, Events, GalleryAlbums, News, LegalPages, ContactSubmissions],
-  globals: [Mitgliedschaft, Training, Eisstock, HeroGlobal, WelcomeSectionGlobal, LocationSectionGlobal, FooterGlobal, KontaktSectionGlobal, SeitenTexte, TermineSectionGlobal, VorstandSectionGlobal, NewsSectionGlobal],
+  globals: [Mitgliedschaft, Training, Eisstock, HeroGlobal, WelcomeSectionGlobal, LocationSectionGlobal, FooterGlobal, KontaktSectionGlobal, SeitenTexte, TermineSectionGlobal, VorstandSectionGlobal, NewsSectionGlobal, CookieTexteGlobal],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
