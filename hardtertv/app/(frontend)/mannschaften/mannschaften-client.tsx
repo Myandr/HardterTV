@@ -20,17 +20,22 @@ type Props = {
   herren: Team[];
   damen: Team[];
   gemischt: Team[];
+  texte: {
+    kategorien: { kategorie: string; reiterLabel: string; listenEyebrow: string }[];
+    teamsSuffix: string;
+    kartenUntertitel: string;
+  };
 };
 
-const TABS = [
-  { id: "herren", label: "Herren" },
-  { id: "damen", label: "Damen" },
-  { id: "gemischt", label: "Gemischt" },
+const TAB_IDS = [
+  { id: "herren", kategorie: "Herren" },
+  { id: "damen", kategorie: "Damen" },
+  { id: "gemischt", kategorie: "Gemischt" },
 ] as const;
 
-type TabId = (typeof TABS)[number]["id"];
+type TabId = (typeof TAB_IDS)[number]["id"];
 
-function TeamCard({ team }: { team: Team }) {
+function TeamCard({ team, untertitel }: { team: Team; untertitel: string }) {
   return (
     <Link
       href={`/mannschaften/${team.slug}`}
@@ -61,7 +66,7 @@ function TeamCard({ team }: { team: Team }) {
           <div className="mt-1 flex items-center gap-2">
             <span className="h-[2px] w-4 rounded-full bg-[#e1fcad]" />
             <span className="text-xs font-light text-black/40 uppercase tracking-widest">
-              Hardter TV
+              {untertitel}
             </span>
           </div>
         </div>
@@ -75,8 +80,17 @@ function TeamCard({ team }: { team: Team }) {
   );
 }
 
-export default function MannschaftenClient({ herren, damen, gemischt }: Props) {
+export default function MannschaftenClient({ herren, damen, gemischt, texte }: Props) {
+  const TABS = TAB_IDS.map((t) => {
+    const zeile = texte.kategorien.find((k) => k.kategorie === t.kategorie);
+    return {
+      id: t.id,
+      label: zeile?.reiterLabel ?? t.kategorie,
+      listenEyebrow: zeile?.listenEyebrow ?? `${t.kategorie}-Teams`,
+    };
+  });
   const [activeTab, setActiveTab] = React.useState<TabId>("herren");
+  const aktiverTab = TABS.find((t) => t.id === activeTab) ?? TABS[0];
 
   const teamMap: Record<TabId, Team[]> = { herren, damen, gemischt };
   const activeTeams = teamMap[activeTab];
@@ -114,26 +128,18 @@ export default function MannschaftenClient({ herren, damen, gemischt }: Props) {
             <div className="mb-3 flex items-center gap-3">
               <span className="h-px w-8 bg-black/30" />
               <span className="text-xs uppercase tracking-[0.2em] text-black/50">
-                {activeTab === "herren"
-                  ? "Herren-Teams"
-                  : activeTab === "damen"
-                  ? "Damen-Teams"
-                  : "Gemischt-Teams"}
+                {aktiverTab.listenEyebrow}
               </span>
             </div>
             <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl">
               <span className="relative inline-block">
-                {activeTab === "herren"
-                  ? "Herren"
-                  : activeTab === "damen"
-                  ? "Damen"
-                  : "Gemischt"}
+                {aktiverTab.label}
                 <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
               </span>
             </h2>
           </div>
           <span className="shrink-0 rounded-full border border-black/[0.08] bg-white px-4 py-2 text-sm text-black/40">
-            {activeTeams.length} Teams
+            {`${activeTeams.length} ${texte.teamsSuffix}`}
           </span>
         </div>
 
@@ -148,7 +154,7 @@ export default function MannschaftenClient({ herren, damen, gemischt }: Props) {
             className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
           >
             {activeTeams.map((team) => (
-              <TeamCard key={team.slug} team={team} />
+              <TeamCard key={team.slug} team={team} untertitel={texte.kartenUntertitel} />
             ))}
           </motion.div>
         </AnimatePresence>

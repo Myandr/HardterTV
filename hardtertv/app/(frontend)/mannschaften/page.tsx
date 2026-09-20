@@ -1,8 +1,11 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
+import { getSeitenTexte } from "@/lib/seiten-texte";
 import MannschaftenClient from "./mannschaften-client";
 
 export const revalidate = 3600;
+
+const KATEGORIEN = ["Herren", "Damen", "Gemischt"] as const;
 
 type Team = {
   slug: string;
@@ -33,10 +36,20 @@ async function getTeams(): Promise<Team[]> {
 }
 
 export default async function MannschaftenPage() {
-  const teams = await getTeams();
+  const [teams, seitenTexte] = await Promise.all([getTeams(), getSeitenTexte()]);
+  const texte = seitenTexte.mannschaften;
   const herren = teams.filter((t) => t.kategorie === "Herren");
   const damen = teams.filter((t) => t.kategorie === "Damen");
   const gemischt = teams.filter((t) => t.kategorie === "Gemischt");
+  const kategorien = KATEGORIEN.map((k) => {
+    const zeile = texte.kategorien.find((z) => z.kategorie === k);
+    return {
+      kategorie: k,
+      reiterLabel: zeile?.reiterLabel ?? k,
+      listenEyebrow: zeile?.listenEyebrow ?? `${k}-Teams`,
+      badgeSuffix: zeile?.badgeSuffix ?? `${k}-Teams`,
+    };
+  });
 
   return (
     <main>
@@ -50,27 +63,26 @@ export default async function MannschaftenPage() {
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-8 bg-white/30" />
-            <span className="text-xs uppercase tracking-[0.2em] text-white/50">Sport</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-white/50">{texte.eyebrow}</span>
           </div>
 
           <h1 className="font-kanturmuy max-w-3xl text-4xl font-normal tracking-tighter text-white sm:text-5xl md:text-7xl">
-            Unsere{" "}
+            {texte.titelVorne}{" "}
             <span className="relative inline-block">
-              Mannschaften
+              {texte.titelHighlight}
               <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
             </span>
           </h1>
 
           <p className="mt-6 max-w-xl text-base font-light text-white/60 md:text-lg">
-            Vom Nachwuchs bis zu den Senioren — der Hardter TV stellt zahlreiche
-            Mannschaften in verschiedenen Altersklassen und Ligen auf.
+            {texte.text}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             {[
-              { label: `${herren.length} Herren-Teams` },
-              { label: `${damen.length} Damen-Teams` },
-              { label: `${gemischt.length} Gemischt-Teams` },
+              { label: `${herren.length} ${kategorien[0].badgeSuffix}` },
+              { label: `${damen.length} ${kategorien[1].badgeSuffix}` },
+              { label: `${gemischt.length} ${kategorien[2].badgeSuffix}` },
             ].map((b) => (
               <span
                 key={b.label}
@@ -83,7 +95,16 @@ export default async function MannschaftenPage() {
         </div>
       </section>
 
-      <MannschaftenClient herren={herren} damen={damen} gemischt={gemischt} />
+      <MannschaftenClient
+        herren={herren}
+        damen={damen}
+        gemischt={gemischt}
+        texte={{
+          kategorien,
+          teamsSuffix: texte.teamsSuffix,
+          kartenUntertitel: texte.kartenUntertitel,
+        }}
+      />
 
       {/* Kontakt Sportwart */}
       <section className="bg-[#122023] px-6 py-20 md:px-12 lg:px-20 lg:py-28">
@@ -92,36 +113,35 @@ export default async function MannschaftenPage() {
             <div>
               <div className="mb-4 flex items-center gap-3">
                 <span className="h-px w-8 bg-white/30" />
-                <span className="text-xs uppercase tracking-[0.2em] text-white/50">Ansprechpartner</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-white/50">{texte.kontaktEyebrow}</span>
               </div>
               <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter text-white sm:text-4xl">
-                Fragen zu den{" "}
+                {texte.kontaktTitelVorne}{" "}
                 <span className="relative inline-block">
-                  Mannschaften?
+                  {texte.kontaktTitelHighlight}
                   <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
                 </span>
               </h2>
               <p className="mt-3 max-w-md text-base font-light text-white/60">
-                Unser Sportwart hilft dir bei allen Fragen rund um Anmeldung,
-                Spielbetrieb und Mannschaftseinteilung.
+                {texte.kontaktText}
               </p>
             </div>
 
             <div className="flex flex-col gap-3 rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-              <div className="text-xs uppercase tracking-widest text-white/40">Sportwart</div>
+              <div className="text-xs uppercase tracking-widest text-white/40">{texte.kontaktLabel}</div>
               <a
-                href="tel:+4915153553355"
+                href={texte.kontaktTelefonHref}
                 className="flex items-center gap-3 text-sm text-white/70 transition-colors hover:text-white"
               >
                 <span className="flex size-8 items-center justify-center rounded-full bg-[#e1fcad]/20 text-[#e1fcad] text-xs">📞</span>
-                0151 53 55 33 55
+                {texte.kontaktTelefon}
               </a>
               <a
-                href="mailto:1.vorsitzender@hardt-tennis.de"
+                href={`mailto:${texte.kontaktEmail}`}
                 className="flex items-center gap-3 text-sm text-white/70 transition-colors hover:text-white"
               >
                 <span className="flex size-8 items-center justify-center rounded-full bg-[#e1fcad]/20 text-[#e1fcad] text-xs">✉</span>
-                1.vorsitzender@hardt-tennis.de
+                {texte.kontaktEmail}
               </a>
             </div>
           </div>
