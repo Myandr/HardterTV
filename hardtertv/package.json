@@ -17,6 +17,7 @@
     "seed:events": "dotenv -e .env.local -- tsx scripts/seed-events.ts",
     "seed:gallery": "dotenv -e .env.local -- tsx scripts/seed-gallery.ts",
     "seed:legal-pages": "dotenv -e .env.local -- tsx scripts/seed-legal-pages.ts",
+    "sync:embed-consent": "dotenv -e .env.local -- tsx scripts/sync-embed-consent-texte.ts",
     "seed:mitgliedschaft": "dotenv -e .env.local -- tsx scripts/seed-mitgliedschaft.ts",
     "seed:training": "dotenv -e .env.local -- tsx scripts/seed-training.ts",
     "seed:eisstock": "dotenv -e .env.local -- tsx scripts/seed-eisstock.ts",

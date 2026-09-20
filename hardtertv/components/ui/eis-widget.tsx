@@ -1,5 +1,7 @@
 "use client";
 
+import { EmbedConsentGate } from "@/components/ui/embed-consent-gate";
+
 export function EisWidget({ url }: { url: string }) {
   if (!url) {
     return (
@@ -17,14 +19,20 @@ export function EisWidget({ url }: { url: string }) {
   }
 
   return (
-    <iframe
+    <EmbedConsentGate
       src={url}
-      width="100%"
-      height="700"
-      className="min-h-[700px] border-none"
       title="Eisstockschießen online buchen"
-      sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
-      allowFullScreen
+      className="min-h-[700px] w-full border-none"
+      iframeProps={{
+        width: "100%",
+        height: 700,
+        sandbox: "allow-scripts allow-forms allow-same-origin allow-popups",
+        allowFullScreen: true,
+      }}
+      platzhalterTitel="Online-Buchung nicht geladen"
+      platzhalterText="Für die Buchung binden wir den Dienst SimplyBook.me ein. Beim Laden werden Daten (u. a. Ihre IP-Adresse) an SimplyBook.me übertragen und Cookies gesetzt. Mehr dazu in unserer"
+      buttonLabel="Buchung laden"
+      directLinkLabel="Buchungsseite direkt öffnen"
     />
   );
 }

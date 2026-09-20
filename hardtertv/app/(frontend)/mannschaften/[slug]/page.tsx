@@ -5,6 +5,7 @@ import { ArrowLeft, Mail, Phone } from "lucide-react";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import TeamPlaceholder from "@/components/ui/team-placeholder";
+import { EmbedConsentGate } from "@/components/ui/embed-consent-gate";
 import { getSeitenTexte } from "@/lib/seiten-texte";
 
 export const revalidate = 3600;
@@ -186,11 +187,15 @@ export default async function TeamPage({
               <span className="text-xs text-black/30">{texte.mannschaftDetail.ligaQuelle}</span>
             </div>
             <div className="p-0">
-              <iframe
+              <EmbedConsentGate
                 src={team.ligaUrl}
                 title={`${team.name} Ligadaten`}
-                loading="lazy"
                 className="h-[1000px] w-full border-0 md:h-[1100px]"
+                iframeProps={{ loading: "lazy" }}
+                platzhalterTitel="Ligadaten nicht geladen"
+                platzhalterText="Die Ligadaten werden vom Dienst nuLiga (WTV) eingebunden. Beim Laden werden Daten (u. a. Ihre IP-Adresse) an nuLiga übertragen. Mehr dazu in unserer"
+                buttonLabel="Ligadaten laden"
+                directLinkLabel="Ligadaten bei nuLiga öffnen"
               />
             </div>
           </div>
