@@ -1,6 +1,7 @@
 import CookieSettings from "@/components/ui/cookie-settings";
 import RichTextBody from "@/components/ui/rich-text";
 import { getLegalPage } from "@/lib/get-legal-page";
+import { getSeitenTexte } from "@/lib/seiten-texte";
 
 export const revalidate = 3600;
 
@@ -10,20 +11,20 @@ export const metadata = {
 };
 
 export default async function CookiesPage() {
-  const page = await getLegalPage("cookies");
+  const [page, texte] = await Promise.all([getLegalPage("cookies"), getSeitenTexte()]);
 
   return (
     <main className="min-h-screen bg-[#f9f9f7] px-6 py-24 md:px-12 lg:px-20">
       <div className="mx-auto max-w-2xl">
         <div className="mb-6 flex items-center gap-3">
           <span className="h-px w-8 bg-black/30" />
-          <span className="text-xs uppercase tracking-[0.2em] text-black/50">Datenschutz</span>
+          <span className="text-xs uppercase tracking-[0.2em] text-black/50">{texte.rechtliches.cookiesEyebrow}</span>
         </div>
 
         <h1 className="font-kanturmuy text-4xl font-normal tracking-tighter text-black sm:text-5xl">
-          Cookie-
+          {texte.rechtliches.cookiesTitelVorne}
           <span className="relative inline-block">
-            Einstellungen
+            {texte.rechtliches.cookiesTitelHighlight}
             <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
           </span>
         </h1>
