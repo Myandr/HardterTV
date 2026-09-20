@@ -6,28 +6,44 @@ import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 import { MapsConsentGate } from "@/components/ui/maps-consent-gate";
 
-const kontaktInfo = [
-  {
-    icon: MapPin,
-    label: "Adresse",
-    wert: "Gahlener Str. 204\n46282 Dorsten",
-  },
-  {
-    icon: Phone,
-    label: "Vorsitzender",
-    wert: "0172 25 80 209",
-    href: "tel:+4917225800209",
-  },
-  {
-    icon: Mail,
-    label: "E-Mail",
-    wert: "1.vorsitzender@hardt-tennis.de",
-    href: "mailto:1.vorsitzender@hardt-tennis.de",
-  },
-];
+export type KontaktSectionProps = {
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  mapsEmbedUrl: string;
+  mapsTitel: string;
+  erfolgTitel: string;
+  erfolgText: string;
+  adresse: string;
+  telefonLabel: string;
+  telefon: string;
+  telefonHref: string;
+  email: string;
+};
 
-export default function KontaktSection() {
+export default function KontaktSection({
+  eyebrow,
+  headlineTeil1,
+  headlineTeil2,
+  intro,
+  mapsEmbedUrl,
+  mapsTitel,
+  erfolgTitel,
+  erfolgText,
+  adresse,
+  telefonLabel,
+  telefon,
+  telefonHref,
+  email,
+}: KontaktSectionProps) {
   const [sent, setSent] = useState(false);
+
+  const kontaktInfo = [
+    { icon: MapPin, label: "Adresse", wert: adresse, href: undefined as string | undefined },
+    { icon: Phone, label: telefonLabel, wert: telefon, href: telefonHref },
+    { icon: Mail, label: "E-Mail", wert: email, href: `mailto:${email}` },
+  ];
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -41,20 +57,20 @@ export default function KontaktSection() {
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-8 bg-black/30" />
             <span className="text-xs uppercase tracking-[0.2em] text-black/50">
-              Kontakt
+              {eyebrow}
             </span>
           </div>
 
           <h2 className="font-kanturmuy max-w-xl text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-            <BlurTextEffect>Schreibe </BlurTextEffect>
+            <BlurTextEffect>{`${headlineTeil1} `}</BlurTextEffect>
             <span className="relative inline-block">
-              <BlurTextEffect>uns direkt</BlurTextEffect>
+              <BlurTextEffect>{headlineTeil2}</BlurTextEffect>
               <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
             </span>
           </h2>
 
           <p className="mt-4 max-w-md text-base font-light text-black/50">
-            Nehmt direkt Kontakt mit uns auf — wir melden uns so schnell wie möglich.
+            {intro}
           </p>
         </FadeIn>
 
@@ -87,8 +103,8 @@ export default function KontaktSection() {
                   <div className="flex size-12 items-center justify-center rounded-full bg-[#e1fcad]">
                     <ArrowUpRight className="size-5 text-black" strokeWidth={2} />
                   </div>
-                  <p className="font-kanturmuy text-xl tracking-tight text-black">Nachricht gesendet!</p>
-                  <p className="text-sm text-black/50">Wir melden uns bald bei dir.</p>
+                  <p className="font-kanturmuy text-xl tracking-tight text-black">{erfolgTitel}</p>
+                  <p className="text-sm text-black/50">{erfolgText}</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -159,8 +175,8 @@ export default function KontaktSection() {
 
           <div className="overflow-hidden rounded-2xl border border-black/[0.06] min-h-[280px] sm:min-h-[360px] lg:min-h-0">
             <MapsConsentGate
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2474.959200775651!2d6.927527713413548!3d51.6605833717312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b8f26e657412d9%3A0x9088105a5549feb5!2sHardter%20TV!5e0!3m2!1sde!2sde!4v1737024831814!5m2!1sde!2sde"
-              title="Standort Hardter TV"
+              src={mapsEmbedUrl}
+              title={mapsTitel}
               className="h-full w-full"
               style={{ border: 0, minHeight: "280px" }}
             />

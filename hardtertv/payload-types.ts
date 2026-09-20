@@ -107,6 +107,7 @@ export interface Config {
     'welcome-section': WelcomeSection;
     'location-section': LocationSection;
     footer: Footer;
+    'kontakt-section': KontaktSection;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
@@ -116,6 +117,7 @@ export interface Config {
     'welcome-section': WelcomeSectionSelect<false> | WelcomeSectionSelect<true>;
     'location-section': LocationSectionSelect<false> | LocationSectionSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'kontakt-section': KontaktSectionSelect<false> | KontaktSectionSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1024,6 +1026,28 @@ export interface Footer {
   createdAt?: string | null;
 }
 /**
+ * Adresse, Telefon und E-Mail stammen aus „Footer & Kontaktdaten“ — hier stehen nur die Texte dieses Abschnitts.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "kontakt-section".
+ */
+export interface KontaktSection {
+  id: number;
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  /**
+   * In Google Maps: Teilen → Karte einbetten → die Adresse aus dem src="…" kopieren. Die Karte wird erst nach Cookie-Einwilligung geladen.
+   */
+  mapsEmbedUrl: string;
+  mapsTitel: string;
+  erfolgTitel: string;
+  erfolgText: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
@@ -1367,6 +1391,23 @@ export interface FooterSelect<T extends boolean = true> {
         ctaText?: T;
       };
   copyrightName?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "kontakt-section_select".
+ */
+export interface KontaktSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  headlineTeil1?: T;
+  headlineTeil2?: T;
+  intro?: T;
+  mapsEmbedUrl?: T;
+  mapsTitel?: T;
+  erfolgTitel?: T;
+  erfolgText?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
