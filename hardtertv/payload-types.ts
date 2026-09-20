@@ -110,6 +110,7 @@ export interface Config {
     'location-section': LocationSection;
     footer: Footer;
     'kontakt-section': KontaktSection;
+    'seiten-texte': SeitenTexte;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
@@ -120,6 +121,7 @@ export interface Config {
     'location-section': LocationSectionSelect<false> | LocationSectionSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'kontakt-section': KontaktSectionSelect<false> | KontaktSectionSelect<true>;
+    'seiten-texte': SeitenTexteSelect<false> | SeitenTexteSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1090,6 +1092,126 @@ export interface KontaktSection {
   createdAt?: string | null;
 }
 /**
+ * Überschriften und Einleitungen der Unterseiten. Die Inhalte selbst (Vorstandsmitglieder, Termine, Bilder, Mannschaften) werden in den jeweiligen Sammlungen gepflegt.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seiten-texte".
+ */
+export interface SeitenTexte {
+  id: number;
+  vorstand: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    /**
+     * Die Zahl wird automatisch davorgesetzt, z. B. "17 Mitglieder".
+     */
+    badgeSuffix: string;
+    /**
+     * Reihenfolge der Zeilen = Reihenfolge der Abschnitte auf der Seite. Gruppen ohne Mitglieder werden nicht angezeigt.
+     */
+    gruppen: {
+      gruppe: 'fuehrung' | 'finanzen' | 'sport' | 'events' | 'technik';
+      titel: string;
+      beschreibung: string;
+      id?: string | null;
+    }[];
+    ctaTitel: string;
+    ctaText: string;
+    ctaButtonLabel: string;
+    ctaEmail: string;
+  };
+  kalender: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    monatsansichtLabel: string;
+    listenansichtLabel: string;
+    filterAlleLabel: string;
+    ausgewaehlterTagLabel: string;
+    naechsteTermineLabel: string;
+    keineTermineTag: string;
+    keineTermineListe: string;
+    /**
+     * Steht hinter jeder Uhrzeit, z. B. "Uhr".
+     */
+    uhrzeitSuffix: string;
+  };
+  galerie: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    /**
+     * Die Zahl wird automatisch davorgesetzt, z. B. "84 Bilder".
+     */
+    bilderSuffix: string;
+    leerText: string;
+  };
+  mannschaften: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    /**
+     * Beschriftungen für die drei Reiter. Die Zuordnung der Teams passiert in der Sammlung Mannschaften.
+     */
+    kategorien: {
+      kategorie: 'Herren' | 'Damen' | 'Gemischt';
+      reiterLabel: string;
+      listenEyebrow: string;
+      /**
+       * Die Zahl wird automatisch davorgesetzt, z. B. "9 Herren-Teams".
+       */
+      badgeSuffix: string;
+      id?: string | null;
+    }[];
+    /**
+     * Die Zahl wird automatisch davorgesetzt, z. B. "9 Teams".
+     */
+    teamsSuffix: string;
+    kartenUntertitel: string;
+    kontaktEyebrow: string;
+    kontaktTitelVorne: string;
+    kontaktTitelHighlight: string;
+    kontaktText: string;
+    kontaktLabel: string;
+    kontaktTelefon: string;
+    /**
+     * Technische Schreibweise, z. B. "tel:+4915153553355".
+     */
+    kontaktTelefonHref: string;
+    kontaktEmail: string;
+  };
+  mannschaftDetail: {
+    zurueckLabel: string;
+    saisonLabel: string;
+    vereinBadge: string;
+    verbandBadge: string;
+    ligaEyebrow: string;
+    ligaTitel: string;
+    /**
+     * Erscheint als "<Mannschaft> – <Angabe>" und zusätzlich in der Seitenbeschreibung für Suchmaschinen.
+     */
+    ligaSaisonLabel: string;
+    ligaQuelle: string;
+    abschlussText: string;
+  };
+  rechtliches: {
+    zurueckLabel: string;
+    cookiesEyebrow: string;
+    /**
+     * Wird ohne Leerzeichen an den zweiten Teil gehängt (aktuell "Cookie-" + "Einstellungen").
+     */
+    cookiesTitelVorne: string;
+    cookiesTitelHighlight: string;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
@@ -1450,6 +1572,110 @@ export interface KontaktSectionSelect<T extends boolean = true> {
   mapsTitel?: T;
   erfolgTitel?: T;
   erfolgText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "seiten-texte_select".
+ */
+export interface SeitenTexteSelect<T extends boolean = true> {
+  vorstand?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        badgeSuffix?: T;
+        gruppen?:
+          | T
+          | {
+              gruppe?: T;
+              titel?: T;
+              beschreibung?: T;
+              id?: T;
+            };
+        ctaTitel?: T;
+        ctaText?: T;
+        ctaButtonLabel?: T;
+        ctaEmail?: T;
+      };
+  kalender?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        monatsansichtLabel?: T;
+        listenansichtLabel?: T;
+        filterAlleLabel?: T;
+        ausgewaehlterTagLabel?: T;
+        naechsteTermineLabel?: T;
+        keineTermineTag?: T;
+        keineTermineListe?: T;
+        uhrzeitSuffix?: T;
+      };
+  galerie?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        bilderSuffix?: T;
+        leerText?: T;
+      };
+  mannschaften?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        kategorien?:
+          | T
+          | {
+              kategorie?: T;
+              reiterLabel?: T;
+              listenEyebrow?: T;
+              badgeSuffix?: T;
+              id?: T;
+            };
+        teamsSuffix?: T;
+        kartenUntertitel?: T;
+        kontaktEyebrow?: T;
+        kontaktTitelVorne?: T;
+        kontaktTitelHighlight?: T;
+        kontaktText?: T;
+        kontaktLabel?: T;
+        kontaktTelefon?: T;
+        kontaktTelefonHref?: T;
+        kontaktEmail?: T;
+      };
+  mannschaftDetail?:
+    | T
+    | {
+        zurueckLabel?: T;
+        saisonLabel?: T;
+        vereinBadge?: T;
+        verbandBadge?: T;
+        ligaEyebrow?: T;
+        ligaTitel?: T;
+        ligaSaisonLabel?: T;
+        ligaQuelle?: T;
+        abschlussText?: T;
+      };
+  rechtliches?:
+    | T
+    | {
+        zurueckLabel?: T;
+        cookiesEyebrow?: T;
+        cookiesTitelVorne?: T;
+        cookiesTitelHighlight?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

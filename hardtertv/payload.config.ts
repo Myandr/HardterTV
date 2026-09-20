@@ -23,6 +23,7 @@ import { WelcomeSectionGlobal } from "./globals/WelcomeSection";
 import { LocationSectionGlobal } from "./globals/LocationSection";
 import { FooterGlobal } from "./globals/Footer";
 import { KontaktSectionGlobal } from "./globals/KontaktSection";
+import { SeitenTexte } from "./globals/SeitenTexte";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -35,7 +36,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Teams, BoardMembers, Events, GalleryAlbums, News, LegalPages, ContactSubmissions],
-  globals: [Mitgliedschaft, Training, Eisstock, HeroGlobal, WelcomeSectionGlobal, LocationSectionGlobal, FooterGlobal, KontaktSectionGlobal],
+  globals: [Mitgliedschaft, Training, Eisstock, HeroGlobal, WelcomeSectionGlobal, LocationSectionGlobal, FooterGlobal, KontaktSectionGlobal, SeitenTexte],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
