@@ -14,6 +14,15 @@ export type KontaktValidierung =
   | { ok: true; data: { name: string; email: string; telefon: string; nachricht: string } }
   | { ok: false; error: string; fieldErrors: KontaktFeldFehler };
 
+/** Was der Nutzer eingegeben hat — wird bei Fehlern zurückgespiegelt, damit nichts verloren geht. */
+export type KontaktWerte = {
+  name: string;
+  email: string;
+  telefon: string;
+  nachricht: string;
+  datenschutz: boolean;
+};
+
 export const KONTAKT_LIMITS = {
   nameMin: 2,
   nameMax: 120,
@@ -23,13 +32,20 @@ export const KONTAKT_LIMITS = {
   nachrichtMax: 5000,
 };
 
-const EMAIL_MUSTER = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/;
+// Identisch zur E-Mail-Prüfung von Payload (node_modules/payload/dist/fields/validations.js),
+// damit eine hier akzeptierte Adresse nicht erst in payload.create scheitert.
+const EMAIL_MUSTER =
+  /^(?!.*\.\.)[\w!#$%&'*+/=?^`{|}~-](?:[\w!#$%&'*+/=?^`{|}~.-]*[\w!#$%&'*+/=?^`{|}~-])?@[a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}$/i;
+
+// Steuerzeichen (Header-Injection-Hygiene). In der Nachricht bleiben Tab, LF und CR erhalten.
+const STEUERZEICHEN = /[\u0000-\u001F\u007F]/g;
+const STEUERZEICHEN_OHNE_UMBRUCH = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g;
 
 export function validateKontakt(eingabe: KontaktEingabe): KontaktValidierung {
-  const name = eingabe.name.trim();
-  const email = eingabe.email.trim();
-  const telefon = eingabe.telefon.trim();
-  const nachricht = eingabe.nachricht.trim();
+  const name = eingabe.name.replace(STEUERZEICHEN, "").trim();
+  const email = eingabe.email.replace(STEUERZEICHEN, "").trim().toLowerCase();
+  const telefon = eingabe.telefon.replace(STEUERZEICHEN, "").trim();
+  const nachricht = eingabe.nachricht.replace(STEUERZEICHEN_OHNE_UMBRUCH, "").trim();
 
   const fieldErrors: KontaktFeldFehler = {};
 

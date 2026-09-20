@@ -1,11 +1,12 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { MapPin, Phone, Mail, ArrowUpRight } from "lucide-react";
 import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 import { MapsConsentGate } from "@/components/ui/maps-consent-gate";
 import { sendeKontaktanfrage, type KontaktResult } from "@/lib/actions/kontakt";
+import { KONTAKT_LIMITS } from "@/lib/kontakt-validation";
 
 export type KontaktSectionProps = {
   eyebrow: string;
@@ -46,9 +47,14 @@ export default function KontaktSection({
   const fieldErrors = result && !result.ok ? (result.fieldErrors ?? {}) : {};
   const generalError = result && !result.ok ? result.error : null;
 
-  const startRef = useRef<HTMLInputElement>(null);
+  // Nach einem Fehler setzt React 19 das Formular zurück: Eingaben werden deshalb
+  // aus dem Action-Ergebnis als defaultValue zurückgespiegelt.
+  const values = result && !result.ok ? result.values : null;
+
+  // Kontrolliertes Feld: der Formular-Reset kann den Zeitstempel nicht leeren.
+  const [gestartetAm, setGestartetAm] = useState("");
   useEffect(() => {
-    if (startRef.current) startRef.current.value = String(Date.now());
+    setGestartetAm(String(Date.now()));
   }, []);
 
   const kontaktInfo = [
@@ -115,50 +121,65 @@ export default function KontaktSection({
                 </div>
               ) : (
                 <form action={formAction} className="flex flex-col gap-4">
-                  <input ref={startRef} type="hidden" name="gestartetAm" defaultValue="" />
+                  <input type="hidden" name="gestartetAm" value={gestartetAm} readOnly />
                   <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-                    <label htmlFor="website">Dieses Feld bitte leer lassen</label>
-                    <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+                    <label htmlFor="htv_hinweis">Dieses Feld bitte leer lassen</label>
+                    <input type="text" id="htv_hinweis" name="htv_hinweis" tabIndex={-1} autoComplete="off" />
                   </div>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs uppercase tracking-widest text-black/40">Name</label>
+                      <label htmlFor="kontakt-name" className="text-xs uppercase tracking-widest text-black/40">Name</label>
                       <input
                         type="text"
+                        id="kontakt-name"
                         name="name"
                         required
+                        maxLength={KONTAKT_LIMITS.nameMax}
+                        defaultValue={values?.name ?? ""}
+                        aria-invalid={fieldErrors.name ? true : undefined}
+                        aria-describedby={fieldErrors.name ? "kontakt-name-fehler" : undefined}
                         className="rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
                         placeholder="Dein Name"
                       />
                       {fieldErrors.name && (
-                        <p className="text-xs text-red-600">{fieldErrors.name}</p>
+                        <p id="kontakt-name-fehler" className="text-xs text-red-600">{fieldErrors.name}</p>
                       )}
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs uppercase tracking-widest text-black/40">E-Mail</label>
+                      <label htmlFor="kontakt-email" className="text-xs uppercase tracking-widest text-black/40">E-Mail</label>
                       <input
                         type="email"
+                        id="kontakt-email"
                         name="email"
                         required
+                        maxLength={KONTAKT_LIMITS.emailMax}
+                        defaultValue={values?.email ?? ""}
+                        aria-invalid={fieldErrors.email ? true : undefined}
+                        aria-describedby={fieldErrors.email ? "kontakt-email-fehler" : undefined}
                         className="rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
                         placeholder="deine@email.de"
                       />
                       {fieldErrors.email && (
-                        <p className="text-xs text-red-600">{fieldErrors.email}</p>
+                        <p id="kontakt-email-fehler" className="text-xs text-red-600">{fieldErrors.email}</p>
                       )}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs uppercase tracking-widest text-black/40">Nachricht</label>
+                    <label htmlFor="kontakt-nachricht" className="text-xs uppercase tracking-widest text-black/40">Nachricht</label>
                     <textarea
+                      id="kontakt-nachricht"
                       name="message"
                       required
+                      maxLength={KONTAKT_LIMITS.nachrichtMax}
+                      defaultValue={values?.nachricht ?? ""}
+                      aria-invalid={fieldErrors.nachricht ? true : undefined}
+                      aria-describedby={fieldErrors.nachricht ? "kontakt-nachricht-fehler" : undefined}
                       rows={4}
                       className="resize-none rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
                       placeholder="Deine Nachricht an den HTV..."
                     />
                     {fieldErrors.nachricht && (
-                      <p className="text-xs text-red-600">{fieldErrors.nachricht}</p>
+                      <p id="kontakt-nachricht-fehler" className="text-xs text-red-600">{fieldErrors.nachricht}</p>
                     )}
                   </div>
                   <div className="flex items-start gap-2.5">
@@ -167,6 +188,9 @@ export default function KontaktSection({
                       id="datenschutz"
                       name="datenschutz"
                       required
+                      defaultChecked={values?.datenschutz ?? false}
+                      aria-invalid={fieldErrors.datenschutz ? true : undefined}
+                      aria-describedby={fieldErrors.datenschutz ? "kontakt-datenschutz-fehler" : undefined}
                       className="mt-0.5 size-4 shrink-0 cursor-pointer accent-[#122023]"
                     />
                     <label htmlFor="datenschutz" className="text-xs leading-relaxed text-black/50">
@@ -178,10 +202,10 @@ export default function KontaktSection({
                     </label>
                   </div>
                   {fieldErrors.datenschutz && (
-                    <p className="text-xs text-red-600">{fieldErrors.datenschutz}</p>
+                    <p id="kontakt-datenschutz-fehler" className="text-xs text-red-600">{fieldErrors.datenschutz}</p>
                   )}
                   {generalError && (
-                    <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                       {generalError}
                     </p>
                   )}
