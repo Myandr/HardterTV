@@ -17,6 +17,7 @@ import { LegalPages } from "./collections/LegalPages";
 import { Mitgliedschaft } from "./globals/Mitgliedschaft";
 import { Training } from "./globals/Training";
 import { Eisstock } from "./globals/Eisstock";
+import { HeroGlobal } from "./globals/Hero";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -29,7 +30,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, Teams, BoardMembers, Events, GalleryAlbums, News, LegalPages],
-  globals: [Mitgliedschaft, Training, Eisstock],
+  globals: [Mitgliedschaft, Training, Eisstock, HeroGlobal],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

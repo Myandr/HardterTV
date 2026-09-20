@@ -10,8 +10,25 @@ import InstagramCta from "@/components/ui/instagram-cta";
 import KontaktSection from "@/components/ui/kontakt-section";
 import { formatTerminDatum, startOfTodayIso } from "@/lib/events";
 import { formatNewsDatum } from "@/lib/news";
+import { toBild } from "@/lib/media";
 
 export const revalidate = 3600;
+
+async function getHero() {
+  const payload = await getPayload({ config });
+  const data = await payload.findGlobal({ slug: "hero", depth: 1 });
+  return {
+    headline: data.headline ?? "",
+    subtext: data.subtext ?? "",
+    ctaLabel: data.ctaLabel ?? "",
+    bild: toBild(data.bild),
+    partnerLogos: (data.partnerLogos ?? []).flatMap((row, i) => {
+      const bild = toBild(row.logo);
+      if (!bild) return [];
+      return [{ id: row.id ?? String(i), url: bild.url, alt: row.alt || bild.alt }];
+    }),
+  };
+}
 
 async function getVorstand() {
   const payload = await getPayload({ config });
@@ -70,10 +87,15 @@ async function getNews() {
 }
 
 export default async function Home() {
-  const [vorstand, termine, news] = await Promise.all([getVorstand(), getTermine(), getNews()]);
+  const [hero, vorstand, termine, news] = await Promise.all([
+    getHero(),
+    getVorstand(),
+    getTermine(),
+    getNews(),
+  ]);
   return (
     <main>
-      <Hero />
+      <Hero {...hero} />
       <WelcomeSection />
       <LocationSection />
       <TermineSection termine={termine} />

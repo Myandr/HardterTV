@@ -103,11 +103,13 @@ export interface Config {
     mitgliedschaft: Mitgliedschaft;
     training: Training;
     eisstock: Eisstock;
+    hero: Hero;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
     training: TrainingSelect<false> | TrainingSelect<true>;
     eisstock: EisstockSelect<false> | EisstockSelect<true>;
+    hero: HeroSelect<false> | HeroSelect<true>;
   };
   locale: null;
   widgets: {
@@ -846,6 +848,38 @@ export interface Eisstock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero".
+ */
+export interface Hero {
+  id: number;
+  headline: string;
+  subtext: string;
+  /**
+   * Der Button verlinkt immer auf /mitgliedschaft.
+   */
+  ctaLabel: string;
+  /**
+   * Querformat, mindestens 1920×1080. Ohne Bild bleibt die Fläche grau — die Seite bricht nicht.
+   */
+  bild?: (number | null) | Media;
+  /**
+   * Laufen als Endlosband unter dem Text durch.
+   */
+  partnerLogos?:
+    | {
+        logo: number | Media;
+        /**
+         * Leer lassen = Alternativtext des Bildes wird verwendet.
+         */
+        alt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
 export interface MitgliedschaftSelect<T extends boolean = true> {
@@ -1071,6 +1105,26 @@ export interface EisstockSelect<T extends boolean = true> {
         titelHighlight?: T;
         text?: T;
         widgetUrl?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero_select".
+ */
+export interface HeroSelect<T extends boolean = true> {
+  headline?: T;
+  subtext?: T;
+  ctaLabel?: T;
+  bild?: T;
+  partnerLogos?:
+    | T
+    | {
+        logo?: T;
+        alt?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
