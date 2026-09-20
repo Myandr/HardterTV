@@ -17,6 +17,17 @@ type Event = {
   beschreibung?: string;
 };
 
+export type KalenderTexte = {
+  monatsansichtLabel: string;
+  listenansichtLabel: string;
+  filterAlleLabel: string;
+  ausgewaehlterTagLabel: string;
+  naechsteTermineLabel: string;
+  keineTermineTag: string;
+  keineTermineListe: string;
+  uhrzeitSuffix: string;
+};
+
 const KATEGORIE_FARBE: Record<Kategorie, string> = {
   Training: "bg-blue-100 text-blue-700",
   Turnier: "bg-[#e1fcad] text-[#122023]",
@@ -40,7 +51,7 @@ function formatDatum(dateStr: string) {
   return d.toLocaleDateString("de-DE", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
 }
 
-export default function KalenderClient({ events }: { events: Event[] }) {
+export default function KalenderClient({ events, texte }: { events: Event[]; texte: KalenderTexte }) {
   const today = new Date();
   const [view, setView] = React.useState<"monat" | "liste">("monat");
   const [year, setYear] = React.useState(today.getFullYear());
@@ -92,7 +103,7 @@ export default function KalenderClient({ events }: { events: Event[] }) {
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           {/* Tab toggle */}
           <div className="flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white p-1.5 w-fit">
-            {([["monat", "Monatsansicht", Calendar], ["liste", "Listenansicht", List]] as const).map(([id, label, Icon]) => (
+            {([["monat", texte.monatsansichtLabel, Calendar], ["liste", texte.listenansichtLabel, List]] as const).map(([id, label, Icon]) => (
               <button
                 key={id}
                 onClick={() => setView(id)}
@@ -119,7 +130,7 @@ export default function KalenderClient({ events }: { events: Event[] }) {
                       : "border border-black/[0.08] bg-white text-black/50 hover:text-black"
                   }`}
                 >
-                  {k}
+                  {k === "Alle" ? texte.filterAlleLabel : k}
                 </button>
               ))}
             </div>
@@ -225,7 +236,7 @@ export default function KalenderClient({ events }: { events: Event[] }) {
                 {selectedDate ? (
                   <>
                     <div className="mb-1">
-                      <p className="text-xs uppercase tracking-widest text-black/40">Ausgewählter Tag</p>
+                      <p className="text-xs uppercase tracking-widest text-black/40">{texte.ausgewaehlterTagLabel}</p>
                       <p className="font-kanturmuy mt-1 text-lg font-normal tracking-tight text-black">
                         {formatDatum(selectedDate)}
                       </p>
@@ -233,21 +244,21 @@ export default function KalenderClient({ events }: { events: Event[] }) {
                     {selectedEvents.length === 0 ? (
                       <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/[0.1] bg-white py-12 text-center">
                         <Calendar className="mb-3 size-8 text-black/20" strokeWidth={1} />
-                        <p className="text-sm text-black/40">Keine Termine an diesem Tag</p>
+                        <p className="text-sm text-black/40">{texte.keineTermineTag}</p>
                       </div>
                     ) : (
-                      selectedEvents.map((e) => <EventCard key={e.id} event={e} />)
+                      selectedEvents.map((e) => <EventCard key={e.id} event={e} texte={texte} />)
                     )}
                   </>
                 ) : (
                   <>
                     <div className="mb-1">
-                      <p className="text-xs uppercase tracking-widest text-black/40">Nächste Termine</p>
+                      <p className="text-xs uppercase tracking-widest text-black/40">{texte.naechsteTermineLabel}</p>
                     </div>
                     {events.filter(e => e.datum >= todayStr)
                       .sort((a, b) => a.datum.localeCompare(b.datum))
                       .slice(0, 4)
-                      .map((e) => <EventCard key={e.id} event={e} />)
+                      .map((e) => <EventCard key={e.id} event={e} texte={texte} />)
                     }
                   </>
                 )}
@@ -267,7 +278,7 @@ export default function KalenderClient({ events }: { events: Event[] }) {
               {filteredEvents.length === 0 ? (
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-black/[0.1] bg-white py-24 text-center">
                   <Calendar className="mb-4 size-10 text-black/20" strokeWidth={1} />
-                  <p className="text-base text-black/40">Keine Termine gefunden</p>
+                  <p className="text-base text-black/40">{texte.keineTermineListe}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -285,7 +296,7 @@ export default function KalenderClient({ events }: { events: Event[] }) {
                             <span className="h-px flex-1 bg-black/[0.06]" />
                           </div>
                         )}
-                        <EventListRow event={e} />
+                        <EventListRow event={e} texte={texte} />
                       </React.Fragment>
                     );
                   })}
@@ -299,7 +310,7 @@ export default function KalenderClient({ events }: { events: Event[] }) {
   );
 }
 
-function EventCard({ event }: { event: Event }) {
+function EventCard({ event, texte }: { event: Event; texte: KalenderTexte }) {
   const [, m, d] = event.datum.split("-");
   return (
     <div className="group overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-300 hover:shadow-md">
@@ -320,7 +331,7 @@ function EventCard({ event }: { event: Event }) {
           {event.uhrzeit && (
             <p className="mt-1 flex items-center gap-1 text-xs text-black/40">
               <Clock className="size-3" strokeWidth={1.5} />
-              {event.uhrzeit} Uhr
+              {`${event.uhrzeit} ${texte.uhrzeitSuffix}`}
             </p>
           )}
           {event.ort && (
@@ -336,7 +347,7 @@ function EventCard({ event }: { event: Event }) {
   );
 }
 
-function EventListRow({ event }: { event: Event }) {
+function EventListRow({ event, texte }: { event: Event; texte: KalenderTexte }) {
   const [, m, d] = event.datum.split("-");
   return (
     <div className="group relative flex items-start gap-4 overflow-hidden rounded-2xl border border-black/[0.06] bg-white p-5 transition-shadow duration-300 hover:shadow-md">
@@ -362,7 +373,7 @@ function EventListRow({ event }: { event: Event }) {
           {event.uhrzeit && (
             <span className="flex items-center gap-1.5 text-xs text-black/40">
               <Clock className="size-3" strokeWidth={1.5} />
-              {event.uhrzeit} Uhr
+              {`${event.uhrzeit} ${texte.uhrzeitSuffix}`}
             </span>
           )}
           {event.ort && (
