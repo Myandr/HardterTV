@@ -5,6 +5,7 @@ import { ArrowLeft, Mail, Phone } from "lucide-react";
 import { getPayload } from "payload";
 import config from "@payload-config";
 import TeamPlaceholder from "@/components/ui/team-placeholder";
+import { getSeitenTexte } from "@/lib/seiten-texte";
 
 export const revalidate = 3600;
 
@@ -49,11 +50,11 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const team = await getTeam(slug);
+  const [team, seitenTexte] = await Promise.all([getTeam(slug), getSeitenTexte()]);
   if (!team) return {};
   return {
     title: team.name,
-    description: `${team.name} des Hardter Tennisverein – Saison 2024/2025`,
+    description: `${team.name} des Hardter Tennisverein – ${seitenTexte.mannschaftDetail.ligaSaisonLabel}`,
   };
 }
 
@@ -67,8 +68,9 @@ export default async function TeamPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const team = await getTeam(slug);
+  const [team, seitenTexte] = await Promise.all([getTeam(slug), getSeitenTexte()]);
   if (!team) notFound();
+  const texte = seitenTexte;
 
   return (
     <main>
@@ -86,7 +88,7 @@ export default async function TeamPage({
             className="mb-10 inline-flex items-center gap-2 text-sm text-white/50 transition-colors hover:text-[#e1fcad]"
           >
             <ArrowLeft className="size-4" strokeWidth={1.5} />
-            Zurück zur Übersicht
+            {texte.mannschaftDetail.zurueckLabel}
           </Link>
 
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16 lg:items-center">
@@ -125,7 +127,7 @@ export default async function TeamPage({
 
               <div className="flex flex-col gap-3">
                 <p className="text-xs uppercase tracking-[0.15em] text-white/30">
-                  Saison 2024 / 2025
+                  {texte.mannschaftDetail.saisonLabel}
                 </p>
                 {isEmail(team.kontakt) ? (
                   <a
@@ -147,10 +149,10 @@ export default async function TeamPage({
 
               <div className="flex flex-wrap gap-3">
                 <span className="rounded-full border border-white/[0.12] px-4 py-2 text-xs text-white/50">
-                  Hardter TV
+                  {texte.mannschaftDetail.vereinBadge}
                 </span>
                 <span className="rounded-full bg-[#e1fcad]/10 px-4 py-2 text-xs text-[#e1fcad]">
-                  WTV
+                  {texte.mannschaftDetail.verbandBadge}
                 </span>
               </div>
             </div>
@@ -165,11 +167,11 @@ export default async function TeamPage({
             <div className="mb-3 flex items-center gap-3">
               <span className="h-px w-8 bg-black/20" />
               <span className="text-xs uppercase tracking-[0.2em] text-black/40">
-                Ligadaten
+                {texte.mannschaftDetail.ligaEyebrow}
               </span>
             </div>
             <h2 className="font-kanturmuy text-2xl font-normal tracking-tighter sm:text-3xl">
-              Tabelle & Ergebnisse
+              {texte.mannschaftDetail.ligaTitel}
             </h2>
           </div>
 
@@ -178,10 +180,10 @@ export default async function TeamPage({
               <div className="flex items-center gap-2">
                 <span className="h-[3px] w-4 rounded-full bg-[#e1fcad]" />
                 <span className="text-sm font-medium text-black/70">
-                  {team.name} – Saison 2024/2025
+                  {`${team.name} – ${texte.mannschaftDetail.ligaSaisonLabel}`}
                 </span>
               </div>
-              <span className="text-xs text-black/30">wtv.liga.nu</span>
+              <span className="text-xs text-black/30">{texte.mannschaftDetail.ligaQuelle}</span>
             </div>
             <div className="p-0">
               <iframe
@@ -198,13 +200,13 @@ export default async function TeamPage({
       {/* Back CTA */}
       <section className="bg-[#122023] px-6 py-16 md:px-12 lg:px-20">
         <div className="mx-auto max-w-7xl flex flex-col items-center gap-4 text-center">
-          <p className="text-sm text-white/40">Alle Mannschaften im Überblick</p>
+          <p className="text-sm text-white/40">{texte.mannschaftDetail.abschlussText}</p>
           <Link
             href="/mannschaften"
             className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm text-white/70 transition-colors hover:border-[#e1fcad]/40 hover:text-[#e1fcad]"
           >
             <ArrowLeft className="size-4" strokeWidth={1.5} />
-            Zurück zur Übersicht
+            {texte.mannschaftDetail.zurueckLabel}
           </Link>
         </div>
       </section>
