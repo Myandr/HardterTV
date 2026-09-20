@@ -76,5 +76,27 @@ export const KontaktSectionGlobal: GlobalConfig = {
         },
       ],
     },
+    {
+      name: "fehlermeldungen",
+      type: "group",
+      label: "Fehlermeldungen",
+      admin: {
+        description:
+          "Meldungen unter den Formularfeldern. {min} und {max} werden automatisch durch die erlaubte Länge ersetzt.",
+      },
+      fields: [
+        { name: "nameZuKurz", type: "text", required: true, maxLength: 200, admin: { description: "{min} wird durch die Mindestlänge ersetzt." } },
+        { name: "nameZuLang", type: "text", required: true, maxLength: 200, admin: { description: "{max} wird durch die Höchstlänge ersetzt." } },
+        { name: "emailFehlt", type: "text", required: true, maxLength: 200 },
+        { name: "emailZuLang", type: "text", required: true, maxLength: 200 },
+        { name: "emailUngueltig", type: "text", required: true, maxLength: 200 },
+        { name: "telefonZuLang", type: "text", required: true, maxLength: 200 },
+        { name: "nachrichtZuKurz", type: "text", required: true, maxLength: 200, admin: { description: "{min} wird durch die Mindestlänge ersetzt." } },
+        { name: "nachrichtZuLang", type: "text", required: true, maxLength: 200, admin: { description: "{max} wird durch die Höchstlänge ersetzt." } },
+        { name: "einwilligungFehlt", type: "text", required: true, maxLength: 300 },
+        { name: "allgemein", type: "text", required: true, maxLength: 200, label: "Sammelmeldung über dem Formular" },
+        { name: "speichernFehlgeschlagen", type: "textarea", required: true, maxLength: 400 },
+      ],
+    },
   ],
 };

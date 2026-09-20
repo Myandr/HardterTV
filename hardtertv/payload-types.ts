@@ -1163,6 +1163,34 @@ export interface KontaktSection {
      */
     honeypotLabel: string;
   };
+  /**
+   * Meldungen unter den Formularfeldern. {min} und {max} werden automatisch durch die erlaubte Länge ersetzt.
+   */
+  fehlermeldungen: {
+    /**
+     * {min} wird durch die Mindestlänge ersetzt.
+     */
+    nameZuKurz: string;
+    /**
+     * {max} wird durch die Höchstlänge ersetzt.
+     */
+    nameZuLang: string;
+    emailFehlt: string;
+    emailZuLang: string;
+    emailUngueltig: string;
+    telefonZuLang: string;
+    /**
+     * {min} wird durch die Mindestlänge ersetzt.
+     */
+    nachrichtZuKurz: string;
+    /**
+     * {max} wird durch die Höchstlänge ersetzt.
+     */
+    nachrichtZuLang: string;
+    einwilligungFehlt: string;
+    allgemein: string;
+    speichernFehlgeschlagen: string;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1738,6 +1766,21 @@ export interface KontaktSectionSelect<T extends boolean = true> {
         absendenLabel?: T;
         sendenLabel?: T;
         honeypotLabel?: T;
+      };
+  fehlermeldungen?:
+    | T
+    | {
+        nameZuKurz?: T;
+        nameZuLang?: T;
+        emailFehlt?: T;
+        emailZuLang?: T;
+        emailUngueltig?: T;
+        telefonZuLang?: T;
+        nachrichtZuKurz?: T;
+        nachrichtZuLang?: T;
+        einwilligungFehlt?: T;
+        allgemein?: T;
+        speichernFehlgeschlagen?: T;
       };
   updatedAt?: T;
   createdAt?: T;

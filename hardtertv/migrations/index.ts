@@ -19,6 +19,7 @@ import * as migration_20260920_170801_add_seiten_texte from './20260920_170801_a
 import * as migration_20260920_171650_add_startseite_abschnitte from './20260920_171650_add_startseite_abschnitte';
 import * as migration_20260920_171943_add_footer_links from './20260920_171943_add_footer_links';
 import * as migration_20260920_172213_add_kontakt_formular from './20260920_172213_add_kontakt_formular';
+import * as migration_20260920_172435_add_kontakt_fehlermeldungen from './20260920_172435_add_kontakt_fehlermeldungen';
 
 export const migrations = [
   {
@@ -124,6 +125,11 @@ export const migrations = [
   {
     up: migration_20260920_172213_add_kontakt_formular.up,
     down: migration_20260920_172213_add_kontakt_formular.down,
-    name: '20260920_172213_add_kontakt_formular'
+    name: '20260920_172213_add_kontakt_formular',
+  },
+  {
+    up: migration_20260920_172435_add_kontakt_fehlermeldungen.up,
+    down: migration_20260920_172435_add_kontakt_fehlermeldungen.down,
+    name: '20260920_172435_add_kontakt_fehlermeldungen'
   },
 ];

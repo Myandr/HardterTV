@@ -3,7 +3,13 @@
 import { getPayload, ValidationError } from "payload";
 import config from "@payload-config";
 
-import { validateKontakt, type KontaktFeldFehler, type KontaktWerte } from "@/lib/kontakt-validation";
+import {
+  STANDARD_MELDUNGEN,
+  validateKontakt,
+  type KontaktFeldFehler,
+  type KontaktMeldungen,
+  type KontaktWerte,
+} from "@/lib/kontakt-validation";
 
 export type KontaktResult =
   | { ok: true }
@@ -11,6 +17,23 @@ export type KontaktResult =
 
 /** Schneller als das ist kein Mensch — dann ist es ein Bot. */
 const MINDESTDAUER_MS = 2000;
+
+/** Meldungen aus Payload; bei jedem Fehler greift die Ausfallsicherung. */
+async function ladeMeldungen(): Promise<KontaktMeldungen> {
+  try {
+    const payload = await getPayload({ config });
+    const data = await payload.findGlobal({ slug: "kontakt-section", depth: 0 });
+    const m = data.fehlermeldungen;
+    if (!m) return STANDARD_MELDUNGEN;
+    // Leere Felder (z. B. vor dem Seeden) fallen auf den Standard zurück.
+    const gepflegt = Object.fromEntries(
+      Object.entries(m).filter(([, wert]) => typeof wert === "string" && wert.length > 0),
+    ) as Partial<KontaktMeldungen>;
+    return { ...STANDARD_MELDUNGEN, ...gepflegt };
+  } catch {
+    return STANDARD_MELDUNGEN;
+  }
+}
 
 export async function sendeKontaktanfrage(
   _prev: KontaktResult | null,
@@ -48,7 +71,8 @@ export async function sendeKontaktanfrage(
   // Nur die Nutzerfelder werden zurückgespiegelt — niemals Honeypot oder Zeitstempel.
   const values: KontaktWerte = { ...eingabe };
 
-  const validierung = validateKontakt(eingabe);
+  const meldungen = await ladeMeldungen();
+  const validierung = validateKontakt(eingabe, meldungen);
 
   if (!validierung.ok) {
     return {
@@ -87,8 +111,8 @@ export async function sendeKontaktanfrage(
       if (emailBetroffen) {
         return {
           ok: false,
-          error: "Bitte prüfe die markierten Felder.",
-          fieldErrors: { email: "Diese E-Mail-Adresse sieht nicht gültig aus." },
+          error: meldungen.allgemein,
+          fieldErrors: { email: meldungen.emailUngueltig },
           values,
         };
       }
@@ -101,8 +125,7 @@ export async function sendeKontaktanfrage(
     }
     return {
       ok: false,
-      error:
-        "Deine Nachricht konnte gerade nicht gespeichert werden. Bitte versuche es später noch einmal oder schreib uns direkt eine E-Mail.",
+      error: meldungen.speichernFehlgeschlagen,
       values,
     };
   }
