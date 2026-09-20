@@ -19,6 +19,7 @@
     "seed:legal-pages": "dotenv -e .env.local -- tsx scripts/seed-legal-pages.ts",
     "seed:mitgliedschaft": "dotenv -e .env.local -- tsx scripts/seed-mitgliedschaft.ts",
     "seed:training": "dotenv -e .env.local -- tsx scripts/seed-training.ts",
+    "seed:eisstock": "dotenv -e .env.local -- tsx scripts/seed-eisstock.ts",
     "ci": "if [ \"$VERCEL_ENV\" = \"production\" ]; then payload migrate; fi && next build"
   },
   "dependencies": {

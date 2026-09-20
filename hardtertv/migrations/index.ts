@@ -7,6 +7,7 @@ import * as migration_20260919_174521_add_news from './20260919_174521_add_news'
 import * as migration_20260919_175022_add_legal_pages from './20260919_175022_add_legal_pages';
 import * as migration_20260919_194632_add_mitgliedschaft from './20260919_194632_add_mitgliedschaft';
 import * as migration_20260920_000635_add_training from './20260920_000635_add_training';
+import * as migration_20260920_044305_add_eisstock from './20260920_044305_add_eisstock';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260920_000635_add_training.up,
     down: migration_20260920_000635_add_training.down,
-    name: '20260920_000635_add_training'
+    name: '20260920_000635_add_training',
+  },
+  {
+    up: migration_20260920_044305_add_eisstock.up,
+    down: migration_20260920_044305_add_eisstock.down,
+    name: '20260920_044305_add_eisstock'
   },
 ];

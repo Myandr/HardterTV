@@ -102,10 +102,12 @@ export interface Config {
   globals: {
     mitgliedschaft: Mitgliedschaft;
     training: Training;
+    eisstock: Eisstock;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
     training: TrainingSelect<false> | TrainingSelect<true>;
+    eisstock: EisstockSelect<false> | EisstockSelect<true>;
   };
   locale: null;
   widgets: {
@@ -797,6 +799,53 @@ export interface Training {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "eisstock".
+ */
+export interface Eisstock {
+  id: number;
+  hero: {
+    bild?: (number | null) | Media;
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    buttonLabel: string;
+  };
+  angebot: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    kacheln: {
+      icon: 'mapPin' | 'users' | 'euro' | 'calendarDays';
+      titel: string;
+      beschreibung: string;
+      id?: string | null;
+    }[];
+  };
+  galerie?: {
+    bilder?:
+      | {
+          bild: number | Media;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  buchung: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    /**
+     * Wird als Buchungs-Widget (iframe) eingebunden.
+     */
+    widgetUrl: string;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
 export interface MitgliedschaftSelect<T extends boolean = true> {
@@ -968,6 +1017,60 @@ export interface TrainingSelect<T extends boolean = true> {
         buttonLabel?: T;
         telefonHref?: T;
         zurueckLabel?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "eisstock_select".
+ */
+export interface EisstockSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        bild?: T;
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        buttonLabel?: T;
+      };
+  angebot?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        kacheln?:
+          | T
+          | {
+              icon?: T;
+              titel?: T;
+              beschreibung?: T;
+              id?: T;
+            };
+      };
+  galerie?:
+    | T
+    | {
+        bilder?:
+          | T
+          | {
+              bild?: T;
+              id?: T;
+            };
+      };
+  buchung?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        widgetUrl?: T;
       };
   updatedAt?: T;
   createdAt?: T;
