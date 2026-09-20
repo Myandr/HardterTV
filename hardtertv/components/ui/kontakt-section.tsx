@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { MapPin, Phone, Mail, ArrowUpRight } from "lucide-react";
 import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 import { MapsConsentGate } from "@/components/ui/maps-consent-gate";
+import { sendeKontaktanfrage, type KontaktResult } from "@/lib/actions/kontakt";
 
 export type KontaktSectionProps = {
   eyebrow: string;
@@ -37,18 +38,24 @@ export default function KontaktSection({
   telefonHref,
   email,
 }: KontaktSectionProps) {
-  const [sent, setSent] = useState(false);
+  const [result, formAction, pending] = useActionState<KontaktResult | null, FormData>(
+    sendeKontaktanfrage,
+    null,
+  );
+  const sent = result?.ok === true;
+  const fieldErrors = result && !result.ok ? (result.fieldErrors ?? {}) : {};
+  const generalError = result && !result.ok ? result.error : null;
+
+  const startRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (startRef.current) startRef.current.value = String(Date.now());
+  }, []);
 
   const kontaktInfo = [
     { icon: MapPin, label: "Adresse", wert: adresse, href: undefined as string | undefined },
     { icon: Phone, label: telefonLabel, wert: telefon, href: telefonHref },
     { icon: Mail, label: "E-Mail", wert: email, href: `mailto:${email}` },
   ];
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setSent(true);
-  }
 
   return (
     <section id="contact" className="bg-[#f9f9f7] px-6 py-20 md:px-12 lg:px-20 lg:py-32">
@@ -107,7 +114,12 @@ export default function KontaktSection({
                   <p className="text-sm text-black/50">{erfolgText}</p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <form action={formAction} className="flex flex-col gap-4">
+                  <input ref={startRef} type="hidden" name="gestartetAm" defaultValue="" />
+                  <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                    <label htmlFor="website">Dieses Feld bitte leer lassen</label>
+                    <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+                  </div>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-xs uppercase tracking-widest text-black/40">Name</label>
@@ -118,6 +130,9 @@ export default function KontaktSection({
                         className="rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
                         placeholder="Dein Name"
                       />
+                      {fieldErrors.name && (
+                        <p className="text-xs text-red-600">{fieldErrors.name}</p>
+                      )}
                     </div>
                     <div className="flex flex-col gap-1.5">
                       <label className="text-xs uppercase tracking-widest text-black/40">E-Mail</label>
@@ -128,6 +143,9 @@ export default function KontaktSection({
                         className="rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
                         placeholder="deine@email.de"
                       />
+                      {fieldErrors.email && (
+                        <p className="text-xs text-red-600">{fieldErrors.email}</p>
+                      )}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5">
@@ -139,6 +157,9 @@ export default function KontaktSection({
                       className="resize-none rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
                       placeholder="Deine Nachricht an den HTV..."
                     />
+                    {fieldErrors.nachricht && (
+                      <p className="text-xs text-red-600">{fieldErrors.nachricht}</p>
+                    )}
                   </div>
                   <div className="flex items-start gap-2.5">
                     <input
@@ -156,12 +177,22 @@ export default function KontaktSection({
                       gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu.
                     </label>
                   </div>
+                  {fieldErrors.datenschutz && (
+                    <p className="text-xs text-red-600">{fieldErrors.datenschutz}</p>
+                  )}
+                  {generalError && (
+                    <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                      {generalError}
+                    </p>
+                  )}
                   <button
                     type="submit"
-                    className="group flex cursor-pointer items-center gap-0 self-start rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none"
+                    disabled={pending}
+                    aria-busy={pending}
+                    className="group flex cursor-pointer items-center gap-0 self-start rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
-                      Nachricht senden
+                      {pending ? "Wird gesendet…" : "Nachricht senden"}
                     </span>
                     <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
                       <ArrowUpRight className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />
