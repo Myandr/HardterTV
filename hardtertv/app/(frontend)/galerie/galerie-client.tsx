@@ -18,7 +18,7 @@ type GalerieAlbum = {
   bilder: GalerieImage[];
 };
 
-export default function GalerieClient({ alben }: { alben: GalerieAlbum[] }) {
+export default function GalerieClient({ alben, leerText }: { alben: GalerieAlbum[]; leerText: string }) {
   const images = React.useMemo(() => alben.flatMap((album) => album.bilder), [alben]);
   const [lightbox, setLightbox] = React.useState<number | null>(null);
 
@@ -48,7 +48,7 @@ export default function GalerieClient({ alben }: { alben: GalerieAlbum[] }) {
         <div className="mx-auto max-w-7xl">
           {images.length === 0 && (
             <p className="rounded-2xl border border-black/[0.07] bg-white p-6 text-sm text-black/50">
-              Aktuell sind keine Bilder online — schau bald wieder vorbei.
+              {leerText}
             </p>
           )}
 

@@ -1,6 +1,7 @@
 import { getPayload } from "payload";
 import config from "@payload-config";
 import type { Media } from "@/payload-types";
+import { getSeitenTexte } from "@/lib/seiten-texte";
 import GalerieClient from "./galerie-client";
 
 export const revalidate = 3600;
@@ -37,7 +38,8 @@ async function getAlben(): Promise<GalerieAlbum[]> {
 }
 
 export default async function GaleriePage() {
-  const alben = await getAlben();
+  const [seitenTexte, alben] = await Promise.all([getSeitenTexte(), getAlben()]);
+  const texte = seitenTexte.galerie;
   const gesamtBilder = alben.reduce((summe, album) => summe + album.bilder.length, 0);
 
   return (
@@ -52,20 +54,19 @@ export default async function GaleriePage() {
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-8 bg-white/30" />
-            <span className="text-xs uppercase tracking-[0.2em] text-white/50">Galerie</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-white/50">{texte.eyebrow}</span>
           </div>
 
           <h1 className="font-kanturmuy max-w-3xl text-4xl font-normal tracking-tighter text-white sm:text-5xl md:text-7xl">
-            Unsere{" "}
+            {texte.titelVorne}{" "}
             <span className="relative inline-block">
-              Tennismomente
+              {texte.titelHighlight}
               <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
             </span>
           </h1>
 
           <p className="mt-6 max-w-xl text-base font-light text-white/60 md:text-lg">
-            Entdecke die schönsten Momente aus unserem Vereinsleben — von Turnieren
-            über Mannschaftsabende bis zum Saisonabschluss.
+            {texte.text}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -77,12 +78,12 @@ export default async function GaleriePage() {
                 {album.titel}
               </span>
             ))}
-            <span className="text-sm text-white/40">{gesamtBilder} Bilder</span>
+            <span className="text-sm text-white/40">{`${gesamtBilder} ${texte.bilderSuffix}`}</span>
           </div>
         </div>
       </section>
 
-      <GalerieClient alben={alben} />
+      <GalerieClient alben={alben} leerText={texte.leerText} />
     </main>
   );
 }
