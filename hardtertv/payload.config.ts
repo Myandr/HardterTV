@@ -14,6 +14,7 @@ import { Events } from "./collections/Events";
 import { GalleryAlbums } from "./collections/GalleryAlbums";
 import { News } from "./collections/News";
 import { LegalPages } from "./collections/LegalPages";
+import { ContactSubmissions } from "./collections/ContactSubmissions";
 import { Mitgliedschaft } from "./globals/Mitgliedschaft";
 import { Training } from "./globals/Training";
 import { Eisstock } from "./globals/Eisstock";
@@ -33,7 +34,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Teams, BoardMembers, Events, GalleryAlbums, News, LegalPages],
+  collections: [Users, Media, Teams, BoardMembers, Events, GalleryAlbums, News, LegalPages, ContactSubmissions],
   globals: [Mitgliedschaft, Training, Eisstock, HeroGlobal, WelcomeSectionGlobal, LocationSectionGlobal, FooterGlobal, KontaktSectionGlobal],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",

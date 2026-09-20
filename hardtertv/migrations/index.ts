@@ -13,6 +13,7 @@ import * as migration_20260920_093501_add_welcome_section from './20260920_09350
 import * as migration_20260920_094017_add_location_section from './20260920_094017_add_location_section';
 import * as migration_20260920_094953_add_footer from './20260920_094953_add_footer';
 import * as migration_20260920_095600_add_kontakt_section from './20260920_095600_add_kontakt_section';
+import * as migration_20260920_100331_add_contact_submissions from './20260920_100331_add_contact_submissions';
 
 export const migrations = [
   {
@@ -88,6 +89,11 @@ export const migrations = [
   {
     up: migration_20260920_095600_add_kontakt_section.up,
     down: migration_20260920_095600_add_kontakt_section.down,
-    name: '20260920_095600_add_kontakt_section'
+    name: '20260920_095600_add_kontakt_section',
+  },
+  {
+    up: migration_20260920_100331_add_contact_submissions.up,
+    down: migration_20260920_100331_add_contact_submissions.down,
+    name: '20260920_100331_add_contact_submissions'
   },
 ];

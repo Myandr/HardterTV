@@ -75,6 +75,7 @@ export interface Config {
     'gallery-albums': GalleryAlbum;
     news: News;
     'legal-pages': LegalPage;
+    'contact-submissions': ContactSubmission;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -90,6 +91,7 @@ export interface Config {
     'gallery-albums': GalleryAlbumsSelect<false> | GalleryAlbumsSelect<true>;
     news: NewsSelect<false> | NewsSelect<true>;
     'legal-pages': LegalPagesSelect<false> | LegalPagesSelect<true>;
+    'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -376,6 +378,27 @@ export interface LegalPage {
   createdAt: string;
 }
 /**
+ * Nachrichten aus dem Kontaktformular. Personenbezogene Daten — nur für angemeldete Benutzer sichtbar.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-submissions".
+ */
+export interface ContactSubmission {
+  id: number;
+  name: string;
+  email: string;
+  /**
+   * Wird vom aktuellen Formular nicht abgefragt.
+   */
+  telefon?: string | null;
+  nachricht: string;
+  einwilligung: boolean;
+  einwilligungAm: string;
+  gelesen?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -430,6 +453,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'legal-pages';
         value: number | LegalPage;
+      } | null)
+    | ({
+        relationTo: 'contact-submissions';
+        value: number | ContactSubmission;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -605,6 +632,21 @@ export interface LegalPagesSelect<T extends boolean = true> {
         id?: T;
       };
   stand?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-submissions_select".
+ */
+export interface ContactSubmissionsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  telefon?: T;
+  nachricht?: T;
+  einwilligung?: T;
+  einwilligungAm?: T;
+  gelesen?: T;
   updatedAt?: T;
   createdAt?: T;
 }
