@@ -56,6 +56,25 @@ async function getWelcome() {
   };
 }
 
+async function getStandorte() {
+  const payload = await getPayload({ config });
+  const data = await payload.findGlobal({ slug: "location-section", depth: 1 });
+  return {
+    eyebrow: data.eyebrow ?? "",
+    headlineTeil1: data.headlineTeil1 ?? "",
+    headlineTeil2: data.headlineTeil2 ?? "",
+    intro: data.intro ?? "",
+    ctaLabel: data.ctaLabel ?? "",
+    karten: (data.karten ?? []).map((row, i) => ({
+      id: row.id ?? String(i),
+      titel: row.titel,
+      untertitel: row.untertitel ?? "",
+      bild: toBild(row.bild),
+      href: row.href,
+    })),
+  };
+}
+
 async function getVorstand() {
   const payload = await getPayload({ config });
   const { docs } = await payload.find({
@@ -113,9 +132,10 @@ async function getNews() {
 }
 
 export default async function Home() {
-  const [hero, welcome, vorstand, termine, news] = await Promise.all([
+  const [hero, welcome, standorte, vorstand, termine, news] = await Promise.all([
     getHero(),
     getWelcome(),
+    getStandorte(),
     getVorstand(),
     getTermine(),
     getNews(),
@@ -124,7 +144,7 @@ export default async function Home() {
     <main>
       <Hero {...hero} />
       <WelcomeSection {...welcome} />
-      <LocationSection />
+      <LocationSection {...standorte} />
       <TermineSection termine={termine} />
       <VorstandSection vorstand={vorstand} />
       <NewsSection news={news} />

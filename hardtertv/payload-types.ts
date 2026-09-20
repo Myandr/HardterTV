@@ -105,6 +105,7 @@ export interface Config {
     eisstock: Eisstock;
     hero: Hero;
     'welcome-section': WelcomeSection;
+    'location-section': LocationSection;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
@@ -112,6 +113,7 @@ export interface Config {
     eisstock: EisstockSelect<false> | EisstockSelect<true>;
     hero: HeroSelect<false> | HeroSelect<true>;
     'welcome-section': WelcomeSectionSelect<false> | WelcomeSectionSelect<true>;
+    'location-section': LocationSectionSelect<false> | LocationSectionSelect<true>;
   };
   locale: null;
   widgets: {
@@ -924,6 +926,44 @@ export interface WelcomeSection {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "location-section".
+ */
+export interface LocationSection {
+  id: number;
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  /**
+   * Der Button verlinkt immer auf /mitgliedschaft.
+   */
+  ctaLabel: string;
+  /**
+   * Fünf Karten passen am besten in das Raster.
+   */
+  karten?:
+    | {
+        titel: string;
+        /**
+         * Zeilenumbrüche bleiben erhalten.
+         */
+        untertitel?: string | null;
+        /**
+         * Ohne Bild bleibt die Fläche grau.
+         */
+        bild?: (number | null) | Media;
+        /**
+         * Externe Links (beginnen mit "http") öffnen in einem neuen Tab und liegen hinter der Google-Maps-Einwilligung. Interne Links beginnen mit "/", z. B. /eisstock.
+         */
+        href: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
 export interface MitgliedschaftSelect<T extends boolean = true> {
@@ -1197,6 +1237,29 @@ export interface WelcomeSectionSelect<T extends boolean = true> {
   signaturRolle?: T;
   ctaLabel?: T;
   sekundaerLabel?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "location-section_select".
+ */
+export interface LocationSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  headlineTeil1?: T;
+  headlineTeil2?: T;
+  intro?: T;
+  ctaLabel?: T;
+  karten?:
+    | T
+    | {
+        titel?: T;
+        untertitel?: T;
+        bild?: T;
+        href?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

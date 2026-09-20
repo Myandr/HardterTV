@@ -7,53 +7,41 @@ import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 import { useCookieConsent } from "@/hooks/use-cookie-consent";
 
-const locations = [
-  {
-    title: "6 Ascheplätze",
-    subtitle: "Zwei mit Flutlichtanlage",
-    image: "/images/hero-new.png",
-    href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
-  },
-  {
-    title: "Clubheim Hardt",
-    subtitle: "Vermietung nur an Mitglieder",
-    image: "/images/image copy 2.png",
-    href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
-  },
-  {
-    title: "Flutlichtanlage",
-    subtitle: "Auf 2 Plätzen",
-    image: "/images/image.png",
-    href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
-  },
-  {
-    title: "Kletter- und Spielgerüst",
-    subtitle: "Für die jüngsten Mitglieder",
-    image: "/images/image copy 3.png",
-    href: "https://maps.google.com/?q=Hardter+TV+Gahlener+Str.+204+46282+Dorsten",
-  },
-  {
-    title: "Eisstockbahn",
-    subtitle: "Vermietung nur an Mitglieder",
-    image: "/images/änderungen/eis.png",
-    href: "/eisstock",
-  },
-];
+export type StandortKarte = {
+  id: string;
+  titel: string;
+  untertitel: string;
+  bild: { url: string; alt: string } | null;
+  href: string;
+};
 
-function LocationCard({ location, mapsAllowed }: { location: (typeof locations)[0]; mapsAllowed: boolean }) {
+export type LocationSectionProps = {
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  ctaLabel: string;
+  karten: StandortKarte[];
+};
+
+function LocationCard({ location, mapsAllowed }: { location: StandortKarte; mapsAllowed: boolean }) {
   const isExternal = location.href.startsWith("http");
   const blocked = isExternal && !mapsAllowed;
 
   const cardContent = (
     <div className="overflow-hidden rounded-2xl bg-black/[0.03] transition-all duration-500 hover:shadow-xl">
       <div className="relative h-52 overflow-hidden">
-        <Image
-          src={location.image}
-          alt={location.title}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
-          className={`object-cover object-center transition-transform duration-700 ease-out ${!blocked ? "group-hover:scale-105" : "blur-sm"}`}
-        />
+        {location.bild ? (
+          <Image
+            src={location.bild.url}
+            alt={location.bild.alt}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 20vw"
+            className={`object-cover object-center transition-transform duration-700 ease-out ${!blocked ? "group-hover:scale-105" : "blur-sm"}`}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-black/[0.04]" />
+        )}
         {blocked && (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/50 p-4 text-center">
             <svg className="size-5 text-white/70" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -81,11 +69,11 @@ function LocationCard({ location, mapsAllowed }: { location: (typeof locations)[
 
       <div className="p-5">
         <h3 className="font-kanturmuy text-xl font-normal tracking-tight text-black">
-          {location.title}
+          {location.titel}
         </h3>
-        {location.subtitle && (
+        {location.untertitel && (
           <p className="mt-1 text-sm font-light text-black/50 whitespace-pre-line">
-            {location.subtitle}
+            {location.untertitel}
           </p>
         )}
         {!blocked && (
@@ -110,7 +98,14 @@ function LocationCard({ location, mapsAllowed }: { location: (typeof locations)[
   );
 }
 
-export default function LocationSection() {
+export default function LocationSection({
+  eyebrow,
+  headlineTeil1,
+  headlineTeil2,
+  intro,
+  ctaLabel,
+  karten,
+}: LocationSectionProps) {
   const consent = useCookieConsent();
   const mapsAllowed = consent?.maps ?? false;
 
@@ -123,20 +118,20 @@ export default function LocationSection() {
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-8 bg-black/30" />
               <span className="text-xs uppercase tracking-[0.2em] text-black/50">
-                Standorte
+                {eyebrow}
               </span>
             </div>
 
             <h2 className="font-kanturmuy max-w-xl text-4xl font-normal tracking-tighter md:text-5xl lg:text-6xl">
-              <BlurTextEffect>Unsere </BlurTextEffect>
+              <BlurTextEffect>{`${headlineTeil1} `}</BlurTextEffect>
               <span className="relative inline-block">
-                <BlurTextEffect>Tennisanlage</BlurTextEffect>
+                <BlurTextEffect>{headlineTeil2}</BlurTextEffect>
                 <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
               </span>
             </h2>
 
             <p className="mt-4 max-w-md text-base font-light text-black/50">
-              Erleben Sie Tennis vom Feinsten mit unserer erstklassig gepflegten Anlage und dem Überblick aller 6 Plätze von unserer überdachten Terrasse. Egal, ob Anfänger oder erfahrener Profi, wir haben den perfekten Platz für Ihr Spiel.
+              {intro}
             </p>
           </div>
 
@@ -144,7 +139,7 @@ export default function LocationSection() {
             <Link href="/mitgliedschaft">
               <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
                 <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
-                  Mitgliedschaft
+                  {ctaLabel}
                 </span>
                 <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
                   <ArrowUpRight className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />
@@ -157,9 +152,9 @@ export default function LocationSection() {
         </FadeIn>
 
         <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-          {locations.map((loc, i) => (
-            <FadeIn key={loc.title} delay={0.1 + i * 0.08}>
-              <LocationCard location={loc} mapsAllowed={mapsAllowed} />
+          {karten.map((karte, i) => (
+            <FadeIn key={karte.id} delay={0.1 + i * 0.08}>
+              <LocationCard location={karte} mapsAllowed={mapsAllowed} />
             </FadeIn>
           ))}
         </div>

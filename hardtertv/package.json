@@ -22,6 +22,7 @@
     "seed:eisstock": "dotenv -e .env.local -- tsx scripts/seed-eisstock.ts",
     "seed:hero": "dotenv -e .env.local -- tsx scripts/seed-hero.ts",
     "seed:welcome-section": "dotenv -e .env.local -- tsx scripts/seed-welcome-section.ts",
+    "seed:location-section": "dotenv -e .env.local -- tsx scripts/seed-location-section.ts",
     "ci": "if [ \"$VERCEL_ENV\" = \"production\" ]; then payload migrate; fi && next build"
   },
   "dependencies": {
