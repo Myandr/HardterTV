@@ -39,6 +39,12 @@ export default buildConfig({
     push: false,
     pool: {
       connectionString: process.env.DATABASE_URL || "",
+      // Neon closes idle connections; drop them first and never hang forever.
+      max: 5,
+      idleTimeoutMillis: 10_000,
+      connectionTimeoutMillis: 15_000,
+      query_timeout: 120_000,
+      keepAlive: true,
     },
   }),
   sharp,
