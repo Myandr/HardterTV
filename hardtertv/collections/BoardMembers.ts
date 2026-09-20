@@ -26,7 +26,7 @@ export const BoardMembers: CollectionConfig = {
       name: "gruppe",
       type: "select",
       required: true,
-      options: VORSTAND_GRUPPEN.map((g) => ({ label: g.titel, value: g.value })),
+      options: VORSTAND_GRUPPEN.map((g) => ({ label: g.adminLabel, value: g.value })),
     },
     {
       name: "reihenfolge",

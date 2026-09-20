@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Mail, Phone } from "lucide-react";
 import { getPayload } from "payload";
 import config from "@payload-config";
+import { getSeitenTexte } from "@/lib/seiten-texte";
 import { VORSTAND_GRUPPEN } from "@/lib/vorstand-gruppen";
 
 export const revalidate = 3600;
@@ -15,7 +16,19 @@ type Person = {
   bild: string | null;
 };
 
-async function getGruppen() {
+type GruppenText = { gruppe: string; titel: string; beschreibung: string };
+
+function gruppenReihenfolge(gepflegt: GruppenText[]): GruppenText[] {
+  const bekannt = new Set(gepflegt.map((g) => g.gruppe));
+  const fehlend = VORSTAND_GRUPPEN.filter((g) => !bekannt.has(g.value)).map((g) => ({
+    gruppe: g.value,
+    titel: g.adminLabel,
+    beschreibung: "",
+  }));
+  return [...gepflegt, ...fehlend];
+}
+
+async function getGruppen(gruppenTexte: GruppenText[]) {
   const payload = await getPayload({ config });
   const { docs } = await payload.find({
     collection: "board-members",
@@ -24,11 +37,12 @@ async function getGruppen() {
     sort: "reihenfolge",
   });
 
-  return VORSTAND_GRUPPEN.map((g) => ({
+  return gruppenReihenfolge(gruppenTexte).map((g) => ({
+    gruppe: g.gruppe,
     titel: g.titel,
     beschreibung: g.beschreibung,
     mitglieder: docs
-      .filter((d) => d.gruppe === g.value)
+      .filter((d) => d.gruppe === g.gruppe)
       .map(
         (d): Person => ({
           id: String(d.id),
@@ -101,7 +115,8 @@ function VorstandCard({ person }: { person: Person }) {
 }
 
 export default async function VorstandPage() {
-  const gruppen = await getGruppen();
+  const texte = await getSeitenTexte();
+  const gruppen = await getGruppen(texte.vorstand.gruppen);
   const total = gruppen.reduce((sum, g) => sum + g.mitglieder.length, 0);
 
   return (
@@ -116,29 +131,28 @@ export default async function VorstandPage() {
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-8 bg-white/30" />
-            <span className="text-xs uppercase tracking-[0.2em] text-white/50">Der Verein</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-white/50">{texte.vorstand.eyebrow}</span>
           </div>
 
           <h1 className="font-kanturmuy max-w-3xl text-4xl font-normal tracking-tighter text-white sm:text-5xl md:text-7xl">
-            Unser{" "}
+            {texte.vorstand.titelVorne}{" "}
             <span className="relative inline-block">
-              Vorstand
+              {texte.vorstand.titelHighlight}
               <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
             </span>
           </h1>
 
           <p className="mt-6 max-w-xl text-base font-light text-white/60 md:text-lg">
-            Lern die Menschen kennen, die unseren Verein leiten, gestalten und am Leben erhalten —
-            ehrenamtlich und mit vollem Herz dabei.
+            {texte.vorstand.text}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
             <span className="rounded-full bg-[#e1fcad]/20 px-4 py-2 text-sm font-light text-[#e1fcad]">
-              {total} Mitglieder
+              {`${total} ${texte.vorstand.badgeSuffix}`}
             </span>
             {gruppen.map((g) => (
               <span
-                key={g.titel}
+                key={g.gruppe}
                 className="rounded-full bg-white/10 px-4 py-2 text-sm font-light text-white/60"
               >
                 {g.titel}
@@ -151,7 +165,7 @@ export default async function VorstandPage() {
       {/* Gruppen */}
       {gruppen.map((gruppe, gi) => (
         <section
-          key={gruppe.titel}
+          key={gruppe.gruppe}
           className={`px-6 py-20 md:px-12 lg:px-20 lg:py-28 ${gi % 2 === 0 ? "bg-white" : "bg-[#f9f9f7]"}`}
         >
           <div className="mx-auto max-w-7xl">
@@ -188,17 +202,16 @@ export default async function VorstandPage() {
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter text-black sm:text-4xl md:text-5xl">
-                Du möchtest mitmachen?
+                {texte.vorstand.ctaTitel}
               </h2>
               <p className="mt-3 max-w-md text-base font-light text-black/60">
-                Wir freuen uns über engagierte Mitglieder, die den Verein aktiv mitgestalten wollen.
-                Meld dich einfach bei uns.
+                {texte.vorstand.ctaText}
               </p>
             </div>
-            <a href="mailto:1.vorsitzender@hardt-tennis.de" className="shrink-0">
+            <a href={`mailto:${texte.vorstand.ctaEmail}`} className="shrink-0">
               <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
                 <span className="rounded-full bg-[#122023] px-6 py-3 text-sm font-medium text-[#e1fcad] duration-500 ease-in-out group-hover:bg-black group-hover:text-white">
-                  Kontakt aufnehmen
+                  {texte.vorstand.ctaButtonLabel}
                 </span>
                 <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#122023] text-[#e1fcad] duration-500 ease-in-out group-hover:bg-black group-hover:text-white">
                   <Mail className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" strokeWidth={1.5} />
