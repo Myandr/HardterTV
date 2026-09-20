@@ -75,6 +75,27 @@ async function getStandorte() {
   };
 }
 
+async function getFooterDaten() {
+  const payload = await getPayload({ config });
+  const data = await payload.findGlobal({ slug: "footer", depth: 0 });
+  return {
+    instagram: {
+      eyebrow: data.instagram?.ctaEyebrow ?? "",
+      headline: data.instagram?.ctaHeadline ?? "",
+      text: data.instagram?.ctaText ?? "",
+      handle: data.instagram?.handle ?? "",
+      url: data.instagram?.url ?? "#",
+    },
+    kontakt: {
+      adresse: `${data.strasse ?? ""}\n${data.plz ?? ""} ${data.ort ?? ""}`.trim(),
+      telefonLabel: data.telefonLabel ?? "",
+      telefon: data.telefon ?? "",
+      telefonHref: data.telefonHref ?? "",
+      email: data.email ?? "",
+    },
+  };
+}
+
 async function getVorstand() {
   const payload = await getPayload({ config });
   const { docs } = await payload.find({
@@ -132,13 +153,14 @@ async function getNews() {
 }
 
 export default async function Home() {
-  const [hero, welcome, standorte, vorstand, termine, news] = await Promise.all([
+  const [hero, welcome, standorte, vorstand, termine, news, footerDaten] = await Promise.all([
     getHero(),
     getWelcome(),
     getStandorte(),
     getVorstand(),
     getTermine(),
     getNews(),
+    getFooterDaten(),
   ]);
   return (
     <main>
@@ -148,7 +170,7 @@ export default async function Home() {
       <TermineSection termine={termine} />
       <VorstandSection vorstand={vorstand} />
       <NewsSection news={news} />
-      <InstagramCta />
+      <InstagramCta {...footerDaten.instagram} />
       <KontaktSection />
     </main>
   );

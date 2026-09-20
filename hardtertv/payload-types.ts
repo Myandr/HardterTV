@@ -106,6 +106,7 @@ export interface Config {
     hero: Hero;
     'welcome-section': WelcomeSection;
     'location-section': LocationSection;
+    footer: Footer;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
@@ -114,6 +115,7 @@ export interface Config {
     hero: HeroSelect<false> | HeroSelect<true>;
     'welcome-section': WelcomeSectionSelect<false> | WelcomeSectionSelect<true>;
     'location-section': LocationSectionSelect<false> | LocationSectionSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
   widgets: {
@@ -963,6 +965,65 @@ export interface LocationSection {
   createdAt?: string | null;
 }
 /**
+ * Diese Daten erscheinen im Footer jeder Seite, im Instagram-Banner und im Kontaktbereich der Startseite.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  vereinsname: string;
+  beschreibung: string;
+  strasse: string;
+  plz: string;
+  ort: string;
+  email: string;
+  /**
+   * Steht im Kontaktbereich über der Nummer, z. B. "Vorsitzender".
+   */
+  telefonLabel: string;
+  telefon: string;
+  /**
+   * Technische Schreibweise, z. B. "tel:+491722580209".
+   */
+  telefonHref: string;
+  kontaktpersonen?:
+    | {
+        label: string;
+        name: string;
+        email: string;
+        id?: string | null;
+      }[]
+    | null;
+  funFactTitel: string;
+  funFact: string;
+  shop: {
+    textVor: string;
+    linkText: string;
+    url: string;
+    textNach: string;
+  };
+  instagram: {
+    /**
+     * Mit @, z. B. "@hardtertv".
+     */
+    handle: string;
+    url: string;
+    ctaEyebrow: string;
+    ctaHeadline: string;
+    /**
+     * Der Instagram-Name wird automatisch dahinter gesetzt.
+     */
+    ctaText: string;
+  };
+  /**
+   * Das Jahr wird automatisch eingesetzt.
+   */
+  copyrightName: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
@@ -1260,6 +1321,52 @@ export interface LocationSectionSelect<T extends boolean = true> {
         href?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  vereinsname?: T;
+  beschreibung?: T;
+  strasse?: T;
+  plz?: T;
+  ort?: T;
+  email?: T;
+  telefonLabel?: T;
+  telefon?: T;
+  telefonHref?: T;
+  kontaktpersonen?:
+    | T
+    | {
+        label?: T;
+        name?: T;
+        email?: T;
+        id?: T;
+      };
+  funFactTitel?: T;
+  funFact?: T;
+  shop?:
+    | T
+    | {
+        textVor?: T;
+        linkText?: T;
+        url?: T;
+        textNach?: T;
+      };
+  instagram?:
+    | T
+    | {
+        handle?: T;
+        url?: T;
+        ctaEyebrow?: T;
+        ctaHeadline?: T;
+        ctaText?: T;
+      };
+  copyrightName?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

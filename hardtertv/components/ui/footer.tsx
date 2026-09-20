@@ -1,3 +1,5 @@
+import { getPayload } from "payload";
+import config from "@payload-config";
 import Link from "next/link";
 import { FadeIn } from "@/components/ui/fade-in";
 
@@ -14,14 +16,17 @@ const links = [
   { label: "Mitgliedschaft", href: "/mitgliedschaft" },
 ];
 
-const kontakt = [
-  { label: "1. Vorsitzender", wert: "Oliver Wiegand", href: "mailto:1.vorsitzender@hardt-tennis.de" },
-  { label: "1. Geschäftsführer", wert: "Hendrick Büncker", href: "mailto:1.vorsitzender@hardt-tennis.de" },
-  { label: "Schatzmeister", wert: "Marco Hohenstein", href: "mailto:1.vorsitzender@hardt-tennis.de" },
-  { label: "E-Mail", wert: "1.vorsitzender@hardt-tennis.de", href: "mailto:1.vorsitzender@hardt-tennis.de" },
-];
+export default async function Footer() {
+  const payload = await getPayload({ config });
+  const data = await payload.findGlobal({ slug: "footer", depth: 0 });
 
-export default function Footer() {
+  const kontaktpersonen = (data.kontaktpersonen ?? []).map((person, i) => ({
+    id: person.id ?? String(i),
+    label: person.label,
+    name: person.name,
+    email: person.email,
+  }));
+
   return (
     <footer className="bg-[#0d1a1c] text-white">
       {/* Main grid */}
@@ -33,14 +38,13 @@ export default function Footer() {
           <div className="flex flex-col gap-4 lg:col-span-1">
             <div className="flex items-center gap-2">
               <span className="h-[3px] w-5 rounded-full bg-[#e1fcad]" />
-              <span className="font-kanturmuy text-xl tracking-tight">Hardter TV</span>
+              <span className="font-kanturmuy text-xl tracking-tight">{data.vereinsname}</span>
             </div>
             <p className="text-sm font-light leading-relaxed text-white/50">
-              Ihr Tennisverein für Sport, Spaß und Gemeinschaft in
-              Dorsten.
+              {data.beschreibung}
             </p>
             <a
-              href="https://www.instagram.com/hardtertv/"
+              href={data.instagram?.url ?? "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-2 flex w-fit items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-xs text-white/50 transition-colors hover:border-[#e1fcad]/40 hover:text-[#e1fcad]"
@@ -50,7 +54,7 @@ export default function Footer() {
                 <circle cx="12" cy="12" r="4"/>
                 <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
               </svg>
-              @hardtertv
+              {data.instagram?.handle}
             </a>
           </div>
 
@@ -79,47 +83,55 @@ export default function Footer() {
               Kontakt
             </h4>
             <p className="mb-4 text-sm font-light leading-relaxed text-white/50">
-              Hardter TV<br />
-              Gahlener Str. 204<br />
-              46282 Dorsten
+              {data.vereinsname}<br />
+              {data.strasse}<br />
+              {data.plz} {data.ort}
             </p>
             <ul className="flex flex-col gap-2.5">
-              {kontakt.map((k) => (
-                <li key={k.label} className="flex flex-col">
+              {kontaktpersonen.map((k) => (
+                <li key={k.id} className="flex flex-col">
                   <span className="text-[11px] uppercase tracking-widest text-white/25">{k.label}</span>
                   <a
-                    href={k.href}
+                    href={`mailto:${k.email}`}
                     className="text-sm text-white/50 transition-colors hover:text-white"
                   >
-                    {k.wert}
+                    {k.name}
                   </a>
                 </li>
               ))}
+              <li className="flex flex-col">
+                <span className="text-[11px] uppercase tracking-widest text-white/25">E-Mail</span>
+                <a
+                  href={`mailto:${data.email}`}
+                  className="text-sm text-white/50 transition-colors hover:text-white"
+                >
+                  {data.email}
+                </a>
+              </li>
             </ul>
           </div>
 
           {/* Fun fact */}
           <div>
             <h4 className="mb-5 text-xs uppercase tracking-[0.2em] text-white/30">
-              Wusstest du schon?
+              {data.funFactTitel}
             </h4>
             <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] p-5">
               <p className="text-sm font-light leading-relaxed text-white/40">
-                Der längste Tennismatch der Geschichte dauerte über 11 Stunden —
-                John Isner gegen Nicolas Mahut in Wimbledon 2010.
+                {data.funFact}
               </p>
               <div className="mt-4 h-px w-full bg-white/[0.06]" />
               <p className="mt-4 text-sm font-light leading-relaxed text-white/40">
-                Mitglied im{" "}
+                {data.shop?.textVor}{" "}
                 <a
-                  href="https://matchpoint24.de/collections/tennisclub-hardter-tv"
+                  href={data.shop?.url ?? "#"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#e1fcad]/70 transition-colors hover:text-[#e1fcad]"
                 >
-                  HTV-Shop
+                  {data.shop?.linkText}
                 </a>{" "}
-                — Ausrüstung direkt vom Verein.
+                {data.shop?.textNach}
               </p>
             </div>
           </div>
@@ -130,7 +142,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/[0.06]">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-5 text-xs text-white/30 md:flex-row md:px-12 lg:px-20">
-          <p>© 2026 Hardter TV. Alle Rechte vorbehalten.</p>
+          <p>{`© ${new Date().getFullYear()} ${data.copyrightName}. Alle Rechte vorbehalten.`}</p>
           <div className="flex gap-5">
             <Link href="/datenschutz" className="transition-colors hover:text-white">
               Datenschutz
