@@ -8,7 +8,7 @@ import { FadeIn } from "@/components/ui/fade-in";
 const termine = [
   {
     datum: "08./09. Aug.",
-    tag: "Sa",
+    tag: "Sa/So",
     veranstaltung: "LK-Turnier LK 20-25",
     uhrzeit: "Ganztägig",
     ort: "Gahlener Str. 204",
@@ -24,7 +24,7 @@ const termine = [
   },
   {
     datum: "12./13. Sep.",
-    tag: "Sa",
+    tag: "Sa/So",
     veranstaltung: "Mixed- und Doppelstadtmeisterschaften",
     uhrzeit: "Ganztägig",
     ort: "Gahlener Str. 204",
@@ -40,18 +40,21 @@ const kategorieFarbe: Record<string, string> = {
 };
 
 function TerminCard({ termin }: { termin: (typeof termine)[0] }) {
+  const [tage, monat] = termin.datum.split(" ");
+  const mehrtaegig = tage.includes("/");
+
   return (
     <div className="group flex items-start gap-5 rounded-2xl border border-black/[0.07] bg-white p-5 transition-shadow duration-300 hover:shadow-md">
-      <div className="flex w-14 shrink-0 flex-col items-center justify-center rounded-xl bg-black/[0.04] py-3 text-center">
+      <div className="flex w-16 shrink-0 flex-col items-center justify-center rounded-xl bg-black/[0.04] py-3 text-center">
         <span className="text-[11px] uppercase tracking-widest text-black/40">
           {termin.tag}
         </span>
-        <span className="font-kanturmuy text-2xl font-normal leading-none text-black">
-          {termin.datum.split(".")[0]}
+        <span
+          className={`font-kanturmuy font-normal leading-none text-black ${mehrtaegig ? "text-base" : "text-2xl"}`}
+        >
+          {tage.replace(/\.$/, "")}
         </span>
-        <span className="mt-0.5 text-[11px] text-black/40">
-          {termin.datum.split(". ")[1] ?? termin.datum.split(".")[1]}
-        </span>
+        <span className="mt-0.5 text-[11px] text-black/40">{monat}</span>
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">

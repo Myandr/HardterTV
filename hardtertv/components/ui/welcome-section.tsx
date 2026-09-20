@@ -7,8 +7,8 @@ import { BlurTextEffect } from "@/components/ui/blur-text-effect";
 import { FadeIn } from "@/components/ui/fade-in";
 
 const stats = [
-  { icon: Trophy, value: "1952", label: "Gegründet" },
-  { icon: Users, value: "300+", label: "Mitglieder" },
+  { icon: Trophy, value: "1978", label: "Gegründet" },
+  { icon: Users, value: "200+", label: "Mitglieder" },
   { icon: MapPin, value: "6", label: "Tennisplätze" },
   { icon: Zap, value: "2", label: "Flutlichtplätze" },
 ];

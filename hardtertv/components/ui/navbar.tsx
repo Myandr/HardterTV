@@ -82,7 +82,7 @@ const NAV_ITEMS = [
   {
     id: 2,
     label: "Training",
-    image: "/images/training-828726_960_720.jpg",
+    image: "/images/tennis3.jpg",
     imageLabel: "Training & Kurse",
     cta: {
       label: "Zum Training",
