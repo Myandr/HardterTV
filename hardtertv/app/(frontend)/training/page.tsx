@@ -12,41 +12,41 @@ import {
   MapPin,
   ExternalLink,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { getPayload } from "payload";
+import config from "@payload-config";
+import type { Media } from "@/payload-types";
 
-const angebote = [
-  {
-    icon: UserCheck,
-    title: "Einzelstunden",
-    description: "Individuelles Training abgestimmt auf dein Spielniveau und deine Ziele.",
-  },
-  {
-    icon: Users,
-    title: "Gruppentraining",
-    description: "Gemeinsam mehr Spaß — Training in kleinen Gruppen für alle Altersklassen.",
-  },
-  {
-    icon: Trophy,
-    title: "Mannschaftstraining",
-    description: "Vorbereitung für Vereinsmannschaften auf den Wettkampf.",
-  },
-  {
-    icon: Dumbbell,
-    title: "Spielvorbereitung",
-    description: "Gezielte Einheiten zur taktischen und technischen Matchvorbereitung.",
-  },
-  {
-    icon: Star,
-    title: "Turnierbegleitung",
-    description: "Coaching und Unterstützung bei Turnieren auf allen Niveaus.",
-  },
-  {
-    icon: Calendar,
-    title: "Schnupperstunden",
-    description: "Noch nie Tennis gespielt? Lern das Spiel bei einer unverbindlichen Schnupperstunde kennen.",
-  },
-];
+export const revalidate = 3600;
 
-export default function TrainingPage() {
+const ANGEBOT_ICONS: Record<string, LucideIcon> = {
+  userCheck: UserCheck,
+  users: Users,
+  trophy: Trophy,
+  dumbbell: Dumbbell,
+  star: Star,
+  calendar: Calendar,
+};
+
+function angebotIcon(key: string | null | undefined): LucideIcon {
+  return ANGEBOT_ICONS[key ?? ""] ?? Star;
+}
+
+function mediaDoc(value: number | Media | null | undefined): Media | null {
+  return typeof value === "object" && value ? value : null;
+}
+
+export default async function TrainingPage() {
+  const payload = await getPayload({ config });
+  const { hero, trainer, angebote, halle, cta } = await payload.findGlobal({
+    slug: "training",
+    depth: 1,
+  });
+
+  const foto = mediaDoc(trainer?.foto);
+  const bioAbsaetze = (trainer?.bio ?? "").split(/\n\s*\n/).filter((p) => p.trim().length > 0);
+  const adresseZeilen = (halle?.adresse ?? "").split("\n").filter((z) => z.trim().length > 0);
+
   return (
     <main>
       {/* Hero */}
@@ -59,27 +59,24 @@ export default function TrainingPage() {
         <div className="relative mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-8 bg-white/30" />
-            <span className="text-xs uppercase tracking-[0.2em] text-white/50">Training</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-white/50">{hero?.eyebrow}</span>
           </div>
 
           <h1 className="font-kanturmuy max-w-3xl text-4xl font-normal tracking-tighter text-white sm:text-5xl md:text-7xl">
-            Tennisschule{" "}
+            {hero?.titelVorne}{" "}
             <span className="relative inline-block">
-              André Albert
+              {hero?.titelHighlight}
               <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
             </span>
           </h1>
 
-          <p className="mt-6 max-w-xl text-base font-light text-white/60 md:text-lg">
-            Wir l(i)eben Tennis – das ist das Motto von André Albert und dem Team seiner
-            Tennisschule, mit dem er seit 2005 unseren Verein betreut.
-          </p>
+          <p className="mt-6 max-w-xl text-base font-light text-white/60 md:text-lg">{hero?.text}</p>
 
           <div className="mt-10 flex flex-wrap gap-4">
-            <a href="tel:+4917559049030">
+            <a href={`tel:${hero?.telefonHref ?? ""}`}>
               <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
                 <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-white group-hover:text-black">
-                  Jetzt anrufen
+                  {hero?.buttonLabel}
                 </span>
                 <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-white group-hover:text-black">
                   <ArrowUpRight className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />
@@ -96,23 +93,27 @@ export default function TrainingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-8 bg-black/30" />
-            <span className="text-xs uppercase tracking-[0.2em] text-black/50">Euer Trainer</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-black/50">{trainer?.eyebrow}</span>
           </div>
 
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-20">
             {/* Photo */}
             <div className="group relative overflow-hidden rounded-2xl">
-              <Image
-                src="/images/Andre Albert_1.JPG"
-                alt="André Albert – Tennislehrer"
-                width={900}
-                height={1100}
-                className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                style={{ minHeight: "420px" }}
-              />
+              {foto?.url ? (
+                <Image
+                  src={foto.url}
+                  alt={foto.alt}
+                  width={900}
+                  height={1100}
+                  className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
+                  style={{ minHeight: "420px" }}
+                />
+              ) : (
+                <div className="h-full w-full bg-black/[0.04]" style={{ minHeight: "420px" }} />
+              )}
               <div className="absolute bottom-5 left-5 flex items-center gap-2 rounded-full bg-[#e1fcad] px-4 py-2">
                 <Trophy className="size-4 text-black" strokeWidth={1.5} />
-                <span className="text-sm font-medium text-black">Seit 2005 beim HTV</span>
+                <span className="text-sm font-medium text-black">{trainer?.badge}</span>
               </div>
               <div className="h-[3px] w-0 bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full absolute bottom-0 left-0" />
             </div>
@@ -120,47 +121,37 @@ export default function TrainingPage() {
             {/* Info */}
             <div className="flex flex-col justify-center">
               <h2 className="font-kanturmuy text-4xl font-normal tracking-tight text-black sm:text-5xl">
-                André Albert
+                {trainer?.name}
               </h2>
               <div className="mt-3 flex items-center gap-2">
                 <span className="h-[2px] w-5 rounded-full bg-[#e1fcad]" />
-                <span className="text-sm font-light text-black/50">Tennislehrer & Vereinstrainer</span>
+                <span className="text-sm font-light text-black/50">{trainer?.rolle}</span>
               </div>
 
               <div className="mt-8 space-y-4 text-base font-light leading-relaxed text-black/70">
-                <p>
-                  André Albert ist seit 2005 selbstständiger Tennislehrer und betreut den
-                  Hardter Tennisverein mit vollem Einsatz. Als ehemaliger Leistungsspieler
-                  mit Deutschlandranking bringt er nicht nur technisches Know-how, sondern
-                  auch die Leidenschaft für das Spiel mit.
-                </p>
-                <p>
-                  Mit seiner B-Trainer-Lizenz des Deutschen Tennisbundes und jahrelanger
-                  Erfahrung bietet er maßgeschneidertes Training für Anfänger, Fortgeschrittene
-                  und ambitionierte Wettkampfspieler.
-                </p>
+                {bioAbsaetze.map((absatz) => (
+                  <p key={absatz.slice(0, 40)}>{absatz}</p>
+                ))}
               </div>
 
               <div className="mt-8 grid grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1 border-t border-black/10 pt-4">
-                  <span className="font-kanturmuy text-2xl font-normal tracking-tight">2005</span>
-                  <span className="text-xs uppercase tracking-widest text-black/50">Selbstständig seit</span>
-                </div>
-                <div className="flex flex-col gap-1 border-t border-black/10 pt-4">
-                  <span className="font-kanturmuy text-2xl font-normal tracking-tight">B-Lizenz</span>
-                  <span className="text-xs uppercase tracking-widest text-black/50">DTB Trainer</span>
-                </div>
+                {(trainer?.fakten ?? []).map((f) => (
+                  <div key={f.label} className="flex flex-col gap-1 border-t border-black/10 pt-4">
+                    <span className="font-kanturmuy text-2xl font-normal tracking-tight">{f.wert}</span>
+                    <span className="text-xs uppercase tracking-widest text-black/50">{f.label}</span>
+                  </div>
+                ))}
               </div>
 
               <div className="mt-8 space-y-3 border-t border-black/[0.06] pt-6">
                 <a
-                  href="tel:+4917559049030"
+                  href={`tel:${trainer?.telefonHref ?? ""}`}
                   className="flex items-center gap-3 text-sm text-black/50 transition-colors hover:text-black"
                 >
                   <div className="flex size-8 items-center justify-center rounded-full bg-[#e1fcad]">
                     <Phone className="size-3.5" strokeWidth={1.5} />
                   </div>
-                  0175 59 04 903
+                  {trainer?.telefonLabel}
                 </a>
               </div>
             </div>
@@ -173,38 +164,36 @@ export default function TrainingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-6 flex items-center gap-3">
             <span className="h-px w-8 bg-black/30" />
-            <span className="text-xs uppercase tracking-[0.2em] text-black/50">Was wir anbieten</span>
+            <span className="text-xs uppercase tracking-[0.2em] text-black/50">{angebote?.eyebrow}</span>
           </div>
 
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <h2 className="font-kanturmuy max-w-xl text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-              Unsere{" "}
+              {angebote?.titelVorne}{" "}
               <span className="relative inline-block">
-                Trainingsangebote
+                {angebote?.titelHighlight}
                 <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
               </span>
             </h2>
-            <p className="max-w-sm text-base font-light text-black/50">
-              Für jedes Alter und jedes Niveau — von der ersten Schnupperstunde bis zum Turnierspieler.
-            </p>
+            <p className="max-w-sm text-base font-light text-black/50">{angebote?.text}</p>
           </div>
 
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 md:mt-16 lg:grid-cols-3">
-            {angebote.map((item) => {
-              const Icon = item.icon;
+            {(angebote?.karten ?? []).map((item) => {
+              const Icon = angebotIcon(item.icon);
               return (
                 <div
-                  key={item.title}
+                  key={item.titel}
                   className="group flex flex-col rounded-2xl border border-black/[0.06] bg-white p-6 transition-shadow duration-300 hover:shadow-lg overflow-hidden relative"
                 >
                   <div className="mb-4 flex size-10 items-center justify-center rounded-xl bg-[#e1fcad]">
                     <Icon className="size-5 text-black" strokeWidth={1.5} />
                   </div>
                   <h3 className="font-kanturmuy text-xl font-normal tracking-tight text-black">
-                    {item.title}
+                    {item.titel}
                   </h3>
                   <p className="mt-2 text-sm font-light leading-relaxed text-black/55">
-                    {item.description}
+                    {item.beschreibung}
                   </p>
                   <div className="absolute bottom-0 left-0 h-[3px] w-0 bg-[#e1fcad] transition-all duration-500 ease-out group-hover:w-full" />
                 </div>
@@ -221,45 +210,33 @@ export default function TrainingPage() {
             <div className="flex flex-col justify-center">
               <div className="mb-6 flex items-center gap-3">
                 <span className="h-px w-8 bg-black/30" />
-                <span className="text-xs uppercase tracking-[0.2em] text-black/50">Anlage</span>
+                <span className="text-xs uppercase tracking-[0.2em] text-black/50">{halle?.eyebrow}</span>
               </div>
 
               <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl">
-                Tennishalle{" "}
+                {halle?.titelVorne}{" "}
                 <span className="relative inline-block">
-                  Kirchhellen
+                  {halle?.titelHighlight}
                   <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
                 </span>
               </h2>
 
-              <p className="mt-6 text-base font-light leading-relaxed text-black/70">
-                Seit dem 1. Oktober 2022 leitet André Albert auch die Tennishalle Kirchhellen.
-                Die Halle bietet vier Plätze — drei Sandplätze und einen Teppichplatz — und
-                ist damit die ideale Ergänzung für ganzjähriges Training.
-              </p>
+              <p className="mt-6 text-base font-light leading-relaxed text-black/70">{halle?.text}</p>
 
               <div className="mt-8 grid grid-cols-3 gap-4">
-                {[
-                  { value: "4", label: "Plätze gesamt" },
-                  { value: "3", label: "Sandplätze" },
-                  { value: "1", label: "Teppichplatz" },
-                ].map((s) => (
+                {(halle?.stats ?? []).map((s) => (
                   <div key={s.label} className="flex flex-col gap-1 border-t border-black/10 pt-4">
-                    <span className="font-kanturmuy text-3xl font-normal tracking-tight">{s.value}</span>
+                    <span className="font-kanturmuy text-3xl font-normal tracking-tight">{s.wert}</span>
                     <span className="text-xs uppercase tracking-widest text-black/50">{s.label}</span>
                   </div>
                 ))}
               </div>
 
               <div className="mt-8 flex flex-wrap items-center gap-4">
-                <a
-                  href="https://www.tennishalle-kirchhellen.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={halle?.websiteUrl ?? "#"} target="_blank" rel="noopener noreferrer">
                   <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
                     <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
-                      Zur Website der Halle
+                      {halle?.websiteLabel}
                     </span>
                     <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
                       <ExternalLink className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />
@@ -268,10 +245,10 @@ export default function TrainingPage() {
                   </button>
                 </a>
                 <a
-                  href="tel:+4917559049030"
+                  href={`tel:${halle?.telefonHref ?? ""}`}
                   className="text-sm font-light text-black/50 underline-offset-4 hover:underline"
                 >
-                  Direkt anrufen →
+                  {halle?.anrufLabel}
                 </a>
               </div>
             </div>
@@ -279,24 +256,31 @@ export default function TrainingPage() {
             <div className="flex flex-col gap-4">
               <div className="rounded-2xl bg-[#122023] p-8 text-white">
                 <MapPin className="mb-4 size-6 text-[#e1fcad]" strokeWidth={1.5} />
-                <h3 className="font-kanturmuy text-2xl font-normal tracking-tight">Standort</h3>
+                <h3 className="font-kanturmuy text-2xl font-normal tracking-tight">{halle?.standortTitel}</h3>
                 <p className="mt-2 text-sm font-light text-white/60">
-                  Gahlener Str. 204<br />46284 Dorsten
+                  {adresseZeilen.map((zeile, i) => (
+                    <span key={zeile}>
+                      {i > 0 && <br />}
+                      {zeile}
+                    </span>
+                  ))}
                 </p>
               </div>
               <div className="rounded-2xl border border-black/[0.06] bg-[#f9f9f7] p-8">
                 <Phone className="mb-4 size-6 text-black/40" strokeWidth={1.5} />
-                <h3 className="font-kanturmuy text-2xl font-normal tracking-tight">Kontakt</h3>
-                <p className="mt-2 text-sm font-light text-black/55">
-                  Ruf André direkt an oder schreib uns eine E-Mail — wir melden uns schnellstmöglich.
-                </p>
+                <h3 className="font-kanturmuy text-2xl font-normal tracking-tight">{halle?.kontaktTitel}</h3>
+                <p className="mt-2 text-sm font-light text-black/55">{halle?.kontaktText}</p>
                 <div className="mt-4 space-y-2">
-                  <a href="tel:+4917559049030" className="block text-sm text-black/70 hover:text-black">
-                    0175 59 04 903
-                  </a>
-                  <a href="mailto:1.vorsitzender@hardt-tennis.de" className="block text-sm text-black/70 hover:text-black">
-                    1.vorsitzender@hardt-tennis.de
-                  </a>
+                  {halle?.kontaktTelefonLabel && halle.kontaktTelefonHref && (
+                    <a href={`tel:${halle.kontaktTelefonHref}`} className="block text-sm text-black/70 hover:text-black">
+                      {halle.kontaktTelefonLabel}
+                    </a>
+                  )}
+                  {halle?.kontaktEmail && (
+                    <a href={`mailto:${halle.kontaktEmail}`} className="block text-sm text-black/70 hover:text-black">
+                      {halle.kontaktEmail}
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -310,17 +294,15 @@ export default function TrainingPage() {
           <div className="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="font-kanturmuy text-3xl font-normal tracking-tighter text-black sm:text-4xl md:text-5xl">
-                Bereit für dein erstes Training?
+                {cta?.titel}
               </h2>
-              <p className="mt-3 text-base font-light text-black/60">
-                Melde dich jetzt und starte durch — Schnupperstunden jederzeit möglich.
-              </p>
+              <p className="mt-3 text-base font-light text-black/60">{cta?.text}</p>
             </div>
             <div className="flex flex-wrap gap-4 shrink-0">
-              <a href="tel:+4917559049030">
+              <a href={`tel:${cta?.telefonHref ?? ""}`}>
                 <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
                   <span className="rounded-full bg-[#122023] px-6 py-3 text-sm font-medium text-[#e1fcad] duration-500 ease-in-out group-hover:bg-black group-hover:text-white">
-                    Anrufen
+                    {cta?.buttonLabel}
                   </span>
                   <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#122023] text-[#e1fcad] duration-500 ease-in-out group-hover:bg-black group-hover:text-white">
                     <ArrowUpRight className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />
@@ -332,7 +314,7 @@ export default function TrainingPage() {
                 href="/"
                 className="flex items-center text-sm font-light text-black/60 underline-offset-4 hover:underline"
               >
-                Zurück zur Startseite →
+                {cta?.zurueckLabel}
               </Link>
             </div>
           </div>
