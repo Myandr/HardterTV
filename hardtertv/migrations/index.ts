@@ -16,6 +16,7 @@ import * as migration_20260920_095600_add_kontakt_section from './20260920_09560
 import * as migration_20260920_100331_add_contact_submissions from './20260920_100331_add_contact_submissions';
 import * as migration_20260920_104752_check_nullability from './20260920_104752_check_nullability';
 import * as migration_20260920_170801_add_seiten_texte from './20260920_170801_add_seiten_texte';
+import * as migration_20260920_171650_add_startseite_abschnitte from './20260920_171650_add_startseite_abschnitte';
 
 export const migrations = [
   {
@@ -106,6 +107,11 @@ export const migrations = [
   {
     up: migration_20260920_170801_add_seiten_texte.up,
     down: migration_20260920_170801_add_seiten_texte.down,
-    name: '20260920_170801_add_seiten_texte'
+    name: '20260920_170801_add_seiten_texte',
+  },
+  {
+    up: migration_20260920_171650_add_startseite_abschnitte.up,
+    down: migration_20260920_171650_add_startseite_abschnitte.down,
+    name: '20260920_171650_add_startseite_abschnitte'
   },
 ];

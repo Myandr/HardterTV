@@ -111,6 +111,9 @@ export interface Config {
     footer: Footer;
     'kontakt-section': KontaktSection;
     'seiten-texte': SeitenTexte;
+    'termine-section': TermineSection;
+    'vorstand-section': VorstandSection;
+    'news-section': NewsSection;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
@@ -122,6 +125,9 @@ export interface Config {
     footer: FooterSelect<false> | FooterSelect<true>;
     'kontakt-section': KontaktSectionSelect<false> | KontaktSectionSelect<true>;
     'seiten-texte': SeitenTexteSelect<false> | SeitenTexteSelect<true>;
+    'termine-section': TermineSectionSelect<false> | TermineSectionSelect<true>;
+    'vorstand-section': VorstandSectionSelect<false> | VorstandSectionSelect<true>;
+    'news-section': NewsSectionSelect<false> | NewsSectionSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1213,6 +1219,62 @@ export interface SeitenTexte {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "termine-section".
+ */
+export interface TermineSection {
+  id: number;
+  /**
+   * Die Jahreszahl wird automatisch angehängt.
+   */
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  /**
+   * Der Button verlinkt immer auf /kalender.
+   */
+  ctaLabel: string;
+  leerTextVor: string;
+  /**
+   * Verlinkt auf /kalender.
+   */
+  leerLinkText: string;
+  leerTextNach: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vorstand-section".
+ */
+export interface VorstandSection {
+  id: number;
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  /**
+   * Der Button verlinkt immer auf /vorstand.
+   */
+  ctaLabel: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news-section".
+ */
+export interface NewsSection {
+  id: number;
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
 export interface MitgliedschaftSelect<T extends boolean = true> {
@@ -1676,6 +1738,50 @@ export interface SeitenTexteSelect<T extends boolean = true> {
         cookiesTitelVorne?: T;
         cookiesTitelHighlight?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "termine-section_select".
+ */
+export interface TermineSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  headlineTeil1?: T;
+  headlineTeil2?: T;
+  intro?: T;
+  ctaLabel?: T;
+  leerTextVor?: T;
+  leerLinkText?: T;
+  leerTextNach?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vorstand-section_select".
+ */
+export interface VorstandSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  headlineTeil1?: T;
+  headlineTeil2?: T;
+  intro?: T;
+  ctaLabel?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "news-section_select".
+ */
+export interface NewsSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  headlineTeil1?: T;
+  headlineTeil2?: T;
+  intro?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

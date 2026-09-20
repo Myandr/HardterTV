@@ -70,7 +70,23 @@ function VorstandCard({ person }: { person: VorstandItem }) {
   );
 }
 
-export default function VorstandSection({ vorstand }: { vorstand: VorstandItem[] }) {
+export type VorstandSectionProps = {
+  vorstand: VorstandItem[];
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  ctaLabel: string;
+};
+
+export default function VorstandSection({
+  vorstand,
+  eyebrow,
+  headlineTeil1,
+  headlineTeil2,
+  intro,
+  ctaLabel,
+}: VorstandSectionProps) {
   return (
     <section id="trainer" className="bg-[#f9f9f7] px-6 py-20 md:px-12 lg:px-20 lg:py-32">
       <div className="mx-auto max-w-7xl">
@@ -80,20 +96,20 @@ export default function VorstandSection({ vorstand }: { vorstand: VorstandItem[]
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-8 bg-black/30" />
               <span className="text-xs uppercase tracking-[0.2em] text-black/50">
-                Menschen hinter dem HTV
+                {eyebrow}
               </span>
             </div>
 
             <h2 className="font-kanturmuy max-w-xl text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-              <BlurTextEffect>Unser </BlurTextEffect>
+              <BlurTextEffect>{`${headlineTeil1} `}</BlurTextEffect>
               <span className="relative inline-block">
-                <BlurTextEffect>Vorstand</BlurTextEffect>
+                <BlurTextEffect>{headlineTeil2}</BlurTextEffect>
                 <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
               </span>
             </h2>
 
             <p className="mt-4 max-w-md text-base font-light text-black/50">
-              Das Team des Hardter TV
+              {intro}
             </p>
           </div>
 
@@ -101,7 +117,7 @@ export default function VorstandSection({ vorstand }: { vorstand: VorstandItem[]
             <Link href="/vorstand">
               <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
                 <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
-                  Ganzen Vorstand sehen
+                  {ctaLabel}
                 </span>
                 <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
                   <ArrowUpRight className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />

@@ -26,6 +26,7 @@
     "seed:footer": "dotenv -e .env.local -- tsx scripts/seed-footer.ts",
     "seed:kontakt-section": "dotenv -e .env.local -- tsx scripts/seed-kontakt-section.ts",
     "seed:seiten-texte": "dotenv -e .env.local -- tsx scripts/seed-seiten-texte.ts",
+    "seed:startseite-abschnitte": "dotenv -e .env.local -- tsx scripts/seed-startseite-abschnitte.ts",
     "ci":"payload migrate && next build"
   },
   "dependencies": {

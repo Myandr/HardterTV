@@ -111,6 +111,44 @@ async function getKontaktTexte() {
   };
 }
 
+async function getTermineTexte() {
+  const payload = await getPayload({ config });
+  const data = await payload.findGlobal({ slug: "termine-section", depth: 0 });
+  return {
+    eyebrow: data.eyebrow ?? "",
+    headlineTeil1: data.headlineTeil1 ?? "",
+    headlineTeil2: data.headlineTeil2 ?? "",
+    intro: data.intro ?? "",
+    ctaLabel: data.ctaLabel ?? "",
+    leerTextVor: data.leerTextVor ?? "",
+    leerLinkText: data.leerLinkText ?? "",
+    leerTextNach: data.leerTextNach ?? "",
+  };
+}
+
+async function getVorstandTexte() {
+  const payload = await getPayload({ config });
+  const data = await payload.findGlobal({ slug: "vorstand-section", depth: 0 });
+  return {
+    eyebrow: data.eyebrow ?? "",
+    headlineTeil1: data.headlineTeil1 ?? "",
+    headlineTeil2: data.headlineTeil2 ?? "",
+    intro: data.intro ?? "",
+    ctaLabel: data.ctaLabel ?? "",
+  };
+}
+
+async function getNewsTexte() {
+  const payload = await getPayload({ config });
+  const data = await payload.findGlobal({ slug: "news-section", depth: 0 });
+  return {
+    eyebrow: data.eyebrow ?? "",
+    headlineTeil1: data.headlineTeil1 ?? "",
+    headlineTeil2: data.headlineTeil2 ?? "",
+    intro: data.intro ?? "",
+  };
+}
+
 async function getVorstand() {
   const payload = await getPayload({ config });
   const { docs } = await payload.find({
@@ -171,7 +209,19 @@ async function getNews() {
 }
 
 export default async function Home() {
-  const [hero, welcome, standorte, vorstand, termine, news, footerDaten, kontaktTexte] = await Promise.all([
+  const [
+    hero,
+    welcome,
+    standorte,
+    vorstand,
+    termine,
+    news,
+    footerDaten,
+    kontaktTexte,
+    termineTexte,
+    vorstandTexte,
+    newsTexte,
+  ] = await Promise.all([
     getHero(),
     getWelcome(),
     getStandorte(),
@@ -180,15 +230,18 @@ export default async function Home() {
     getNews(),
     getFooterDaten(),
     getKontaktTexte(),
+    getTermineTexte(),
+    getVorstandTexte(),
+    getNewsTexte(),
   ]);
   return (
     <main>
       <Hero {...hero} />
       <WelcomeSection {...welcome} />
       <LocationSection {...standorte} />
-      <TermineSection termine={termine} />
-      <VorstandSection vorstand={vorstand} />
-      <NewsSection news={news} />
+      <TermineSection termine={termine} {...termineTexte} />
+      <VorstandSection vorstand={vorstand} {...vorstandTexte} />
+      <NewsSection news={news} {...newsTexte} />
       <InstagramCta {...footerDaten.instagram} />
       <KontaktSection {...kontaktTexte} {...footerDaten.kontakt} />
     </main>

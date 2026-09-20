@@ -70,7 +70,29 @@ function TerminCard({ termin }: { termin: Termin }) {
   );
 }
 
-export default function TermineSection({ termine }: { termine: Termin[] }) {
+export type TermineSectionProps = {
+  termine: Termin[];
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+  ctaLabel: string;
+  leerTextVor: string;
+  leerLinkText: string;
+  leerTextNach: string;
+};
+
+export default function TermineSection({
+  termine,
+  eyebrow,
+  headlineTeil1,
+  headlineTeil2,
+  intro,
+  ctaLabel,
+  leerTextVor,
+  leerLinkText,
+  leerTextNach,
+}: TermineSectionProps) {
   return (
     <section id="termine" className="bg-white px-6 py-20 md:px-12 lg:px-20 lg:py-32">
       <div className="mx-auto max-w-7xl">
@@ -80,20 +102,20 @@ export default function TermineSection({ termine }: { termine: Termin[] }) {
             <div className="mb-6 flex items-center gap-3">
               <span className="h-px w-8 bg-black/30" />
               <span className="text-xs uppercase tracking-[0.2em] text-black/50">
-                Veranstaltungen {new Date().getFullYear()}
+                {`${eyebrow} ${new Date().getFullYear()}`}
               </span>
             </div>
 
             <h2 className="font-kanturmuy max-w-xl text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-              <BlurTextEffect>Kommende </BlurTextEffect>
+              <BlurTextEffect>{`${headlineTeil1} `}</BlurTextEffect>
               <span className="relative inline-block">
-                <BlurTextEffect>Termine</BlurTextEffect>
+                <BlurTextEffect>{headlineTeil2}</BlurTextEffect>
                 <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
               </span>
             </h2>
 
             <p className="mt-4 max-w-md text-base font-light text-black/50">
-              Hier erfahren Sie alles über kommende Termine und Veranstaltungen.
+              {intro}
             </p>
           </div>
 
@@ -101,7 +123,7 @@ export default function TermineSection({ termine }: { termine: Termin[] }) {
             <Link href="/kalender">
               <button className="group flex cursor-pointer items-center gap-0 rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none">
                 <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
-                  Zum Kalender
+                  {ctaLabel}
                 </span>
                 <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
                   <ArrowUpRight className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />
@@ -116,8 +138,8 @@ export default function TermineSection({ termine }: { termine: Termin[] }) {
         <div className="mt-8 grid grid-cols-1 gap-4 md:mt-14 md:grid-cols-2">
           {termine.length === 0 ? (
             <p className="rounded-2xl border border-black/[0.07] bg-white p-6 text-sm text-black/50 md:col-span-2">
-              Aktuell sind keine Termine geplant — schau bald wieder vorbei oder wirf einen Blick in den{" "}
-              <Link href="/kalender" className="underline">Kalender</Link>.
+              {leerTextVor}{" "}
+              <Link href="/kalender" className="underline">{leerLinkText}</Link>{leerTextNach}
             </p>
           ) : (
             termine.map((t, i) => (

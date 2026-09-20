@@ -101,7 +101,21 @@ function NewsCard({
   );
 }
 
-export default function NewsSection({ news }: { news: NewsItem[] }) {
+export type NewsSectionProps = {
+  news: NewsItem[];
+  eyebrow: string;
+  headlineTeil1: string;
+  headlineTeil2: string;
+  intro: string;
+};
+
+export default function NewsSection({
+  news,
+  eyebrow,
+  headlineTeil1,
+  headlineTeil2,
+  intro,
+}: NewsSectionProps) {
   if (news.length === 0) return null;
 
   return (
@@ -113,20 +127,20 @@ export default function NewsSection({ news }: { news: NewsItem[] }) {
               <div className="mb-6 flex items-center gap-3">
                 <span className="h-px w-8 bg-black/30" />
                 <span className="text-xs uppercase tracking-[0.2em] text-black/50">
-                  Aus dem Verein
+                  {eyebrow}
                 </span>
               </div>
 
               <h2 className="font-kanturmuy max-w-xl text-3xl font-normal tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
-                <BlurTextEffect>Aktuelle </BlurTextEffect>
+                <BlurTextEffect>{`${headlineTeil1} `}</BlurTextEffect>
                 <span className="relative inline-block">
-                  <BlurTextEffect>Neuigkeiten</BlurTextEffect>
+                  <BlurTextEffect>{headlineTeil2}</BlurTextEffect>
                   <span className="absolute -bottom-1 left-0 h-[3px] w-full bg-[#e1fcad]" />
                 </span>
               </h2>
 
               <p className="mt-4 max-w-md text-base font-light text-black/50">
-                Bleiben Sie auf dem Laufenden über die neuesten Entwicklungen in unserem Verein.
+                {intro}
               </p>
             </div>
           </div>
