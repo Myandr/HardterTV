@@ -101,9 +101,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     mitgliedschaft: Mitgliedschaft;
+    training: Training;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
+    training: TrainingSelect<false> | TrainingSelect<true>;
   };
   locale: null;
   widgets: {
@@ -713,6 +715,88 @@ export interface Mitgliedschaft {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training".
+ */
+export interface Training {
+  id: number;
+  hero: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    buttonLabel: string;
+    /**
+     * Wird als tel:-Link verwendet, z.B. "+4917559049030".
+     */
+    telefonHref: string;
+  };
+  trainer: {
+    eyebrow: string;
+    foto?: (number | null) | Media;
+    badge: string;
+    name: string;
+    rolle: string;
+    /**
+     * Leerzeile = neuer Absatz.
+     */
+    bio: string;
+    fakten: {
+      wert: string;
+      label: string;
+      id?: string | null;
+    }[];
+    telefonLabel: string;
+    telefonHref: string;
+  };
+  angebote: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    karten: {
+      icon: 'userCheck' | 'users' | 'trophy' | 'dumbbell' | 'star' | 'calendar';
+      titel: string;
+      beschreibung: string;
+      id?: string | null;
+    }[];
+  };
+  halle: {
+    eyebrow: string;
+    titelVorne: string;
+    titelHighlight: string;
+    text: string;
+    stats: {
+      wert: string;
+      label: string;
+      id?: string | null;
+    }[];
+    websiteLabel: string;
+    websiteUrl: string;
+    anrufLabel: string;
+    telefonHref: string;
+    standortTitel: string;
+    /**
+     * Jede Zeile wird als eigene Zeile ausgegeben.
+     */
+    adresse: string;
+    kontaktTitel: string;
+    kontaktText: string;
+    kontaktTelefonLabel?: string | null;
+    kontaktTelefonHref?: string | null;
+    kontaktEmail?: string | null;
+  };
+  cta: {
+    titel: string;
+    text: string;
+    buttonLabel: string;
+    telefonHref: string;
+    zurueckLabel: string;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
 export interface MitgliedschaftSelect<T extends boolean = true> {
@@ -795,6 +879,95 @@ export interface MitgliedschaftSelect<T extends boolean = true> {
         email?: T;
         telefonLabel?: T;
         telefonHref?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "training_select".
+ */
+export interface TrainingSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        buttonLabel?: T;
+        telefonHref?: T;
+      };
+  trainer?:
+    | T
+    | {
+        eyebrow?: T;
+        foto?: T;
+        badge?: T;
+        name?: T;
+        rolle?: T;
+        bio?: T;
+        fakten?:
+          | T
+          | {
+              wert?: T;
+              label?: T;
+              id?: T;
+            };
+        telefonLabel?: T;
+        telefonHref?: T;
+      };
+  angebote?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        karten?:
+          | T
+          | {
+              icon?: T;
+              titel?: T;
+              beschreibung?: T;
+              id?: T;
+            };
+      };
+  halle?:
+    | T
+    | {
+        eyebrow?: T;
+        titelVorne?: T;
+        titelHighlight?: T;
+        text?: T;
+        stats?:
+          | T
+          | {
+              wert?: T;
+              label?: T;
+              id?: T;
+            };
+        websiteLabel?: T;
+        websiteUrl?: T;
+        anrufLabel?: T;
+        telefonHref?: T;
+        standortTitel?: T;
+        adresse?: T;
+        kontaktTitel?: T;
+        kontaktText?: T;
+        kontaktTelefonLabel?: T;
+        kontaktTelefonHref?: T;
+        kontaktEmail?: T;
+      };
+  cta?:
+    | T
+    | {
+        titel?: T;
+        text?: T;
+        buttonLabel?: T;
+        telefonHref?: T;
+        zurueckLabel?: T;
       };
   updatedAt?: T;
   createdAt?: T;

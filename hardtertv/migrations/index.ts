@@ -6,6 +6,7 @@ import * as migration_20260919_141246_add_gallery_albums from './20260919_141246
 import * as migration_20260919_174521_add_news from './20260919_174521_add_news';
 import * as migration_20260919_175022_add_legal_pages from './20260919_175022_add_legal_pages';
 import * as migration_20260919_194632_add_mitgliedschaft from './20260919_194632_add_mitgliedschaft';
+import * as migration_20260920_000635_add_training from './20260920_000635_add_training';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260919_194632_add_mitgliedschaft.up,
     down: migration_20260919_194632_add_mitgliedschaft.down,
-    name: '20260919_194632_add_mitgliedschaft'
+    name: '20260919_194632_add_mitgliedschaft',
+  },
+  {
+    up: migration_20260920_000635_add_training.up,
+    down: migration_20260920_000635_add_training.down,
+    name: '20260920_000635_add_training'
   },
 ];
