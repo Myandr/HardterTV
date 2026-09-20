@@ -104,12 +104,14 @@ export interface Config {
     training: Training;
     eisstock: Eisstock;
     hero: Hero;
+    'welcome-section': WelcomeSection;
   };
   globalsSelect: {
     mitgliedschaft: MitgliedschaftSelect<false> | MitgliedschaftSelect<true>;
     training: TrainingSelect<false> | TrainingSelect<true>;
     eisstock: EisstockSelect<false> | EisstockSelect<true>;
     hero: HeroSelect<false> | HeroSelect<true>;
+    'welcome-section': WelcomeSectionSelect<false> | WelcomeSectionSelect<true>;
   };
   locale: null;
   widgets: {
@@ -880,6 +882,48 @@ export interface Hero {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "welcome-section".
+ */
+export interface WelcomeSection {
+  id: number;
+  eyebrow: string;
+  headline: string;
+  intro: string;
+  /**
+   * Vier Kacheln passen genau in eine Zeile.
+   */
+  stats?:
+    | {
+        icon: 'trophy' | 'users' | 'mapPin' | 'zap';
+        wert: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Ohne Bild bleibt die Fläche grau.
+   */
+  bild?: (number | null) | Media;
+  bildBadge: string;
+  /**
+   * Absätze durch eine Leerzeile voneinander trennen.
+   */
+  text: string;
+  signaturName: string;
+  signaturRolle: string;
+  /**
+   * Der Button verlinkt immer auf /mitgliedschaft.
+   */
+  ctaLabel: string;
+  /**
+   * Verlinkt auf /training. Der Pfeil wird automatisch angehängt.
+   */
+  sekundaerLabel: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "mitgliedschaft_select".
  */
 export interface MitgliedschaftSelect<T extends boolean = true> {
@@ -1126,6 +1170,33 @@ export interface HeroSelect<T extends boolean = true> {
         alt?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "welcome-section_select".
+ */
+export interface WelcomeSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  headline?: T;
+  intro?: T;
+  stats?:
+    | T
+    | {
+        icon?: T;
+        wert?: T;
+        label?: T;
+        id?: T;
+      };
+  bild?: T;
+  bildBadge?: T;
+  text?: T;
+  signaturName?: T;
+  signaturRolle?: T;
+  ctaLabel?: T;
+  sekundaerLabel?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

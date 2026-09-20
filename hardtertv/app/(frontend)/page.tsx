@@ -30,6 +30,32 @@ async function getHero() {
   };
 }
 
+async function getWelcome() {
+  const payload = await getPayload({ config });
+  const data = await payload.findGlobal({ slug: "welcome-section", depth: 1 });
+  return {
+    eyebrow: data.eyebrow ?? "",
+    headline: data.headline ?? "",
+    intro: data.intro ?? "",
+    stats: (data.stats ?? []).map((row, i) => ({
+      id: row.id ?? String(i),
+      icon: row.icon,
+      wert: row.wert,
+      label: row.label,
+    })),
+    bild: toBild(data.bild),
+    bildBadge: data.bildBadge ?? "",
+    absaetze: (data.text ?? "")
+      .split(/\n\s*\n/)
+      .map((absatz) => absatz.trim())
+      .filter((absatz) => absatz.length > 0),
+    signaturName: data.signaturName ?? "",
+    signaturRolle: data.signaturRolle ?? "",
+    ctaLabel: data.ctaLabel ?? "",
+    sekundaerLabel: data.sekundaerLabel ?? "",
+  };
+}
+
 async function getVorstand() {
   const payload = await getPayload({ config });
   const { docs } = await payload.find({
@@ -87,8 +113,9 @@ async function getNews() {
 }
 
 export default async function Home() {
-  const [hero, vorstand, termine, news] = await Promise.all([
+  const [hero, welcome, vorstand, termine, news] = await Promise.all([
     getHero(),
+    getWelcome(),
     getVorstand(),
     getTermine(),
     getNews(),
@@ -96,7 +123,7 @@ export default async function Home() {
   return (
     <main>
       <Hero {...hero} />
-      <WelcomeSection />
+      <WelcomeSection {...welcome} />
       <LocationSection />
       <TermineSection termine={termine} />
       <VorstandSection vorstand={vorstand} />

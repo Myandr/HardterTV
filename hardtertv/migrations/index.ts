@@ -9,6 +9,7 @@ import * as migration_20260919_194632_add_mitgliedschaft from './20260919_194632
 import * as migration_20260920_000635_add_training from './20260920_000635_add_training';
 import * as migration_20260920_044305_add_eisstock from './20260920_044305_add_eisstock';
 import * as migration_20260920_092833_add_hero from './20260920_092833_add_hero';
+import * as migration_20260920_093501_add_welcome_section from './20260920_093501_add_welcome_section';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20260920_092833_add_hero.up,
     down: migration_20260920_092833_add_hero.down,
-    name: '20260920_092833_add_hero'
+    name: '20260920_092833_add_hero',
+  },
+  {
+    up: migration_20260920_093501_add_welcome_section.up,
+    down: migration_20260920_093501_add_welcome_section.down,
+    name: '20260920_093501_add_welcome_section'
   },
 ];
