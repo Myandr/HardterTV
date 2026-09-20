@@ -1141,6 +1141,28 @@ export interface KontaktSection {
   mapsTitel: string;
   erfolgTitel: string;
   erfolgText: string;
+  formular: {
+    adresseLabel: string;
+    emailLabel: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    emailFeldLabel: string;
+    emailPlaceholder: string;
+    nachrichtLabel: string;
+    nachrichtPlaceholder: string;
+    einwilligungTextVor: string;
+    /**
+     * Verlinkt immer auf /datenschutz.
+     */
+    einwilligungLinkText: string;
+    einwilligungTextNach: string;
+    absendenLabel: string;
+    sendenLabel: string;
+    /**
+     * Für Menschen unsichtbar, wird nur von Screenreadern vorgelesen.
+     */
+    honeypotLabel: string;
+  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1699,6 +1721,24 @@ export interface KontaktSectionSelect<T extends boolean = true> {
   mapsTitel?: T;
   erfolgTitel?: T;
   erfolgText?: T;
+  formular?:
+    | T
+    | {
+        adresseLabel?: T;
+        emailLabel?: T;
+        nameLabel?: T;
+        namePlaceholder?: T;
+        emailFeldLabel?: T;
+        emailPlaceholder?: T;
+        nachrichtLabel?: T;
+        nachrichtPlaceholder?: T;
+        einwilligungTextVor?: T;
+        einwilligungLinkText?: T;
+        einwilligungTextNach?: T;
+        absendenLabel?: T;
+        sendenLabel?: T;
+        honeypotLabel?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

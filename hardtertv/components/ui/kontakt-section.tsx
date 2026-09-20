@@ -8,6 +8,23 @@ import { MapsConsentGate } from "@/components/ui/maps-consent-gate";
 import { sendeKontaktanfrage, type KontaktResult } from "@/lib/actions/kontakt";
 import { KONTAKT_LIMITS } from "@/lib/kontakt-validation";
 
+export type KontaktFormularTexte = {
+  adresseLabel: string;
+  emailLabel: string;
+  nameLabel: string;
+  namePlaceholder: string;
+  emailFeldLabel: string;
+  emailPlaceholder: string;
+  nachrichtLabel: string;
+  nachrichtPlaceholder: string;
+  einwilligungTextVor: string;
+  einwilligungLinkText: string;
+  einwilligungTextNach: string;
+  absendenLabel: string;
+  sendenLabel: string;
+  honeypotLabel: string;
+};
+
 export type KontaktSectionProps = {
   eyebrow: string;
   headlineTeil1: string;
@@ -17,6 +34,7 @@ export type KontaktSectionProps = {
   mapsTitel: string;
   erfolgTitel: string;
   erfolgText: string;
+  formular: KontaktFormularTexte;
   adresse: string;
   telefonLabel: string;
   telefon: string;
@@ -33,6 +51,7 @@ export default function KontaktSection({
   mapsTitel,
   erfolgTitel,
   erfolgText,
+  formular,
   adresse,
   telefonLabel,
   telefon,
@@ -59,9 +78,9 @@ export default function KontaktSection({
   }, []);
 
   const kontaktInfo = [
-    { icon: MapPin, label: "Adresse", wert: adresse, href: undefined as string | undefined },
+    { icon: MapPin, label: formular.adresseLabel, wert: adresse, href: undefined as string | undefined },
     { icon: Phone, label: telefonLabel, wert: telefon, href: telefonHref },
-    { icon: Mail, label: "E-Mail", wert: email, href: `mailto:${email}` },
+    { icon: Mail, label: formular.emailLabel, wert: email, href: `mailto:${email}` },
   ];
 
   return (
@@ -124,12 +143,12 @@ export default function KontaktSection({
                 <form action={formAction} className="flex flex-col gap-4">
                   <input type="hidden" name="gestartetAm" value={gestartetAm} readOnly />
                   <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-                    <label htmlFor="htv_hinweis">Dieses Feld bitte leer lassen</label>
+                    <label htmlFor="htv_hinweis">{formular.honeypotLabel}</label>
                     <input type="text" id="htv_hinweis" name="htv_hinweis" tabIndex={-1} autoComplete="off" />
                   </div>
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="kontakt-name" className="text-xs uppercase tracking-widest text-black/40">Name</label>
+                      <label htmlFor="kontakt-name" className="text-xs uppercase tracking-widest text-black/40">{formular.nameLabel}</label>
                       <input
                         type="text"
                         id="kontakt-name"
@@ -140,14 +159,14 @@ export default function KontaktSection({
                         aria-invalid={fieldErrors.name ? true : undefined}
                         aria-describedby={fieldErrors.name ? "kontakt-name-fehler" : undefined}
                         className="rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
-                        placeholder="Dein Name"
+                        placeholder={formular.namePlaceholder}
                       />
                       {fieldErrors.name && (
                         <p id="kontakt-name-fehler" className="text-xs text-red-600">{fieldErrors.name}</p>
                       )}
                     </div>
                     <div className="flex flex-col gap-1.5">
-                      <label htmlFor="kontakt-email" className="text-xs uppercase tracking-widest text-black/40">E-Mail</label>
+                      <label htmlFor="kontakt-email" className="text-xs uppercase tracking-widest text-black/40">{formular.emailFeldLabel}</label>
                       <input
                         type="email"
                         id="kontakt-email"
@@ -158,7 +177,7 @@ export default function KontaktSection({
                         aria-invalid={fieldErrors.email ? true : undefined}
                         aria-describedby={fieldErrors.email ? "kontakt-email-fehler" : undefined}
                         className="rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
-                        placeholder="deine@email.de"
+                        placeholder={formular.emailPlaceholder}
                       />
                       {fieldErrors.email && (
                         <p id="kontakt-email-fehler" className="text-xs text-red-600">{fieldErrors.email}</p>
@@ -166,7 +185,7 @@ export default function KontaktSection({
                     </div>
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="kontakt-nachricht" className="text-xs uppercase tracking-widest text-black/40">Nachricht</label>
+                    <label htmlFor="kontakt-nachricht" className="text-xs uppercase tracking-widest text-black/40">{formular.nachrichtLabel}</label>
                     <textarea
                       id="kontakt-nachricht"
                       name="message"
@@ -177,7 +196,7 @@ export default function KontaktSection({
                       aria-describedby={fieldErrors.nachricht ? "kontakt-nachricht-fehler" : undefined}
                       rows={4}
                       className="resize-none rounded-xl border border-black/10 bg-black/[0.02] px-4 py-3 text-sm text-black placeholder-black/30 outline-none transition-colors focus:border-black/30 focus:bg-white"
-                      placeholder="Deine Nachricht an den HTV..."
+                      placeholder={formular.nachrichtPlaceholder}
                     />
                     {fieldErrors.nachricht && (
                       <p id="kontakt-nachricht-fehler" className="text-xs text-red-600">{fieldErrors.nachricht}</p>
@@ -195,11 +214,11 @@ export default function KontaktSection({
                       className="mt-0.5 size-4 shrink-0 cursor-pointer accent-[#122023]"
                     />
                     <label htmlFor="datenschutz" className="text-xs leading-relaxed text-black/50">
-                      Ich habe die{" "}
+                      {formular.einwilligungTextVor}{" "}
                       <a href="/datenschutz" className="text-black underline underline-offset-2 hover:text-black/70">
-                        Datenschutzerklärung
+                        {formular.einwilligungLinkText}
                       </a>{" "}
-                      gelesen und stimme der Verarbeitung meiner Daten zur Bearbeitung meiner Anfrage zu.
+                      {formular.einwilligungTextNach}
                     </label>
                   </div>
                   {fieldErrors.datenschutz && (
@@ -217,7 +236,7 @@ export default function KontaktSection({
                     className="group flex cursor-pointer items-center gap-0 self-start rounded-full border-none bg-transparent px-0 py-0 shadow-none outline-none disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <span className="rounded-full bg-[#e1fcad] px-6 py-3 text-sm font-medium text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
-                      {pending ? "Wird gesendet…" : "Nachricht senden"}
+                      {pending ? formular.sendenLabel : formular.absendenLabel}
                     </span>
                     <div className="relative flex size-[46px] items-center justify-center overflow-hidden rounded-full bg-[#e1fcad] text-black duration-500 ease-in-out group-hover:bg-[#122023] group-hover:text-[#e1fcad]">
                       <ArrowUpRight className="absolute left-1/2 top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-in-out group-hover:translate-x-10" />

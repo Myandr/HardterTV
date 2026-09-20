@@ -108,6 +108,22 @@ async function getKontaktTexte() {
     mapsTitel: data.mapsTitel ?? "",
     erfolgTitel: data.erfolgTitel ?? "",
     erfolgText: data.erfolgText ?? "",
+    formular: {
+      adresseLabel: data.formular?.adresseLabel ?? "",
+      emailLabel: data.formular?.emailLabel ?? "",
+      nameLabel: data.formular?.nameLabel ?? "",
+      namePlaceholder: data.formular?.namePlaceholder ?? "",
+      emailFeldLabel: data.formular?.emailFeldLabel ?? "",
+      emailPlaceholder: data.formular?.emailPlaceholder ?? "",
+      nachrichtLabel: data.formular?.nachrichtLabel ?? "",
+      nachrichtPlaceholder: data.formular?.nachrichtPlaceholder ?? "",
+      einwilligungTextVor: data.formular?.einwilligungTextVor ?? "",
+      einwilligungLinkText: data.formular?.einwilligungLinkText ?? "",
+      einwilligungTextNach: data.formular?.einwilligungTextNach ?? "",
+      absendenLabel: data.formular?.absendenLabel ?? "",
+      sendenLabel: data.formular?.sendenLabel ?? "",
+      honeypotLabel: data.formular?.honeypotLabel ?? "",
+    },
   };
 }
 
