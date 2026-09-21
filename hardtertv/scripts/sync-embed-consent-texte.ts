@@ -14,13 +14,17 @@ import type { LegalPage } from "../payload-types";
  */
 const SIMPLYBOOK = {
   /** Name und Anschrift des Anbieters (Verantwortlicher/Auftragsverarbeiter) laut SimplyBook-Dokumentation. */
-  anbieter: "",
+  anbieter: "SimplyBook.me Ltd, Nafpliou 28, Medical Court, Floor 4, Flat/Office 401, 3025 Limassol, Zypern.",
   /** Speicherdauer der Buchungsdaten (z. B. "bis zum Ablauf der gesetzlichen Aufbewahrungsfristen"). */
-  speicherdauer: "",
-  /** Aussage zum AV-Vertrag, z. B. "Mit dem Anbieter besteht ein Auftragsverarbeitungsvertrag gemäß Art. 28 DSGVO." */
+  speicherdauer: "bis zum Ablauf der gesetzlichen Aufbewahrungsfristen, danach werden die Daten gelöscht",
+  /**
+   * Aussage zum AV-Vertrag, z. B. "Mit dem Anbieter besteht ein Auftragsverarbeitungsvertrag gemäß Art. 28 DSGVO."
+   * BEWUSST LEER: Der AVV mit SimplyBook.me ist noch nicht abgeschlossen. Erst nach Abschluss eintragen.
+   */
   avvHinweis: "",
   /** Aussage zur Drittlandübermittlung (Serverstandort, Garantien wie SCCs/Angemessenheitsbeschluss). */
-  drittland: "",
+  drittland:
+    "Nach Angaben des Anbieters werden die Daten von Kunden aus der EU einschließlich Sicherungskopien in der EU gespeichert. Eine Übermittlung in Länder außerhalb der EU kann erfolgen; sie stützt sich nach Angaben des Anbieters auf Standardvertragsklauseln bzw. Angemessenheitsbeschlüsse der EU-Kommission.",
 };
 
 const BANNER_TEXT_VOR =
@@ -65,9 +69,13 @@ async function run() {
   const missing = Object.entries(SIMPLYBOOK)
     .filter(([, v]) => !v.trim())
     .map(([k]) => k);
-  if (missing.length > 0) {
-    console.error(`Abbruch: Bitte zuerst in SIMPLYBOOK ausfüllen: ${missing.join(", ")}`);
-    process.exit(1);
+  // Solange SimplyBook-Angaben fehlen, wird nur der davon unabhängige Liga-Abschnitt aktualisiert.
+  // Banner, Cookie-Abschnitt und SimplyBook-Abschnitt erwähnen SimplyBook und bleiben unverändert.
+  const simplybookBereit = missing.length === 0;
+  if (!simplybookBereit) {
+    console.warn(
+      `Hinweis: SIMPLYBOOK unvollständig (${missing.join(", ")}). Es wird nur der Liga-Abschnitt aktualisiert; Banner, Cookies und SimplyBook-Abschnitt bleiben unverändert.`,
+    );
   }
 
   const payload = await getPayload({ config });
@@ -78,12 +86,15 @@ async function run() {
     return state as unknown as NonNullable<LegalPage["intro"]>;
   };
 
-  const cookieTexte = await payload.findGlobal({ slug: "cookie-texte", depth: 0 });
-  await payload.updateGlobal({
-    slug: "cookie-texte",
-    data: { banner: { ...cookieTexte.banner, textVor: BANNER_TEXT_VOR } },
-  });
-  console.log("updated: cookie-texte.banner.textVor");
+  if (simplybookBereit) {
+    const cookieTexte = await payload.findGlobal({ slug: "cookie-texte", depth: 0 });
+    await payload.updateGlobal({
+      slug: "cookie-texte",
+      data: { banner: { ...cookieTexte.banner, textVor: BANNER_TEXT_VOR } },
+      context: { disableRevalidate: true },
+    });
+    console.log("updated: cookie-texte.banner.textVor");
+  }
 
   const { docs } = await payload.find({
     collection: "legal-pages",
@@ -101,23 +112,27 @@ async function run() {
     abschnitte[i] = { titel: abschnitte[i].titel, inhalt: toLexical(markdown) };
   };
 
-  replace("Cookies", COOKIES_MARKDOWN);
   replace("Liga-Daten", LIGA_MARKDOWN);
 
-  const title = "Online-Buchung Eisstockschießen (SimplyBook.me)";
-  const neu = { titel: title, inhalt: toLexical(simplybookMarkdown()) };
-  const existing = abschnitte.findIndex((a) => a.titel === title);
-  if (existing >= 0) {
-    abschnitte[existing] = neu;
-  } else {
-    const mapsIdx = abschnitte.findIndex((a) => a.titel === "Google Maps");
-    abschnitte.splice(mapsIdx >= 0 ? mapsIdx + 1 : abschnitte.length, 0, neu);
+  if (simplybookBereit) {
+    replace("Cookies", COOKIES_MARKDOWN);
+
+    const title = "Online-Buchung Eisstockschießen (SimplyBook.me)";
+    const neu = { titel: title, inhalt: toLexical(simplybookMarkdown()) };
+    const existing = abschnitte.findIndex((a) => a.titel === title);
+    if (existing >= 0) {
+      abschnitte[existing] = neu;
+    } else {
+      const mapsIdx = abschnitte.findIndex((a) => a.titel === "Google Maps");
+      abschnitte.splice(mapsIdx >= 0 ? mapsIdx + 1 : abschnitte.length, 0, neu);
+    }
   }
 
   await payload.update({
     collection: "legal-pages",
     id: page.id,
     data: { abschnitte },
+    context: { disableRevalidate: true },
   });
   console.log("updated: datenschutz");
   process.exit(0);
