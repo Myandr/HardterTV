@@ -130,6 +130,17 @@ export default async function Footer() {
       <div className="border-t border-white/[0.06]">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-6 py-5 text-xs text-white/30 md:flex-row md:px-12 lg:px-20">
           <p>{`© ${new Date().getFullYear()} ${data.copyrightName}. ${data.copyrightZusatz}`}</p>
+          <p>
+            Webdesign von{" "}
+            <a
+              href="https://webdesign-dorsten.com"
+              target="_blank"
+              rel="noopener"
+              className="text-white/50 transition-colors hover:text-white"
+            >
+              Paul Spengler
+            </a>
+          </p>
           <div className="flex gap-5">
             {(data.rechtlicheLinks ?? []).map((l) => (
               <Link key={l.id ?? l.ziel} href={l.ziel} className="transition-colors hover:text-white">
