@@ -11,7 +11,7 @@ const SUBTEXT =
   "Erlebe die Freude am Tennis und die Kraft der Gemeinschaft. Verbinde dich mit Gleichgesinnten und wachse gemeinsam im Sport.";
 const CTA_LABEL = "Mitglied werden";
 
-const HERO_BILD = { pfad: "images/hero-new.png", alt: "Tennisplatz Hardter Tennisverein" };
+const HERO_BILD = { pfad: "images/hero-new.jpg", alt: "Tennisplatz Hardter Tennisverein" };
 
 const LOGOS = [5, 6, 7, 8, 9, 10, 11].map((i) => ({
   pfad: `images/image copy ${i}.png`,

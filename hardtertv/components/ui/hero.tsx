@@ -27,6 +27,7 @@ export default function Hero({ headline, subtext, ctaLabel, bild, partnerLogos }
                 height={1080}
                 src={bild.url}
                 width={1920}
+                sizes="(max-width: 768px) 100vw, 50vw"
                 priority
               />
             ) : (

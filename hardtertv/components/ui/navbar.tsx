@@ -23,7 +23,7 @@ const NAV_ITEMS = [
   {
     id: 1,
     label: "Home",
-    image: "/images/hero-new.png",
+    image: "/images/hero-new.jpg",
     imageLabel: "Hardter Tennisverein",
     cta: {
       label: "Zur Startseite",

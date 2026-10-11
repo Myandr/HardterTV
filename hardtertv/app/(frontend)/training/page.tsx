@@ -105,6 +105,7 @@ export default async function TrainingPage() {
                   alt={foto.alt}
                   width={900}
                   height={1100}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="h-full w-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                   style={{ minHeight: "420px" }}
                 />
