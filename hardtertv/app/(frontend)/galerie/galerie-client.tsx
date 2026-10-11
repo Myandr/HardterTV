@@ -128,6 +128,7 @@ export default function GalerieClient({ alben, leerText }: { alben: GalerieAlbum
                 alt={images[lightbox].alt}
                 width={1200}
                 height={900}
+                sizes="(max-width: 1024px) 100vw, 1024px"
                 className="max-h-[90vh] w-auto rounded-xl object-contain"
                 priority
               />

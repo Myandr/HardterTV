@@ -129,6 +129,7 @@ export default async function EisPage() {
                   src={bild.url as string}
                   alt={bild.alt}
                   fill
+                  sizes="(max-width: 640px) 100vw, 50vw"
                   className="object-cover transition-transform duration-700 ease-out hover:scale-105"
                 />
               </div>

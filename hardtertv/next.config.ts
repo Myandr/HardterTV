@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
     ],
   },
   images: {
+    // AVIF is ~20% smaller than WebP; browsers without it fall back to WebP.
+    formats: ["image/avif", "image/webp"],
+    // Optimized variants stay cached for 31 days instead of the 4-hour default.
+    minimumCacheTTL: 2678400,
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "images.cnippet.dev" },

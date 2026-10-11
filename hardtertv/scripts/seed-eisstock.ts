@@ -31,11 +31,11 @@ async function run() {
 
   const heroBild = await uploadMedia(
     payload,
-    "/images/änderungen/eis2.png",
+    "/images/änderungen/eis2.jpg",
     "Eisstockschießen beim Hardter TV",
   );
-  const galerie1 = await uploadMedia(payload, "/images/änderungen/eis.png", "Eisstockbahn");
-  const galerie2 = await uploadMedia(payload, "/images/änderungen/eis3.png", "Eisstockschießen");
+  const galerie1 = await uploadMedia(payload, "/images/änderungen/eis.jpg", "Eisstockbahn");
+  const galerie2 = await uploadMedia(payload, "/images/änderungen/eis3.jpg", "Eisstockschießen");
 
   await payload.updateGlobal({
     slug: "eisstock",

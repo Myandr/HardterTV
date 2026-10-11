@@ -91,6 +91,7 @@ export default function WelcomeSection({
                 alt={bild.alt}
                 width={900}
                 height={700}
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="h-full w-full object-cover object-center"
                 style={{ minHeight: "260px" }}
               />

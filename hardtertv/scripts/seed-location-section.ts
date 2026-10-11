@@ -12,7 +12,7 @@ const KARTEN = [
   {
     titel: "6 Ascheplätze",
     untertitel: "Zwei mit Flutlichtanlage",
-    pfad: "images/hero-new.png",
+    pfad: "images/hero-new.jpg",
     href: MAPS_URL,
   },
   {
@@ -36,7 +36,7 @@ const KARTEN = [
   {
     titel: "Eisstockbahn",
     untertitel: "Vermietung nur an Mitglieder",
-    pfad: "images/änderungen/eis.png",
+    pfad: "images/änderungen/eis.jpg",
     href: "/eisstock",
   },
 ];
